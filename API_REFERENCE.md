@@ -713,7 +713,7 @@ long DM_CALL dm_getID();
 
 ```python
 # Python
-obj_id = dm.get_id()
+obj_id = dm.getID()
 print(f"当前对象 ID: {obj_id}")
 ```
 
@@ -785,7 +785,7 @@ const char* DM_CALL dm_getPath();
 
 ```python
 # Python
-path = dm.get_path()
+path = dm.getPath()
 print(f"当前全局路径: {path}")
 ```
 
@@ -815,9 +815,9 @@ long DM_CALL dm_setPath(const char* path);
 
 ```python
 # Python
-dm.set_path("C:\\dm_project\\resources")
+dm.setPath("C:\\dm_project\\resources")
 # 或使用相对路径
-dm.set_path(".\\resources")
+dm.setPath(".\\resources")
 ```
 
 ---
@@ -1243,8 +1243,8 @@ long DM_CALL dm_getForegroundWindow();
 
 ```python
 # Python
-hwnd = dm.get_foreground_window()
-title = dm.get_window_title(hwnd)
+hwnd = dm.getForegroundWindow()
+title = dm.getWindowTitle(hwnd)
 print(f"当前前台窗口: {title}")
 ```
 
@@ -1285,7 +1285,7 @@ long DM_CALL dm_getMousePointWindow();
 ```python
 # Python
 hwnd = dm.get_mouse_point_window()
-print(f"鼠标下方窗口: {dm.get_window_title(hwnd)}")
+print(f"鼠标下方窗口: {dm.getWindowTitle(hwnd)}")
 ```
 
 ---
@@ -1363,8 +1363,8 @@ const char* DM_CALL dm_getWindowClass(intptr_t hwnd);
 
 ```python
 # Python
-hwnd = dm.get_foreground_window()
-cls = dm.get_window_class(hwnd)
+hwnd = dm.getForegroundWindow()
+cls = dm.getWindowClass(hwnd)
 print(f"窗口类名: {cls}")
 ```
 
@@ -1392,7 +1392,7 @@ long DM_CALL dm_getWindowProcessId(intptr_t hwnd);
 
 ```python
 # Python
-hwnd = dm.get_foreground_window()
+hwnd = dm.getForegroundWindow()
 pid = dm.get_window_process_id(hwnd)
 print(f"进程 PID: {pid}")
 ```
@@ -1423,8 +1423,8 @@ const char* DM_CALL dm_getWindowProcessPath(intptr_t hwnd);
 
 ```python
 # Python
-hwnd = dm.get_foreground_window()
-path = dm.get_window_process_path(hwnd)
+hwnd = dm.getForegroundWindow()
+path = dm.getWindowProcessPath(hwnd)
 print(f"进程路径: {path}")
 ```
 
@@ -1474,8 +1474,8 @@ const char* DM_CALL dm_getWindowTitle(intptr_t hwnd);
 
 ```python
 # Python
-hwnd = dm.get_foreground_window()
-title = dm.get_window_title(hwnd)
+hwnd = dm.getForegroundWindow()
+title = dm.getWindowTitle(hwnd)
 print(f"窗口标题: {title}")
 ```
 
@@ -2010,10 +2010,10 @@ long DM_CALL dm_keyPress(long vk_code);
 
 ```python
 # Python
-dm.key_press(0x0D)     # 按回车
-dm.key_press(0x1B)     # 按 ESC
-dm.key_press(0x70)     # 按 F1
-dm.key_press(ord('A')) # 按 A 键
+dm.keyPress(0x0D)     # 按回车
+dm.keyPress(0x1B)     # 按 ESC
+dm.keyPress(0x70)     # 按 F1
+dm.keyPress(ord('A')) # 按 A 键
 ```
 
 ---
@@ -2167,8 +2167,8 @@ long DM_CALL dm_leftClick();
 
 ```python
 # Python
-dm.move_to(500, 300)  # 先移动鼠标
-dm.left_click()        # 左键单击
+dm.moveTo(500, 300)  # 先移动鼠标
+dm.leftClick()        # 左键单击
 ```
 
 ---
@@ -2340,12 +2340,12 @@ long DM_CALL dm_moveTo(long x, long y);
 
 ```python
 # Python
-dm.move_to(800, 600)   # 移动到屏幕中心
-dm.left_click()         # 单击
+dm.moveTo(800, 600)   # 移动到屏幕中心
+dm.leftClick()         # 单击
 
 # 组合操作：移动到目标位置并点击
-dm.move_to(100, 200)
-dm.left_click()
+dm.moveTo(100, 200)
+dm.leftClick()
 ```
 
 ---
@@ -2377,7 +2377,7 @@ long DM_CALL dm_moveToEx(long x, long y, long w, long h);
 # Python
 # 在 (100,100) 到 (200,150) 的矩形区域内随机点击
 dm.move_to_ex(100, 100, 100, 50)
-dm.left_click()
+dm.leftClick()
 ```
 
 ---
@@ -2405,7 +2405,7 @@ long DM_CALL dm_moveR(long rx, long ry);
 
 ```python
 # Python
-dm.move_to(500, 500)
+dm.moveTo(500, 500)
 dm.move_r(50, -30)  # 向右 50 像素，向上 30 像素
 ```
 
@@ -2831,7 +2831,7 @@ const char* DM_CALL dm_getColor(long x, long y);
 
 ```python
 # Python
-color = dm.get_color(500, 300)
+color = dm.getColor(500, 300)
 print(f"(500,300) 处的颜色: #{color}")
 
 # 解析 RGB 分量
@@ -3039,7 +3039,7 @@ import ctypes
 
 x, y = ctypes.c_long(), ctypes.c_long()
 # 在全屏范围查找红色
-ret = dm.find_color(0, 0, 1920, 1080, "FF0000-050505", 0.9, 0, x, y)
+ret = dm.findColor(0, 0, 1920, 1080, "FF0000-050505", 0.9, 0, x, y)
 if ret == 0:
     print(f"找到红色在 ({x.value}, {y.value})")
 else:
@@ -3295,16 +3295,16 @@ long DM_CALL dm_findPic(long x1, long y1, long x2, long y2, const char* pic_name
 # Python
 # 在屏幕上找按钮图片
 x, y = ctypes.c_long(), ctypes.c_long()
-ret = dm.find_pic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0, x, y)
+ret = dm.findPic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0, x, y)
 if ret == 0:
     print(f"找到按钮在 ({x.value}, {y.value})")
-    dm.move_to(x.value, y.value)
-    dm.left_click()
+    dm.moveTo(x.value, y.value)
+    dm.leftClick()
 else:
     print("未找到按钮")
 
 # 多个图片中找第一个匹配的
-ret = dm.find_pic(0, 0, 1920, 1080, "btn_start.bmp|btn_ok.bmp|btn_confirm.bmp", "202020", 0.8, 0, x, y)
+ret = dm.findPic(0, 0, 1920, 1080, "btn_start.bmp|btn_ok.bmp|btn_confirm.bmp", "202020", 0.8, 0, x, y)
 ```
 
 ---
@@ -3670,7 +3670,7 @@ long DM_CALL dm_loadPic(const char* pic_name);
 dm.load_pic("button.bmp")      # 预加载到内存
 dm.load_pic("icon.bmp")
 # 后续找图更快
-dm.find_pic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0, x, y)
+dm.findPic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0, x, y)
 ```
 
 ---
@@ -4068,9 +4068,9 @@ if ret == 0:
     print("绑定成功，可以开始后台操作")
     
     # 后台操作...
-    dm.move_to(500, 300)
-    dm.left_click()
-    color = dm.get_color(100, 100)
+    dm.moveTo(500, 300)
+    dm.leftClick()
+    color = dm.getColor(100, 100)
     
     # 完成后解绑
     dm.un_bind_window()
@@ -6363,8 +6363,8 @@ long DM_CALL dm_setDict(long index, const char* file);
 
 ```python
 # Python
-dm.set_dict(0, "ocr_dict.txt")   # 加载字库到索引0
-dm.set_dict(1, "font_dict.txt")  # 加载字库到索引1
+dm.setDict(0, "ocr_dict.txt")   # 加载字库到索引0
+dm.setDict(1, "font_dict.txt")  # 加载字库到索引1
 ```
 
 ---
@@ -6618,7 +6618,7 @@ const char* DM_CALL dm_ocr(long x1, long y1, long x2, long y2, const char* color
 ```python
 # Python
 # 先加载字库
-dm.set_dict(0, "ocr_dict.txt")
+dm.setDict(0, "ocr_dict.txt")
 dm.use_dict(0)
 
 # 识别屏幕区域中的文字
@@ -6710,8 +6710,8 @@ x, y = ctypes.c_long(), ctypes.c_long()
 ret = dm.find_str(0, 0, 1920, 1080, "确定", "000000-000000", 0.9, x, y)
 if ret == 0:
     print(f"找到'确定'按钮在 ({x.value}, {y.value})")
-    dm.move_to(x.value, y.value)
-    dm.left_click()
+    dm.moveTo(x.value, y.value)
+    dm.leftClick()
 ```
 
 ---
@@ -7501,8 +7501,8 @@ long DM_CALL dm_getScreenWidth();
 
 ```python
 # Python
-w = dm.get_screen_width()
-h = dm.get_screen_height()
+w = dm.getScreenWidth()
+h = dm.getScreenHeight()
 print(f"当前屏幕分辨率: {w}x{h}")
 ```
 
@@ -7574,9 +7574,9 @@ long DM_CALL dm_getTime();
 
 ```python
 # Python
-start = dm.get_time()
+start = dm.getTime()
 # 执行操作...
-elapsed = dm.get_time() - start
+elapsed = dm.getTime() - start
 print(f"操作耗时: {elapsed} 毫秒")
 ```
 
@@ -7829,7 +7829,7 @@ const char* DM_CALL dm_getMachineCode();
 
 ```python
 # Python
-code = dm.get_machine_code()
+code = dm.getMachineCode()
 print(f"本机机器码: {code}")
 ```
 
@@ -9825,25 +9825,25 @@ dm = DmHook()
 
 # 版本信息
 print(f"版本: {dm.ver()}")
-print(f"对象 ID: {dm.get_id()}")
+print(f"对象 ID: {dm.getID()}")
 
 # 系统信息
-print(f"屏幕: {dm.get_screen_width()}x{dm.get_screen_height()}")
-print(f"机器码: {dm.get_machine_code()}")
+print(f"屏幕: {dm.getScreenWidth()}x{dm.getScreenHeight()}")
+print(f"机器码: {dm.getMachineCode()}")
 
 # 窗口操作
-hwnd = dm.get_foreground_window()
-print(f"前台窗口: {dm.get_window_title(hwnd)}")
+hwnd = dm.getForegroundWindow()
+print(f"前台窗口: {dm.getWindowTitle(hwnd)}")
 
 # 键鼠
-dm.move_to(500, 300)
-dm.left_click()
+dm.moveTo(500, 300)
+dm.leftClick()
 
 # 截图
 dm.capture(0, 0, 800, 600, "test.bmp")
 
 # 颜色
-color = dm.get_color(100, 100)
+color = dm.getColor(100, 100)
 print(f"颜色: {color}")
 
 # 延时

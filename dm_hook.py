@@ -3,7 +3,7 @@
 """
 dm_hook.py — 大漠插件 (dm_hook.dll) Python 绑定示例
 =====================================================
-使用 ctypes 调用 dm_hook.dll 导出函数
+使用 ctypes 调用 dm_hook.dll 导出函数（camelCase 命名风格）
 
 用法:
     pip install -r requirements.txt  # 不需要额外依赖
@@ -26,7 +26,7 @@ from typing import Optional, Tuple, List
 # ============================================================================
 
 class DmHook:
-    """大漠插件 dm_hook.dll 的 Python 封装"""
+    """大漠插件 dm_hook.dll 的 Python 封装（camelCase 命名）"""
     
     def __init__(self, dll_path: str = None):
         if dll_path is None:
@@ -48,9 +48,9 @@ class DmHook:
                 )
         
         self._dll = ctypes.CDLL(dll_path)
-        self._setup_functions()
+        self._setupFunctions()
     
-    def _setup_functions(self):
+    def _setupFunctions(self):
         dll = self._dll
         
         # 字符串返回类型
@@ -111,74 +111,74 @@ class DmHook:
     def ver(self) -> str:
         return self._dll.ver().decode('utf-8', errors='replace')
     
-    def get_id(self) -> int:
+    def getID(self) -> int:
         return self._dll.getID()
     
-    def get_last_error(self) -> int:
+    def getLastError(self) -> int:
         return self._dll.getLastError()
     
-    def get_path(self) -> str:
+    def getPath(self) -> str:
         return self._dll.getPath().decode('utf-8', errors='replace')
     
-    def set_path(self, path: str) -> int:
+    def setPath(self, path: str) -> int:
         return self._dll.setPath(path.encode())
     
-    def get_base_path(self) -> str:
+    def getBasePath(self) -> str:
         return self._dll.getBasePath().decode('utf-8', errors='replace')
     
     # ---- 窗口 ----
-    def find_window(self, cls: str = "", title: str = "") -> int:
+    def findWindow(self, cls: str = "", title: str = "") -> int:
         return self._dll.findWindow(cls.encode(), title.encode())
     
-    def get_foreground_window(self) -> int:
+    def getForegroundWindow(self) -> int:
         return self._dll.getForegroundWindow()
     
-    def get_window_title(self, hwnd: int) -> str:
+    def getWindowTitle(self, hwnd: int) -> str:
         return self._dll.getWindowTitle(hwnd).decode('utf-8', errors='replace')
     
-    def get_window_class(self, hwnd: int) -> str:
+    def getWindowClass(self, hwnd: int) -> str:
         return self._dll.getWindowClass(hwnd).decode('utf-8', errors='replace')
     
-    def get_window_process_path(self, hwnd: int) -> str:
+    def getWindowProcessPath(self, hwnd: int) -> str:
         return self._dll.getWindowProcessPath(hwnd).decode('utf-8', errors='replace')
     
     # ---- 键鼠 ----
-    def move_to(self, x: int, y: int) -> int:
+    def moveTo(self, x: int, y: int) -> int:
         return self._dll.moveTo(x, y)
     
-    def left_click(self) -> int:
+    def leftClick(self) -> int:
         return self._dll.leftClick()
     
-    def key_press(self, vk: int) -> int:
+    def keyPress(self, vk: int) -> int:
         return self._dll.keyPress(vk)
     
     # ---- 图色 ----
-    def get_color(self, x: int, y: int) -> str:
+    def getColor(self, x: int, y: int) -> str:
         return self._dll.getColor(x, y).decode()
     
     def capture(self, x1: int, y1: int, x2: int, y2: int, file: str) -> int:
         return self._dll.capture(x1, y1, x2, y2, file.encode())
     
     # ---- 系统 ----
-    def get_screen_width(self) -> int:
+    def getScreenWidth(self) -> int:
         return self._dll.getScreenWidth()
     
-    def get_screen_height(self) -> int:
+    def getScreenHeight(self) -> int:
         return self._dll.getScreenHeight()
     
     def delay(self, ms: int):
         self._dll.delay(ms)
     
-    def get_time(self) -> int:
+    def getTime(self) -> int:
         return self._dll.getTime()
     
-    def get_os_type(self) -> int:
+    def getOsType(self) -> int:
         return self._dll.getOsType()
     
-    def get_machine_code(self) -> str:
+    def getMachineCode(self) -> str:
         return self._dll.getMachineCode().decode('utf-8', errors='replace')
     
-    def execute_cmd(self, cmd: str, timeout: int = 30000) -> str:
+    def executeCmd(self, cmd: str, timeout: int = 30000) -> str:
         return self._dll.executeCmd(cmd.encode(), timeout).decode('utf-8', errors='replace')
 
 
@@ -200,29 +200,29 @@ def main():
     # 基本信息
     print(f"\n[基本信息]")
     print(f"  版本: {dm.ver()}")
-    print(f"  对象ID: {dm.get_id()}")
-    print(f"  全局路径: {dm.get_path()}")
-    print(f"  基础路径: {dm.get_base_path()}")
-    print(f"  机器码: {dm.get_machine_code()}")
+    print(f"  对象ID: {dm.getID()}")
+    print(f"  全局路径: {dm.getPath()}")
+    print(f"  基础路径: {dm.getBasePath()}")
+    print(f"  机器码: {dm.getMachineCode()}")
     
     # 系统信息
     print(f"\n[系统信息]")
-    print(f"  屏幕: {dm.get_screen_width()}x{dm.get_screen_height()}")
-    print(f"  系统类型: {dm.get_os_type()}")
-    print(f"  当前时间戳: {dm.get_time()}")
+    print(f"  屏幕: {dm.getScreenWidth()}x{dm.getScreenHeight()}")
+    print(f"  系统类型: {dm.getOsType()}")
+    print(f"  当前时间戳: {dm.getTime()}")
     
     # 窗口信息
     print(f"\n[窗口信息]")
-    fg = dm.get_foreground_window()
+    fg = dm.getForegroundWindow()
     if fg:
         print(f"  前台窗口句柄: {fg}")
-        print(f"  窗口标题: {dm.get_window_title(fg)}")
-        print(f"  窗口类: {dm.get_window_class(fg)}")
-        print(f"  进程路径: {dm.get_window_process_path(fg)}")
+        print(f"  窗口标题: {dm.getWindowTitle(fg)}")
+        print(f"  窗口类: {dm.getWindowClass(fg)}")
+        print(f"  进程路径: {dm.getWindowProcessPath(fg)}")
 
     # 键鼠示例：把鼠标移动到 (100, 100)
     print(f"\n[键鼠]")
-    dm.move_to(100, 100)
+    dm.moveTo(100, 100)
     print(f"  移动鼠标到 (100, 100) 完成")
 
     print(f"\n[完成] dm_hook.dll 加载成功，所有 API 可用。")
