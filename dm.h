@@ -657,4 +657,10 @@ DM_API long DM_CALL dm_unLoadDriver();
 const char* DM_SetResult(const std::string& s);
 const char* DM_SetResult(const char* s);
 
+// ============================================================================
+// COM 支持 — 状态切换
+// ============================================================================
+// 设置 COM 对象调用的状态覆盖，使 GetDmState() 返回 COM 对象私有状态
+void dm_setComState(DmState* s);
+
 #endif // DM_H

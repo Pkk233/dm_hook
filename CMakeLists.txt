@@ -8,21 +8,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # 支持 __stdcall 导出
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+# 使用 .def 文件精确控制导出（避免 CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS 导出 RTTI 符号）
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 
 # 源文件
 set(SOURCES
     dm.cpp
     dllmain.cpp
+    dm_com.cpp
 )
 
 # 头文件
 set(HEADERS
     dm.h
+    dm_com.h
 )
 
 # 生成 DLL
-add_library(dm_hook SHARED ${SOURCES} ${HEADERS})
+add_library(dm_hook SHARED ${SOURCES} ${HEADERS} dm_com.def)
 
 # 目标名称兼容
 set_target_properties(dm_hook PROPERTIES

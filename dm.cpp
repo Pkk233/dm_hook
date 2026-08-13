@@ -73,11 +73,20 @@ std::once_flag g_tlsInitFlag;
 static long g_nextObjectId = 1;
 static std::mutex g_idMutex;
 
+// COM 状态覆盖 — 当 COM 对象调用时，临时指向 COM 对象的私有状态
+thread_local DmState* g_comOverrideState = nullptr;
+
+void dm_setComState(DmState* s) {
+    g_comOverrideState = s;
+}
+
 static void InitTls() {
     g_tlsIndex = TlsAlloc();
 }
 
 DmState* GetDmState() {
+    // COM 对象调用时优先使用其私有状态
+    if (g_comOverrideState) return g_comOverrideState;
     std::call_once(g_tlsInitFlag, InitTls);
     if (g_tlsIndex == TLS_OUT_OF_INDEXES) return nullptr;
     DmState* state = reinterpret_cast<DmState*>(TlsGetValue(g_tlsIndex));
