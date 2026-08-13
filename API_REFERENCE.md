@@ -1,7 +1,8 @@
 # dm_hook.dll 完整函数使用说明
 
 > **大漠插件 (dm.dll) 开源重新实现** — 接口完全兼容原版大漠插件  
-> 采用 C 风格导出（`__stdcall`），支持跨语言调用（C++、Python、AutoHotkey 等）  
+> 函数名已去掉 dm_ 前缀，使用驼峰命名（moveTo、getID、findWindow）
+> 采用 C 风格导出（__stdcall），支持跨语言调用（C++、Python、AutoHotkey 等）
 > 现已支持 **COM 组件**，可通过 `win32com.client.Dispatch('dm.dmsoft')` 调用
 >
 > **文档版本**: 1.4 | **最后更新**: 2026-08-13
@@ -14,19 +15,19 @@
 
 <summary>模块 1：基本设置（13 个） <a href="#模块-1基本设置">🔗</a></summary>
 
-- <a href="#11-dm_reg">1.1 dm_reg</a> — 注册插件（基于机器码）
-- <a href="#12-dm_regex">1.2 dm_regEx</a> — 注册插件（基于 IP）
-- <a href="#13-dm_regnomac">1.3 dm_regNoMac</a> — 注册插件（不绑定机器码）
-- <a href="#14-dm_regexnomac">1.4 dm_regExNoMac</a> — 注册插件（IP + 不绑定机器码）
-- <a href="#15-dm_ver">1.5 dm_ver</a> — 获取插件版本号
-- <a href="#16-dm_getid">1.6 dm_getID</a> — 获取当前对象 ID
-- <a href="#17-dm_getdmcount">1.7 dm_getDmCount</a> — 获取进程中的 dm 对象数量
-- <a href="#18-dm_getlasterror">1.8 dm_getLastError</a> — 获取最后错误码
-- <a href="#19-dm_getpath">1.9 dm_getPath</a> — 获取全局路径
-- <a href="#110-dm_setpath">1.10 dm_setPath</a> — 设置全局路径
-- <a href="#111-dm_getbasepath">1.11 dm_getBasePath</a> — 获取 DLL 基础路径
-- <a href="#112-dm_setshowerrormsg">1.12 dm_setShowErrorMsg</a> — 设置错误消息框显示
-- <a href="#113-dm_enablepiccache">1.13 dm_enablePicCache</a> — 启用/禁用图片缓存
+- <a href="#11-reg">1.1 reg</a> — 注册插件（基于机器码）
+- <a href="#12-regex">1.2 regEx</a> — 注册插件（基于 IP）
+- <a href="#13-regnomac">1.3 regNoMac</a> — 注册插件（不绑定机器码）
+- <a href="#14-regexnomac">1.4 regExNoMac</a> — 注册插件（IP + 不绑定机器码）
+- <a href="#15-ver">1.5 ver</a> — 获取插件版本号
+- <a href="#16-getid">1.6 getID</a> — 获取当前对象 ID
+- <a href="#17-getdmcount">1.7 getDmCount</a> — 获取进程中的 dm 对象数量
+- <a href="#18-getlasterror">1.8 getLastError</a> — 获取最后错误码
+- <a href="#19-getpath">1.9 getPath</a> — 获取全局路径
+- <a href="#110-setpath">1.10 setPath</a> — 设置全局路径
+- <a href="#111-getbasepath">1.11 getBasePath</a> — 获取 DLL 基础路径
+- <a href="#112-setshowerrormsg">1.12 setShowErrorMsg</a> — 设置错误消息框显示
+- <a href="#113-enablepiccache">1.13 enablePicCache</a> — 启用/禁用图片缓存
 
 </details>
 
@@ -34,46 +35,46 @@
 
 <summary>模块 2：窗口操作（40 个） <a href="#模块-2窗口操作">🔗</a></summary>
 
-- <a href="#21-dm_findwindow">2.1 dm_findWindow</a> — 查找窗口（类名/标题）
-- <a href="#22-dm_findwindowex">2.2 dm_findWindowEx</a> — 查找子窗口
-- <a href="#23-dm_findwindowbyprocess">2.3 dm_findWindowByProcess</a> — 按进程名查找窗口
-- <a href="#24-dm_findwindowbyprocessid">2.4 dm_findWindowByProcessId</a> — 按进程 ID 查找窗口
-- <a href="#25-dm_findwindowsuper">2.5 dm_findWindowSuper</a> — 高级窗口查找（支持正则）
-- <a href="#26-dm_enumwindow">2.6 dm_enumWindow</a> — 枚举窗口
-- <a href="#27-dm_enumwindowbyprocess">2.7 dm_enumWindowByProcess</a> — 枚举进程窗口
-- <a href="#28-dm_enumwindowbyprocessid">2.8 dm_enumWindowByProcessId</a> — 按 PID 枚举窗口
-- <a href="#29-dm_enumwindowsuper">2.9 dm_enumWindowSuper</a> — 高级窗口枚举
-- <a href="#210-dm_enumprocess">2.10 dm_enumProcess</a> — 枚举进程
-- <a href="#211-dm_getwindow">2.11 dm_getWindow</a> — 获取关联窗口
-- <a href="#212-dm_getforegroundwindow">2.12 dm_getForegroundWindow</a> — 获取前台窗口
-- <a href="#213-dm_getforegroundfocus">2.13 dm_getForegroundFocus</a> — 获取焦点窗口
-- <a href="#214-dm_getmousepointwindow">2.14 dm_getMousePointWindow</a> — 获取鼠标下方窗口
-- <a href="#215-dm_getpointwindow">2.15 dm_getPointWindow</a> — 获取指定坐标处窗口
-- <a href="#216-dm_getspecialwindow">2.16 dm_getSpecialWindow</a> — 获取特殊窗口
-- <a href="#217-dm_getwindowclass">2.17 dm_getWindowClass</a> — 获取窗口类名
-- <a href="#218-dm_getwindowprocessid">2.18 dm_getWindowProcessId</a> — 获取窗口进程 ID
-- <a href="#219-dm_getwindowprocesspath">2.19 dm_getWindowProcessPath</a> — 获取窗口进程路径
-- <a href="#220-dm_getwindowthreadid">2.20 dm_getWindowThreadId</a> — 获取窗口线程 ID
-- <a href="#221-dm_getwindowtitle">2.21 dm_getWindowTitle</a> — 获取窗口标题
-- <a href="#222-dm_getwindowrect">2.22 dm_getWindowRect</a> — 获取窗口矩形
-- <a href="#223-dm_getclientrect">2.23 dm_getClientRect</a> — 获取客户区矩形
-- <a href="#224-dm_getclientsize">2.24 dm_getClientSize</a> — 获取客户区大小
-- <a href="#225-dm_getwindowstate">2.25 dm_getWindowState</a> — 获取窗口状态
-- <a href="#226-dm_getprocessinfo">2.26 dm_getProcessInfo</a> — 获取进程信息
-- <a href="#227-dm_movewindow">2.27 dm_moveWindow</a> — 移动窗口
-- <a href="#228-dm_setwindowsize">2.28 dm_setWindowSize</a> — 调整窗口大小
-- <a href="#229-dm_setwindowstate">2.29 dm_setWindowState</a> — 设置窗口状态
-- <a href="#230-dm_setwindowtext">2.30 dm_setWindowText</a> — 修改窗口标题
-- <a href="#231-dm_setwindowtransparent">2.31 dm_setWindowTransparent</a> — 设置窗口透明度
-- <a href="#232-dm_setclientsize">2.32 dm_setClientSize</a> — 设置客户区大小
-- <a href="#233-dm_setsendstringdelay">2.33 dm_setSendStringDelay</a> — 设置发送字符串延迟
-- <a href="#234-dm_sendpaste">2.34 dm_sendPaste</a> — 发送粘贴命令
-- <a href="#235-dm_sendstring">2.35 dm_sendString</a> — 发送文本字符串
-- <a href="#236-dm_sendstring2">2.36 dm_sendString2</a> — 发送文本字符串（备选方式）
-- <a href="#237-dm_sendstringime">2.37 dm_sendStringIme</a> — 通过 IME 发送字符串
-- <a href="#238-dm_sendstringime2">2.38 dm_sendStringIme2</a> — 通过 IME 发送字符串（备选）
-- <a href="#239-dm_clienttoscreen">2.39 dm_clientToScreen</a> — 客户区坐标转屏幕坐标
-- <a href="#240-dm_screentoclient">2.40 dm_screenToClient</a> — 屏幕坐标转客户区坐标
+- <a href="#21-findwindow">2.1 findWindow</a> — 查找窗口（类名/标题）
+- <a href="#22-findwindowex">2.2 findWindowEx</a> — 查找子窗口
+- <a href="#23-findwindowbyprocess">2.3 findWindowByProcess</a> — 按进程名查找窗口
+- <a href="#24-findwindowbyprocessid">2.4 findWindowByProcessId</a> — 按进程 ID 查找窗口
+- <a href="#25-findwindowsuper">2.5 findWindowSuper</a> — 高级窗口查找（支持正则）
+- <a href="#26-enumwindow">2.6 enumWindow</a> — 枚举窗口
+- <a href="#27-enumwindowbyprocess">2.7 enumWindowByProcess</a> — 枚举进程窗口
+- <a href="#28-enumwindowbyprocessid">2.8 enumWindowByProcessId</a> — 按 PID 枚举窗口
+- <a href="#29-enumwindowsuper">2.9 enumWindowSuper</a> — 高级窗口枚举
+- <a href="#210-enumprocess">2.10 enumProcess</a> — 枚举进程
+- <a href="#211-getwindow">2.11 getWindow</a> — 获取关联窗口
+- <a href="#212-getforegroundwindow">2.12 getForegroundWindow</a> — 获取前台窗口
+- <a href="#213-getforegroundfocus">2.13 getForegroundFocus</a> — 获取焦点窗口
+- <a href="#214-getmousepointwindow">2.14 getMousePointWindow</a> — 获取鼠标下方窗口
+- <a href="#215-getpointwindow">2.15 getPointWindow</a> — 获取指定坐标处窗口
+- <a href="#216-getspecialwindow">2.16 getSpecialWindow</a> — 获取特殊窗口
+- <a href="#217-getwindowclass">2.17 getWindowClass</a> — 获取窗口类名
+- <a href="#218-getwindowprocessid">2.18 getWindowProcessId</a> — 获取窗口进程 ID
+- <a href="#219-getwindowprocesspath">2.19 getWindowProcessPath</a> — 获取窗口进程路径
+- <a href="#220-getwindowthreadid">2.20 getWindowThreadId</a> — 获取窗口线程 ID
+- <a href="#221-getwindowtitle">2.21 getWindowTitle</a> — 获取窗口标题
+- <a href="#222-getwindowrect">2.22 getWindowRect</a> — 获取窗口矩形
+- <a href="#223-getclientrect">2.23 getClientRect</a> — 获取客户区矩形
+- <a href="#224-getclientsize">2.24 getClientSize</a> — 获取客户区大小
+- <a href="#225-getwindowstate">2.25 getWindowState</a> — 获取窗口状态
+- <a href="#226-getprocessinfo">2.26 getProcessInfo</a> — 获取进程信息
+- <a href="#227-movewindow">2.27 moveWindow</a> — 移动窗口
+- <a href="#228-setwindowsize">2.28 setWindowSize</a> — 调整窗口大小
+- <a href="#229-setwindowstate">2.29 setWindowState</a> — 设置窗口状态
+- <a href="#230-setwindowtext">2.30 setWindowText</a> — 修改窗口标题
+- <a href="#231-setwindowtransparent">2.31 setWindowTransparent</a> — 设置窗口透明度
+- <a href="#232-setclientsize">2.32 setClientSize</a> — 设置客户区大小
+- <a href="#233-setsendstringdelay">2.33 setSendStringDelay</a> — 设置发送字符串延迟
+- <a href="#234-sendpaste">2.34 sendPaste</a> — 发送粘贴命令
+- <a href="#235-sendstring">2.35 sendString</a> — 发送文本字符串
+- <a href="#236-sendstring2">2.36 sendString2</a> — 发送文本字符串（备选方式）
+- <a href="#237-sendstringime">2.37 sendStringIme</a> — 通过 IME 发送字符串
+- <a href="#238-sendstringime2">2.38 sendStringIme2</a> — 通过 IME 发送字符串（备选）
+- <a href="#239-clienttoscreen">2.39 clientToScreen</a> — 客户区坐标转屏幕坐标
+- <a href="#240-screentoclient">2.40 screenToClient</a> — 屏幕坐标转客户区坐标
 
 </details>
 
@@ -81,40 +82,40 @@
 
 <summary>模块 3：键鼠操作（34 个） <a href="#模块-3键鼠操作">🔗</a></summary>
 
-- <a href="#31-dm_keydown">3.1 dm_keyDown</a> — 按下键（虚拟键码）
-- <a href="#32-dm_keydownchar">3.2 dm_keyDownChar</a> — 按下字符键
-- <a href="#33-dm_keypress">3.3 dm_keyPress</a> — 按键（按下+释放）
-- <a href="#34-dm_keypresschar">3.4 dm_keyPressChar</a> — 按字符键
-- <a href="#35-dm_keypressstr">3.5 dm_keyPressStr</a> — 按字符串序列
-- <a href="#36-dm_keyup">3.6 dm_keyUp</a> — 释放键
-- <a href="#37-dm_keyupchar">3.7 dm_keyUpChar</a> — 释放字符键
-- <a href="#38-dm_waitkey">3.8 dm_waitKey</a> — 等待按键
-- <a href="#39-dm_getkeystate">3.9 dm_getKeyState</a> — 获取按键状态
-- <a href="#310-dm_leftclick">3.10 dm_leftClick</a> — 左键单击
-- <a href="#311-dm_leftdoubleclick">3.11 dm_leftDoubleClick</a> — 左键双击
-- <a href="#312-dm_leftdown">3.12 dm_leftDown</a> — 左键按下
-- <a href="#313-dm_leftup">3.13 dm_leftUp</a> — 左键释放
-- <a href="#314-dm_rightclick">3.14 dm_rightClick</a> — 右键单击
-- <a href="#315-dm_rightdown">3.15 dm_rightDown</a> — 右键按下
-- <a href="#316-dm_rightup">3.16 dm_rightUp</a> — 右键释放
-- <a href="#317-dm_middleclick">3.17 dm_middleClick</a> — 中键单击
-- <a href="#318-dm_middledown">3.18 dm_middleDown</a> — 中键按下
-- <a href="#319-dm_middleup">3.19 dm_middleUp</a> — 中键释放
-- <a href="#320-dm_moveto">3.20 dm_moveTo</a> — 移动鼠标到绝对坐标
-- <a href="#321-dm_movetoex">3.21 dm_moveToEx</a> — 移动鼠标到区域随机点
-- <a href="#322-dm_mover">3.22 dm_moveR</a> — 相对移动鼠标
-- <a href="#323-dm_wheeldown">3.23 dm_wheelDown</a> — 滚轮向下
-- <a href="#324-dm_wheelup">3.24 dm_wheelUp</a> — 滚轮向上
-- <a href="#325-dm_getcursorpos">3.25 dm_getCursorPos</a> — 获取鼠标位置
-- <a href="#326-dm_getcursorshape">3.26 dm_getCursorShape</a> — 获取光标形状
-- <a href="#327-dm_getcursorshapeex">3.27 dm_getCursorShapeEx</a> — 获取光标形状详细信息
-- <a href="#328-dm_getcursorspot">3.28 dm_getCursorSpot</a> — 获取光标热点
-- <a href="#329-dm_setmousedelay">3.29 dm_setMouseDelay</a> — 设置鼠标延迟
-- <a href="#330-dm_setkeypaddelay">3.30 dm_setKeypadDelay</a> — 设置键盘延迟
-- <a href="#331-dm_setmousespeed">3.31 dm_setMouseSpeed</a> — 设置鼠标速度
-- <a href="#332-dm_getmousespeed">3.32 dm_getMouseSpeed</a> — 获取鼠标速度
-- <a href="#333-dm_enablemouseaccuracy">3.33 dm_enableMouseAccuracy</a> — 启用/禁用鼠标加速
-- <a href="#334-dm_setsimmode">3.34 dm_setSimMode</a> — 设置模拟模式
+- <a href="#31-keydown">3.1 keyDown</a> — 按下键（虚拟键码）
+- <a href="#32-keydownchar">3.2 keyDownChar</a> — 按下字符键
+- <a href="#33-keypress">3.3 keyPress</a> — 按键（按下+释放）
+- <a href="#34-keypresschar">3.4 keyPressChar</a> — 按字符键
+- <a href="#35-keypressstr">3.5 keyPressStr</a> — 按字符串序列
+- <a href="#36-keyup">3.6 keyUp</a> — 释放键
+- <a href="#37-keyupchar">3.7 keyUpChar</a> — 释放字符键
+- <a href="#38-waitkey">3.8 waitKey</a> — 等待按键
+- <a href="#39-getkeystate">3.9 getKeyState</a> — 获取按键状态
+- <a href="#310-leftclick">3.10 leftClick</a> — 左键单击
+- <a href="#311-leftdoubleclick">3.11 leftDoubleClick</a> — 左键双击
+- <a href="#312-leftdown">3.12 leftDown</a> — 左键按下
+- <a href="#313-leftup">3.13 leftUp</a> — 左键释放
+- <a href="#314-rightclick">3.14 rightClick</a> — 右键单击
+- <a href="#315-rightdown">3.15 rightDown</a> — 右键按下
+- <a href="#316-rightup">3.16 rightUp</a> — 右键释放
+- <a href="#317-middleclick">3.17 middleClick</a> — 中键单击
+- <a href="#318-middledown">3.18 middleDown</a> — 中键按下
+- <a href="#319-middleup">3.19 middleUp</a> — 中键释放
+- <a href="#320-moveto">3.20 moveTo</a> — 移动鼠标到绝对坐标
+- <a href="#321-movetoex">3.21 moveToEx</a> — 移动鼠标到区域随机点
+- <a href="#322-mover">3.22 moveR</a> — 相对移动鼠标
+- <a href="#323-wheeldown">3.23 wheelDown</a> — 滚轮向下
+- <a href="#324-wheelup">3.24 wheelUp</a> — 滚轮向上
+- <a href="#325-getcursorpos">3.25 getCursorPos</a> — 获取鼠标位置
+- <a href="#326-getcursorshape">3.26 getCursorShape</a> — 获取光标形状
+- <a href="#327-getcursorshapeex">3.27 getCursorShapeEx</a> — 获取光标形状详细信息
+- <a href="#328-getcursorspot">3.28 getCursorSpot</a> — 获取光标热点
+- <a href="#329-setmousedelay">3.29 setMouseDelay</a> — 设置鼠标延迟
+- <a href="#330-setkeypaddelay">3.30 setKeypadDelay</a> — 设置键盘延迟
+- <a href="#331-setmousespeed">3.31 setMouseSpeed</a> — 设置鼠标速度
+- <a href="#332-getmousespeed">3.32 getMouseSpeed</a> — 获取鼠标速度
+- <a href="#333-enablemouseaccuracy">3.33 enableMouseAccuracy</a> — 启用/禁用鼠标加速
+- <a href="#334-setsimmode">3.34 setSimMode</a> — 设置模拟模式
 
 </details>
 
@@ -122,63 +123,63 @@
 
 <summary>模块 4：图色操作（57 个） <a href="#模块-4图色操作">🔗</a></summary>
 
-- <a href="#41-dm_capture">4.1 dm_capture</a> — 截图保存为 BMP
-- <a href="#42-dm_capturegif">4.2 dm_captureGif</a> — 截图保存为 GIF 动画
-- <a href="#43-dm_capturejpg">4.3 dm_captureJpg</a> — 截图保存为 JPEG
-- <a href="#44-dm_capturepng">4.4 dm_capturePng</a> — 截图保存为 PNG
-- <a href="#45-dm_capturepre">4.5 dm_capturePre</a> — 保存上次截图结果
-- <a href="#46-dm_getcolor">4.6 dm_getColor</a> — 获取颜色（RGB）
-- <a href="#47-dm_getcolorbgr">4.7 dm_getColorBGR</a> — 获取颜色（BGR）
-- <a href="#48-dm_getcolorhsv">4.8 dm_getColorHSV</a> — 获取颜色（HSV）
-- <a href="#49-dm_getcolornum">4.9 dm_getColorNum</a> — 统计颜色像素数量
-- <a href="#410-dm_getaverb">4.10 dm_getAveRGB</a> — 获取区域平均颜色（RGB）
-- <a href="#411-dm_getavehsv">4.11 dm_getAveHSV</a> — 获取区域平均颜色（HSV）
-- <a href="#412-dm_cmpcolor">4.12 dm_cmpColor</a> — 比较颜色
-- <a href="#413-dm_findcolor">4.13 dm_findColor</a> — 找色（单点）
-- <a href="#414-dm_findcolorex">4.14 dm_findColorEx</a> — 找色（返回所有坐标）
-- <a href="#415-dm_findcolorblock">4.15 dm_findColorBlock</a> — 找色块
-- <a href="#416-dm_findcolorblockex">4.16 dm_findColorBlockEx</a> — 找色块（返回所有坐标）
-- <a href="#417-dm_findcolore">4.17 dm_findColorE</a> — 找色（返回坐标字符串）
-- <a href="#418-dm_findmulcolor">4.18 dm_findMulColor</a> — 多色查找
-- <a href="#419-dm_findmulticolor">4.19 dm_findMultiColor</a> — 多点找色
-- <a href="#420-dm_findmulticolorex">4.20 dm_findMultiColorEx</a> — 多点找色（返回所有坐标）
-- <a href="#421-dm_findmulticolore">4.21 dm_findMultiColorE</a> — 多点找色（返回坐标字符串）
-- <a href="#422-dm_findpic">4.22 dm_findPic</a> — 找图
-- <a href="#423-dm_findpice">4.23 dm_findPicE</a> — 找图（返回坐标字符串）
-- <a href="#424-dm_findpicex">4.24 dm_findPicEx</a> — 找图（返回所有坐标）
-- <a href="#425-dm_findpicexs">4.25 dm_findPicExS</a> — 智能找图（返回所有坐标）
-- <a href="#426-dm_findpics">4.26 dm_findPicS</a> — 智能找图
-- <a href="#427-dm_findpicmem">4.27 dm_findPicMem</a> — 内存找图
-- <a href="#428-dm_findpicmeme">4.28 dm_findPicMemE</a> — 内存找图（返回坐标字符串）
-- <a href="#429-dm_findpicmemex">4.29 dm_findPicMemEx</a> — 内存找图（返回所有坐标）
-- <a href="#430-dm_findpicsim">4.30 dm_findPicSim</a> — 智能找图（支持透明色）
-- <a href="#431-dm_findpicsime">4.31 dm_findPicSimE</a> — 智能找图（返回坐标字符串）
-- <a href="#432-dm_findpicsimex">4.32 dm_findPicSimEx</a> — 智能找图（返回所有坐标）
-- <a href="#433-dm_findpicsimmem">4.33 dm_findPicSimMem</a> — 智能找图（内存模式）
-- <a href="#434-dm_findpicsimmeme">4.34 dm_findPicSimMemE</a> — 智能找图内存版（返回坐标字符串）
-- <a href="#435-dm_findpicsimmemex">4.35 dm_findPicSimMemEx</a> — 智能找图内存版（返回所有坐标）
-- <a href="#436-dm_findshape">4.36 dm_findShape</a> — 找形状
-- <a href="#437-dm_findshapee">4.37 dm_findShapeE</a> — 找形状（返回坐标字符串）
-- <a href="#438-dm_findshapeex">4.38 dm_findShapeEx</a> — 找形状（返回所有坐标）
-- <a href="#439-dm_getpicsize">4.39 dm_getPicSize</a> — 获取图片尺寸
-- <a href="#440-dm_freepic">4.40 dm_freePic</a> — 释放图片缓存
-- <a href="#441-dm_loadpic">4.41 dm_loadPic</a> — 加载图片到内存
-- <a href="#442-dm_loadpicbyte">4.42 dm_loadPicByte</a> — 从内存加载图片
-- <a href="#443-dm_appendpicaddr">4.43 dm_appendPicAddr</a> — 追加内存图片地址
-- <a href="#444-dm_matchpicname">4.44 dm_matchPicName</a> — 匹配图片路径
-- <a href="#445-dm_imagetobmp">4.45 dm_imageToBmp</a> — 转换图片为 BMP 格式
-- <a href="#446-dm_setpicpwd">4.46 dm_setPicPwd</a> — 设置图片密码
-- <a href="#447-dm_setexcluderegion">4.47 dm_setExcludeRegion</a> — 设置排除区域
-- <a href="#448-dm_getscreendata">4.48 dm_getScreenData</a> — 获取屏幕原始数据
-- <a href="#449-dm_getscreendatabmp">4.49 dm_getScreenDataBmp</a> — 获取屏幕 BMP 数据
-- <a href="#450-dm_enabledisplaydebug">4.50 dm_enableDisplayDebug</a> — 启用显示调试
-- <a href="#451-dm_enablefindpicmultithread">4.51 dm_enableFindPicMultithread</a> — 启用多线程找图
-- <a href="#452-dm_enablegetcolorbycapture">4.52 dm_enableGetColorByCapture</a> — 通过截图获取颜色
-- <a href="#453-dm_setfindpicmultithreadcount">4.53 dm_setFindPicMultithreadCount</a> — 设置多线程找图线程数
-- <a href="#454-dm_setfindpicmultithreadlimit">4.54 dm_setFindPicMultithreadLimit</a> — 设置多线程找图限制
-- <a href="#455-dm_bgr2rgb">4.55 dm_bgr2RGB</a> — BGR 转 RGB
-- <a href="#456-dm_rgb2bgr">4.56 dm_rgb2BGR</a> — RGB 转 BGR
-- <a href="#457-dm_isdisplaydead">4.57 dm_isDisplayDead</a> — 检测画面是否静止
+- <a href="#41-capture">4.1 capture</a> — 截图保存为 BMP
+- <a href="#42-capturegif">4.2 captureGif</a> — 截图保存为 GIF 动画
+- <a href="#43-capturejpg">4.3 captureJpg</a> — 截图保存为 JPEG
+- <a href="#44-capturepng">4.4 capturePng</a> — 截图保存为 PNG
+- <a href="#45-capturepre">4.5 capturePre</a> — 保存上次截图结果
+- <a href="#46-getcolor">4.6 getColor</a> — 获取颜色（RGB）
+- <a href="#47-getcolorbgr">4.7 getColorBGR</a> — 获取颜色（BGR）
+- <a href="#48-getcolorhsv">4.8 getColorHSV</a> — 获取颜色（HSV）
+- <a href="#49-getcolornum">4.9 getColorNum</a> — 统计颜色像素数量
+- <a href="#410-getavergb">4.10 getAveRGB</a> — 获取区域平均颜色（RGB）
+- <a href="#411-getavehsv">4.11 getAveHSV</a> — 获取区域平均颜色（HSV）
+- <a href="#412-cmpcolor">4.12 cmpColor</a> — 比较颜色
+- <a href="#413-findcolor">4.13 findColor</a> — 找色（单点）
+- <a href="#414-findcolorex">4.14 findColorEx</a> — 找色（返回所有坐标）
+- <a href="#415-findcolorblock">4.15 findColorBlock</a> — 找色块
+- <a href="#416-findcolorblockex">4.16 findColorBlockEx</a> — 找色块（返回所有坐标）
+- <a href="#417-findcolore">4.17 findColorE</a> — 找色（返回坐标字符串）
+- <a href="#418-findmulcolor">4.18 findMulColor</a> — 多色查找
+- <a href="#419-findmulticolor">4.19 findMultiColor</a> — 多点找色
+- <a href="#420-findmulticolorex">4.20 findMultiColorEx</a> — 多点找色（返回所有坐标）
+- <a href="#421-findmulticolore">4.21 findMultiColorE</a> — 多点找色（返回坐标字符串）
+- <a href="#422-findpic">4.22 findPic</a> — 找图
+- <a href="#423-findpice">4.23 findPicE</a> — 找图（返回坐标字符串）
+- <a href="#424-findpicex">4.24 findPicEx</a> — 找图（返回所有坐标）
+- <a href="#425-findpicexs">4.25 findPicExS</a> — 智能找图（返回所有坐标）
+- <a href="#426-findpics">4.26 findPicS</a> — 智能找图
+- <a href="#427-findpicmem">4.27 findPicMem</a> — 内存找图
+- <a href="#428-findpicmeme">4.28 findPicMemE</a> — 内存找图（返回坐标字符串）
+- <a href="#429-findpicmemex">4.29 findPicMemEx</a> — 内存找图（返回所有坐标）
+- <a href="#430-findpicsim">4.30 findPicSim</a> — 智能找图（支持透明色）
+- <a href="#431-findpicsime">4.31 findPicSimE</a> — 智能找图（返回坐标字符串）
+- <a href="#432-findpicsimex">4.32 findPicSimEx</a> — 智能找图（返回所有坐标）
+- <a href="#433-findpicsimmem">4.33 findPicSimMem</a> — 智能找图（内存模式）
+- <a href="#434-findpicsimmeme">4.34 findPicSimMemE</a> — 智能找图内存版（返回坐标字符串）
+- <a href="#435-findpicsimmemex">4.35 findPicSimMemEx</a> — 智能找图内存版（返回所有坐标）
+- <a href="#436-findshape">4.36 findShape</a> — 找形状
+- <a href="#437-findshapee">4.37 findShapeE</a> — 找形状（返回坐标字符串）
+- <a href="#438-findshapeex">4.38 findShapeEx</a> — 找形状（返回所有坐标）
+- <a href="#439-getpicsize">4.39 getPicSize</a> — 获取图片尺寸
+- <a href="#440-freepic">4.40 freePic</a> — 释放图片缓存
+- <a href="#441-loadpic">4.41 loadPic</a> — 加载图片到内存
+- <a href="#442-loadpicbyte">4.42 loadPicByte</a> — 从内存加载图片
+- <a href="#443-appendpicaddr">4.43 appendPicAddr</a> — 追加内存图片地址
+- <a href="#444-matchpicname">4.44 matchPicName</a> — 匹配图片路径
+- <a href="#445-imagetobmp">4.45 imageToBmp</a> — 转换图片为 BMP 格式
+- <a href="#446-setpicpwd">4.46 setPicPwd</a> — 设置图片密码
+- <a href="#447-setexcluderegion">4.47 setExcludeRegion</a> — 设置排除区域
+- <a href="#448-getscreendata">4.48 getScreenData</a> — 获取屏幕原始数据
+- <a href="#449-getscreendatabmp">4.49 getScreenDataBmp</a> — 获取屏幕 BMP 数据
+- <a href="#450-enabledisplaydebug">4.50 enableDisplayDebug</a> — 启用显示调试
+- <a href="#451-enablefindpicmultithread">4.51 enableFindPicMultithread</a> — 启用多线程找图
+- <a href="#452-enablegetcolorbycapture">4.52 enableGetColorByCapture</a> — 通过截图获取颜色
+- <a href="#453-setfindpicmultithreadcount">4.53 setFindPicMultithreadCount</a> — 设置多线程找图线程数
+- <a href="#454-setfindpicmultithreadlimit">4.54 setFindPicMultithreadLimit</a> — 设置多线程找图限制
+- <a href="#455-bgr2rgb">4.55 bgr2RGB</a> — BGR 转 RGB
+- <a href="#456-rgb2bgr">4.56 rgb2BGR</a> — RGB 转 BGR
+- <a href="#457-isdisplaydead">4.57 isDisplayDead</a> — 检测画面是否静止
 
 </details>
 
@@ -186,34 +187,34 @@
 
 <summary>模块 5：后台设置（28 个） <a href="#模块-5后台设置">🔗</a></summary>
 
-- <a href="#51-dm_bindwindow">5.1 dm_bindWindow</a> — 绑定窗口
-- <a href="#52-dm_bindwindowex">5.2 dm_bindWindowEx</a> — 绑定窗口（扩展版）
-- <a href="#53-dm_unbindwindow">5.3 dm_unBindWindow</a> — 解绑窗口
-- <a href="#54-dm_getbindwindow">5.4 dm_getBindWindow</a> — 获取绑定窗口
-- <a href="#55-dm_isbind">5.5 dm_isBind</a> — 检查窗口是否已绑定
-- <a href="#56-dm_forceunbindwindow">5.6 dm_forceUnBindWindow</a> — 强制解绑窗口
-- <a href="#57-dm_setaero">5.7 dm_setAero</a> — 设置 Aero 效果
-- <a href="#58-dm_lockinput">5.8 dm_lockInput</a> — 锁定输入
-- <a href="#59-dm_lockmouserect">5.9 dm_lockMouseRect</a> — 锁定鼠标区域
-- <a href="#510-dm_lockdisplay">5.10 dm_lockDisplay</a> — 锁定显示
-- <a href="#511-dm_enablebind">5.11 dm_enableBind</a> — 启用绑定模式
-- <a href="#512-dm_enablefakeactive">5.12 dm_enableFakeActive</a> — 启用虚假激活
-- <a href="#513-dm_enableime">5.13 dm_enableIme</a> — 启用输入法
-- <a href="#514-dm_enablekeypadmsg">5.14 dm_enableKeypadMsg</a> — 启用键盘消息同步
-- <a href="#515-dm_enablekeypadpatch">5.15 dm_enableKeypadPatch</a> — 启用键盘补丁
-- <a href="#516-dm_enablekeypadsync">5.16 dm_enableKeypadSync</a> — 启用键盘同步
-- <a href="#517-dm_enablemousemsg">5.17 dm_enableMouseMsg</a> — 启用鼠标消息同步
-- <a href="#518-dm_enablemousessync">5.18 dm_enableMouseSync</a> — 启用鼠标同步
-- <a href="#519-dm_enablerealkeypad">5.19 dm_enableRealKeypad</a> — 启用真实键盘
-- <a href="#520-dm_enablerealmouse">5.20 dm_enableRealMouse</a> — 启用真实鼠标
-- <a href="#521-dm_enablespeeddx">5.21 dm_enableSpeedDx</a> — 启用 DX 加速
-- <a href="#522-dm_getfps">5.22 dm_getFps</a> — 获取帧率
-- <a href="#523-dm_setdisplaydelay">5.23 dm_setDisplayDelay</a> — 设置显示延迟
-- <a href="#524-dm_setdisplayrefreshdelay">5.24 dm_setDisplayRefreshDelay</a> — 设置刷新延迟
-- <a href="#525-dm_setinputdm">5.25 dm_setInputDm</a> — 设置 DM 输入模式
-- <a href="#526-dm_hackspeed">5.26 dm_hackSpeed</a> — 设置游戏速度
-- <a href="#527-dm_downcpu">5.27 dm_downCpu</a> — 降低 CPU 占用
-- <a href="#528-dm_switchbindwindow">5.28 dm_switchBindWindow</a> — 切换绑定窗口
+- <a href="#51-bindwindow">5.1 bindWindow</a> — 绑定窗口
+- <a href="#52-bindwindowex">5.2 bindWindowEx</a> — 绑定窗口（扩展版）
+- <a href="#53-unbindwindow">5.3 unBindWindow</a> — 解绑窗口
+- <a href="#54-getbindwindow">5.4 getBindWindow</a> — 获取绑定窗口
+- <a href="#55-isbind">5.5 isBind</a> — 检查窗口是否已绑定
+- <a href="#56-forceunbindwindow">5.6 forceUnBindWindow</a> — 强制解绑窗口
+- <a href="#57-setaero">5.7 setAero</a> — 设置 Aero 效果
+- <a href="#58-lockinput">5.8 lockInput</a> — 锁定输入
+- <a href="#59-lockmouserect">5.9 lockMouseRect</a> — 锁定鼠标区域
+- <a href="#510-lockdisplay">5.10 lockDisplay</a> — 锁定显示
+- <a href="#511-enablebind">5.11 enableBind</a> — 启用绑定模式
+- <a href="#512-enablefakeactive">5.12 enableFakeActive</a> — 启用虚假激活
+- <a href="#513-enableime">5.13 enableIme</a> — 启用输入法
+- <a href="#514-enablekeypadmsg">5.14 enableKeypadMsg</a> — 启用键盘消息同步
+- <a href="#515-enablekeypadpatch">5.15 enableKeypadPatch</a> — 启用键盘补丁
+- <a href="#516-enablekeypadsync">5.16 enableKeypadSync</a> — 启用键盘同步
+- <a href="#517-enablemousemsg">5.17 enableMouseMsg</a> — 启用鼠标消息同步
+- <a href="#518-enablemousesync">5.18 enableMouseSync</a> — 启用鼠标同步
+- <a href="#519-enablerealkeypad">5.19 enableRealKeypad</a> — 启用真实键盘
+- <a href="#520-enablerealmouse">5.20 enableRealMouse</a> — 启用真实鼠标
+- <a href="#521-enablespeeddx">5.21 enableSpeedDx</a> — 启用 DX 加速
+- <a href="#522-getfps">5.22 getFps</a> — 获取帧率
+- <a href="#523-setdisplaydelay">5.23 setDisplayDelay</a> — 设置显示延迟
+- <a href="#524-setdisplayrefreshdelay">5.24 setDisplayRefreshDelay</a> — 设置刷新延迟
+- <a href="#525-setinputdm">5.25 setInputDm</a> — 设置 DM 输入模式
+- <a href="#526-hackspeed">5.26 hackSpeed</a> — 设置游戏速度
+- <a href="#527-downcpu">5.27 downCpu</a> — 降低 CPU 占用
+- <a href="#528-switchbindwindow">5.28 switchBindWindow</a> — 切换绑定窗口
 
 </details>
 
@@ -221,60 +222,60 @@
 
 <summary>模块 6：内存操作（54 个） <a href="#模块-6内存操作">🔗</a></summary>
 
-- <a href="#61-dm_openprocess">6.1 dm_openProcess</a> — 打开进程
-- <a href="#62-dm_getmodulebaseaddr">6.2 dm_getModuleBaseAddr</a> — 获取模块基址
-- <a href="#63-dm_getmodulesize">6.3 dm_getModuleSize</a> — 获取模块大小
-- <a href="#64-dm_getremoteapiaddress">6.4 dm_getRemoteApiAddress</a> — 获取远程 API 地址
-- <a href="#65-dm_readint">6.5 dm_readInt</a> — 读整数
-- <a href="#66-dm_readintaddr">6.6 dm_readIntAddr</a> — 读整数（多级指针）
-- <a href="#67-dm_readfloat">6.7 dm_readFloat</a> — 读浮点数
-- <a href="#68-dm_readfloataddr">6.8 dm_readFloatAddr</a> — 读浮点数（多级指针）
-- <a href="#69-dm_readdouble">6.9 dm_readDouble</a> — 读双精度浮点数
-- <a href="#610-dm_readdoubleaddr">6.10 dm_readDoubleAddr</a> — 读双精度浮点数（多级指针）
-- <a href="#611-dm_readstring">6.11 dm_readString</a> — 读字符串
-- <a href="#612-dm_readstringaddr">6.12 dm_readStringAddr</a> — 读字符串（多级指针）
-- <a href="#613-dm_readdata">6.13 dm_readData</a> — 读字节数据
-- <a href="#614-dm_readdataaddr">6.14 dm_readDataAddr</a> — 读字节数据（多级指针）
-- <a href="#615-dm_readdatatobin">6.15 dm_readDataToBin</a> — 读数据到二进制缓冲区
-- <a href="#616-dm_readdataaddrtobin">6.16 dm_readDataAddrToBin</a> — 读数据到二进制缓冲区（多级指针）
-- <a href="#617-dm_findint">6.17 dm_findInt</a> — 搜索整数
-- <a href="#618-dm_findintex">6.18 dm_findIntEx</a> — 高级整数搜索
-- <a href="#619-dm_findfloat">6.19 dm_findFloat</a> — 搜索浮点数
-- <a href="#620-dm_findfloatex">6.20 dm_findFloatEx</a> — 高级浮点数搜索
-- <a href="#621-dm_finddouble">6.21 dm_findDouble</a> — 搜索双精度浮点数
-- <a href="#622-dm_finddoubleex">6.22 dm_findDoubleEx</a> — 高级双精度搜索
-- <a href="#623-dm_findstring">6.23 dm_findString</a> — 搜索字符串
-- <a href="#624-dm_findstringex">6.24 dm_findStringEx</a> — 高级字符串搜索
-- <a href="#625-dm_finddata">6.25 dm_findData</a> — 搜索字节数据
-- <a href="#626-dm_finddataex">6.26 dm_findDataEx</a> — 高级字节数据搜索
-- <a href="#627-dm_writeint">6.27 dm_writeInt</a> — 写整数
-- <a href="#628-dm_writeintaddr">6.28 dm_writeIntAddr</a> — 写整数（多级指针）
-- <a href="#629-dm_writefloat">6.29 dm_writeFloat</a> — 写浮点数
-- <a href="#630-dm_writefloataddr">6.30 dm_writeFloatAddr</a> — 写浮点数（多级指针）
-- <a href="#631-dm_writedouble">6.31 dm_writeDouble</a> — 写双精度浮点数
-- <a href="#632-dm_writedoubleaddr">6.32 dm_writeDoubleAddr</a> — 写双精度浮点数（多级指针）
-- <a href="#633-dm_writestring">6.33 dm_writeString</a> — 写字符串
-- <a href="#634-dm_writestringaddr">6.34 dm_writeStringAddr</a> — 写字符串（多级指针）
-- <a href="#635-dm_writedata">6.35 dm_writeData</a> — 写字节数据
-- <a href="#636-dm_writedataaddr">6.36 dm_writeDataAddr</a> — 写字节数据（多级指针）
-- <a href="#637-dm_writedatafrombin">6.37 dm_writeDataFromBin</a> — 从缓冲区写数据
-- <a href="#638-dm_writedataaddrfrombin">6.38 dm_writeDataAddrFromBin</a> — 从缓冲区写数据（多级指针）
-- <a href="#639-dm_virtualallocex">6.39 dm_virtualAllocEx</a> — 分配虚拟内存
-- <a href="#640-dm_virtualfreeex">6.40 dm_virtualFreeEx</a> — 释放虚拟内存
-- <a href="#641-dm_virtualprotectex">6.41 dm_virtualProtectEx</a> — 修改内存保护属性
-- <a href="#642-dm_virtualqueryex">6.42 dm_virtualQueryEx</a> — 查询虚拟内存信息
-- <a href="#643-dm_freeprocessmemory">6.43 dm_freeProcessMemory</a> — 释放进程内存资源
-- <a href="#644-dm_getcommandline">6.44 dm_getCommandLine</a> — 获取进程命令行
-- <a href="#645-dm_terminateprocess">6.45 dm_terminateProcess</a> — 终止进程
-- <a href="#646-dm_terminateprocesstree">6.46 dm_terminateProcessTree</a> — 终止进程树
-- <a href="#647-dm_setmemoryfindresulttofile">6.47 dm_setMemoryFindResultToFile</a> — 设置搜索结果保存到文件
-- <a href="#648-dm_setmemoryhwndasprocessid">6.48 dm_setMemoryHwndAsProcessId</a> — 设置 hwnd 作为进程 ID
-- <a href="#649-dm_setparam64topointer">6.49 dm_setParam64ToPointer</a> — 设置 64 位参数为指针
-- <a href="#650-dm_int64toint32">6.50 dm_int64ToInt32</a> — 64 位整数转 32 位地址
-- <a href="#651-dm_inttodata">6.51 dm_intToData</a> — 整数转十六进制数据
-- <a href="#652-dm_floattodata">6.52 dm_floatToData</a> — 浮点数转十六进制数据
-- <a href="#653-dm_doubletodata">6.53 dm_doubleToData</a> — 双精度转十六进制数据
-- <a href="#654-dm_stringtodata">6.54 dm_stringToData</a> — 字符串转十六进制数据
+- <a href="#61-openprocess">6.1 openProcess</a> — 打开进程
+- <a href="#62-getmodulebaseaddr">6.2 getModuleBaseAddr</a> — 获取模块基址
+- <a href="#63-getmodulesize">6.3 getModuleSize</a> — 获取模块大小
+- <a href="#64-getremoteapiaddress">6.4 getRemoteApiAddress</a> — 获取远程 API 地址
+- <a href="#65-readint">6.5 readInt</a> — 读整数
+- <a href="#66-readintaddr">6.6 readIntAddr</a> — 读整数（多级指针）
+- <a href="#67-readfloat">6.7 readFloat</a> — 读浮点数
+- <a href="#68-readfloataddr">6.8 readFloatAddr</a> — 读浮点数（多级指针）
+- <a href="#69-readdouble">6.9 readDouble</a> — 读双精度浮点数
+- <a href="#610-readdoubleaddr">6.10 readDoubleAddr</a> — 读双精度浮点数（多级指针）
+- <a href="#611-readstring">6.11 readString</a> — 读字符串
+- <a href="#612-readstringaddr">6.12 readStringAddr</a> — 读字符串（多级指针）
+- <a href="#613-readdata">6.13 readData</a> — 读字节数据
+- <a href="#614-readdataaddr">6.14 readDataAddr</a> — 读字节数据（多级指针）
+- <a href="#615-readdatatobin">6.15 readDataToBin</a> — 读数据到二进制缓冲区
+- <a href="#616-readdataaddrtobin">6.16 readDataAddrToBin</a> — 读数据到二进制缓冲区（多级指针）
+- <a href="#617-findint">6.17 findInt</a> — 搜索整数
+- <a href="#618-findintex">6.18 findIntEx</a> — 高级整数搜索
+- <a href="#619-findfloat">6.19 findFloat</a> — 搜索浮点数
+- <a href="#620-findfloatex">6.20 findFloatEx</a> — 高级浮点数搜索
+- <a href="#621-finddouble">6.21 findDouble</a> — 搜索双精度浮点数
+- <a href="#622-finddoubleex">6.22 findDoubleEx</a> — 高级双精度搜索
+- <a href="#623-findstring">6.23 findString</a> — 搜索字符串
+- <a href="#624-findstringex">6.24 findStringEx</a> — 高级字符串搜索
+- <a href="#625-finddata">6.25 findData</a> — 搜索字节数据
+- <a href="#626-finddataex">6.26 findDataEx</a> — 高级字节数据搜索
+- <a href="#627-writeint">6.27 writeInt</a> — 写整数
+- <a href="#628-writeintaddr">6.28 writeIntAddr</a> — 写整数（多级指针）
+- <a href="#629-writefloat">6.29 writeFloat</a> — 写浮点数
+- <a href="#630-writefloataddr">6.30 writeFloatAddr</a> — 写浮点数（多级指针）
+- <a href="#631-writedouble">6.31 writeDouble</a> — 写双精度浮点数
+- <a href="#632-writedoubleaddr">6.32 writeDoubleAddr</a> — 写双精度浮点数（多级指针）
+- <a href="#633-writestring">6.33 writeString</a> — 写字符串
+- <a href="#634-writestringaddr">6.34 writeStringAddr</a> — 写字符串（多级指针）
+- <a href="#635-writedata">6.35 writeData</a> — 写字节数据
+- <a href="#636-writedataaddr">6.36 writeDataAddr</a> — 写字节数据（多级指针）
+- <a href="#637-writedatafrombin">6.37 writeDataFromBin</a> — 从缓冲区写数据
+- <a href="#638-writedataaddrfrombin">6.38 writeDataAddrFromBin</a> — 从缓冲区写数据（多级指针）
+- <a href="#639-virtualallocex">6.39 virtualAllocEx</a> — 分配虚拟内存
+- <a href="#640-virtualfreeex">6.40 virtualFreeEx</a> — 释放虚拟内存
+- <a href="#641-virtualprotectex">6.41 virtualProtectEx</a> — 修改内存保护属性
+- <a href="#642-virtualqueryex">6.42 virtualQueryEx</a> — 查询虚拟内存信息
+- <a href="#643-freeprocessmemory">6.43 freeProcessMemory</a> — 释放进程内存资源
+- <a href="#644-getcommandline">6.44 getCommandLine</a> — 获取进程命令行
+- <a href="#645-terminateprocess">6.45 terminateProcess</a> — 终止进程
+- <a href="#646-terminateprocesstree">6.46 terminateProcessTree</a> — 终止进程树
+- <a href="#647-setmemoryfindresulttofile">6.47 setMemoryFindResultToFile</a> — 设置搜索结果保存到文件
+- <a href="#648-setmemoryhwndasprocessid">6.48 setMemoryHwndAsProcessId</a> — 设置 hwnd 作为进程 ID
+- <a href="#649-setparam64topointer">6.49 setParam64ToPointer</a> — 设置 64 位参数为指针
+- <a href="#650-int64toint32">6.50 int64ToInt32</a> — 64 位整数转 32 位地址
+- <a href="#651-inttodata">6.51 intToData</a> — 整数转十六进制数据
+- <a href="#652-floattodata">6.52 floatToData</a> — 浮点数转十六进制数据
+- <a href="#653-doubletodata">6.53 doubleToData</a> — 双精度转十六进制数据
+- <a href="#654-stringtodata">6.54 stringToData</a> — 字符串转十六进制数据
 
 </details>
 
@@ -282,32 +283,32 @@
 
 <summary>模块 7：文件操作（26 个） <a href="#模块-7文件操作">🔗</a></summary>
 
-- <a href="#71-dm_writefile">7.1 dm_writeFile</a> — 写文件
-- <a href="#72-dm_readfile">7.2 dm_readFile</a> — 读文件
-- <a href="#73-dm_deletefile">7.3 dm_deleteFile</a> — 删除文件
-- <a href="#74-dm_copyfile">7.4 dm_copyFile</a> — 复制文件
-- <a href="#75-dm_movefile">7.5 dm_moveFile</a> — 移动文件
-- <a href="#76-dm_createfolder">7.6 dm_createFolder</a> — 创建文件夹
-- <a href="#77-dm_deletefolder">7.7 dm_deleteFolder</a> — 删除文件夹
-- <a href="#78-dm_isfileexist">7.8 dm_isFileExist</a> — 判断文件是否存在
-- <a href="#79-dm_isfolderexist">7.9 dm_isFolderExist</a> — 判断文件夹是否存在
-- <a href="#710-dm_getfilelength">7.10 dm_getFileLength</a> — 获取文件大小
-- <a href="#711-dm_getrealpath">7.11 dm_getRealPath</a> — 获取绝对路径
-- <a href="#712-dm_selectfile">7.12 dm_selectFile</a> — 文件选择对话框
-- <a href="#713-dm_selectdirectory">7.13 dm_selectDirectory</a> — 目录选择对话框
-- <a href="#714-dm_downloadfile">7.14 dm_downloadFile</a> — 下载文件
-- <a href="#715-dm_encodefile">7.15 dm_encodeFile</a> — 加密文件
-- <a href="#716-dm_decodefile">7.16 dm_decodeFile</a> — 解密文件
-- <a href="#717-dm_writeini">7.17 dm_writeIni</a> — 写 INI 文件
-- <a href="#718-dm_readini">7.18 dm_readIni</a> — 读 INI 文件
-- <a href="#719-dm_deleteini">7.19 dm_deleteIni</a> — 删除 INI 键值
-- <a href="#720-dm_enuminikey">7.20 dm_enumIniKey</a> — 枚举 INI 键名
-- <a href="#721-dm_enuminisection">7.21 dm_enumIniSection</a> — 枚举 INI 节名
-- <a href="#722-dm_writeinipwd">7.22 dm_writeIniPwd</a> — 写加密 INI 文件
-- <a href="#723-dm_readinipwd">7.23 dm_readIniPwd</a> — 读加密 INI 文件
-- <a href="#724-dm_deleteinipwd">7.24 dm_deleteIniPwd</a> — 删除加密 INI 键值
-- <a href="#725-dm_enuminikeypwd">7.25 dm_enumIniKeyPwd</a> — 枚举加密 INI 键名
-- <a href="#726-dm_enuminisectionpwd">7.26 dm_enumIniSectionPwd</a> — 枚举加密 INI 节名
+- <a href="#71-writefile">7.1 writeFile</a> — 写文件
+- <a href="#72-readfile">7.2 readFile</a> — 读文件
+- <a href="#73-deletefile">7.3 deleteFile</a> — 删除文件
+- <a href="#74-copyfile">7.4 copyFile</a> — 复制文件
+- <a href="#75-movefile">7.5 moveFile</a> — 移动文件
+- <a href="#76-createfolder">7.6 createFolder</a> — 创建文件夹
+- <a href="#77-deletefolder">7.7 deleteFolder</a> — 删除文件夹
+- <a href="#78-isfileexist">7.8 isFileExist</a> — 判断文件是否存在
+- <a href="#79-isfolderexist">7.9 isFolderExist</a> — 判断文件夹是否存在
+- <a href="#710-getfilelength">7.10 getFileLength</a> — 获取文件大小
+- <a href="#711-getrealpath">7.11 getRealPath</a> — 获取绝对路径
+- <a href="#712-selectfile">7.12 selectFile</a> — 文件选择对话框
+- <a href="#713-selectdirectory">7.13 selectDirectory</a> — 目录选择对话框
+- <a href="#714-downloadfile">7.14 downloadFile</a> — 下载文件
+- <a href="#715-encodefile">7.15 encodeFile</a> — 加密文件
+- <a href="#716-decodefile">7.16 decodeFile</a> — 解密文件
+- <a href="#717-writeini">7.17 writeIni</a> — 写 INI 文件
+- <a href="#718-readini">7.18 readIni</a> — 读 INI 文件
+- <a href="#719-deleteini">7.19 deleteIni</a> — 删除 INI 键值
+- <a href="#720-enuminikey">7.20 enumIniKey</a> — 枚举 INI 键名
+- <a href="#721-enuminisection">7.21 enumIniSection</a> — 枚举 INI 节名
+- <a href="#722-writeinipwd">7.22 writeIniPwd</a> — 写加密 INI 文件
+- <a href="#723-readinipwd">7.23 readIniPwd</a> — 读加密 INI 文件
+- <a href="#724-deleteinipwd">7.24 deleteIniPwd</a> — 删除加密 INI 键值
+- <a href="#725-enuminikeypwd">7.25 enumIniKeyPwd</a> — 枚举加密 INI 键名
+- <a href="#726-enuminisectionpwd">7.26 enumIniSectionPwd</a> — 枚举加密 INI 节名
 
 </details>
 
@@ -315,52 +316,52 @@
 
 <summary>模块 8：文字识别（46 个） <a href="#模块-8文字识别">🔗</a></summary>
 
-- <a href="#81-dm_setdict">8.1 dm_setDict</a> — 加载字库文件
-- <a href="#82-dm_setdictmem">8.2 dm_setDictMem</a> — 从内存加载字库
-- <a href="#83-dm_setdictpwd">8.3 dm_setDictPwd</a> — 设置字库密码
-- <a href="#84-dm_usedict">8.4 dm_useDict</a> — 切换当前字库
-- <a href="#85-dm_getdict">8.5 dm_getDict</a> — 获取字库信息
-- <a href="#86-dm_getdictcount">8.6 dm_getDictCount</a> — 获取字库字体数量
-- <a href="#87-dm_getdictinfo">8.7 dm_getDictInfo</a> — 获取字库文件信息
-- <a href="#88-dm_getnowdict">8.8 dm_getNowDict</a> — 获取当前字库索引
-- <a href="#89-dm_adddict">8.9 dm_addDict</a> — 添加字体到字库
-- <a href="#810-dm_savedict">8.10 dm_saveDict</a> — 保存字库到文件
-- <a href="#811-dm_cleardict">8.11 dm_clearDict</a> — 清除字库
-- <a href="#812-dm_enablesharedict">8.12 dm_enableShareDict</a> — 启用字库共享
-- <a href="#813-dm_ocr">8.13 dm_ocr</a> — 文字识别
-- <a href="#814-dm_ocre_x">8.14 dm_ocrEx</a> — 增强文字识别
-- <a href="#815-dm_ocre_xone">8.15 dm_ocrExOne</a> — 单行文字识别
-- <a href="#816-dm_ocrinfile">8.16 dm_ocrInFile</a> — 识别结果保存到文件
-- <a href="#817-dm_findstr">8.17 dm_findStr</a> — 查找文字
-- <a href="#818-dm_findstre">8.18 dm_findStrE</a> — 查找文字（返回坐标字符串）
-- <a href="#819-dm_findstrex">8.19 dm_findStrEx</a> — 查找文字（返回所有坐标）
-- <a href="#820-dm_findstrs">8.20 dm_findStrS</a> — 智能查找文字
-- <a href="#821-dm_findstrexs">8.21 dm_findStrExS</a> — 智能查找文字（返回所有坐标）
-- <a href="#822-dm_findstrfast">8.22 dm_findStrFast</a> — 快速查找文字
-- <a href="#823-dm_findstrfaste">8.23 dm_findStrFastE</a> — 快速查找文字（返回坐标字符串）
-- <a href="#824-dm_findstrfastex">8.24 dm_findStrFastEx</a> — 快速查找文字（返回所有坐标）
-- <a href="#825-dm_findstrfasts">8.25 dm_findStrFastS</a> — 快速智能查找文字
-- <a href="#826-dm_findstrfastexs">8.26 dm_findStrFastExS</a> — 快速智能查找文字（返回所有坐标）
-- <a href="#827-dm_findstrwithfont">8.27 dm_findStrWithFont</a> — 按字体查找文字
-- <a href="#828-dm_findstrwithfonte">8.28 dm_findStrWithFontE</a> — 按字体查找文字（返回坐标字符串）
-- <a href="#829-dm_findstrwithfontex">8.29 dm_findStrWithFontEx</a> — 按字体查找文字（返回所有坐标）
-- <a href="#830-dm_getwords">8.30 dm_getWords</a> — 提取文字
-- <a href="#831-dm_getwordsnodict">8.31 dm_getWordsNoDict</a> — 无字库提取文字
-- <a href="#832-dm_fetchword">8.32 dm_fetchWord</a> — 提取文字样本到字库
-- <a href="#833-dm_getresultcount">8.33 dm_getResultCount</a> — 获取结果匹配数量
-- <a href="#834-dm_getresultpos">8.34 dm_getResultPos</a> — 获取结果坐标
-- <a href="#835-dm_getwordresultcount">8.35 dm_getWordResultCount</a> — 获取字符数量
-- <a href="#836-dm_getwordresultpos">8.36 dm_getWordResultPos</a> — 获取字符坐标
-- <a href="#837-dm_getwordresultstr">8.37 dm_getWordResultStr</a> — 获取字符识别结果
-- <a href="#838-dm_setcolgapnodict">8.38 dm_setColGapNoDict</a> — 设置无字库列间距
-- <a href="#839-dm_setrowgapnodict">8.39 dm_setRowGapNoDict</a> — 设置无字库行间距
-- <a href="#840-dm_setwordgapnodict">8.40 dm_setWordGapNoDict</a> — 设置无字库字间距
-- <a href="#841-dm_setwordlineheightnodict">8.41 dm_setWordLineHeightNoDict</a> — 设置无字库行高
-- <a href="#842-dm_setexactocr">8.42 dm_setExactOcr</a> — 设置精确 OCR 模式
-- <a href="#843-dm_setmincolgap">8.43 dm_setMinColGap</a> — 设置最小列间距
-- <a href="#844-dm_setminrowgap">8.44 dm_setMinRowGap</a> — 设置最小行间距
-- <a href="#845-dm_setwordgap">8.45 dm_setWordGap</a> — 设置字间距
-- <a href="#846-dm_setwordlineheight">8.46 dm_setWordLineHeight</a> — 设置行高
+- <a href="#81-setdict">8.1 setDict</a> — 加载字库文件
+- <a href="#82-setdictmem">8.2 setDictMem</a> — 从内存加载字库
+- <a href="#83-setdictpwd">8.3 setDictPwd</a> — 设置字库密码
+- <a href="#84-usedict">8.4 useDict</a> — 切换当前字库
+- <a href="#85-getdict">8.5 getDict</a> — 获取字库信息
+- <a href="#86-getdictcount">8.6 getDictCount</a> — 获取字库字体数量
+- <a href="#87-getdictinfo">8.7 getDictInfo</a> — 获取字库文件信息
+- <a href="#88-getnowdict">8.8 getNowDict</a> — 获取当前字库索引
+- <a href="#89-adddict">8.9 addDict</a> — 添加字体到字库
+- <a href="#810-savedict">8.10 saveDict</a> — 保存字库到文件
+- <a href="#811-cleardict">8.11 clearDict</a> — 清除字库
+- <a href="#812-enablesharedict">8.12 enableShareDict</a> — 启用字库共享
+- <a href="#813-ocr">8.13 ocr</a> — 文字识别
+- <a href="#ocre_x">8.14 ocrEx</a> — 增强文字识别
+- <a href="#ocre_xone">8.15 ocrExOne</a> — 单行文字识别
+- <a href="#816-ocrinfile">8.16 ocrInFile</a> — 识别结果保存到文件
+- <a href="#817-findstr">8.17 findStr</a> — 查找文字
+- <a href="#818-findstre">8.18 findStrE</a> — 查找文字（返回坐标字符串）
+- <a href="#819-findstrex">8.19 findStrEx</a> — 查找文字（返回所有坐标）
+- <a href="#820-findstrs">8.20 findStrS</a> — 智能查找文字
+- <a href="#821-findstrexs">8.21 findStrExS</a> — 智能查找文字（返回所有坐标）
+- <a href="#822-findstrfast">8.22 findStrFast</a> — 快速查找文字
+- <a href="#823-findstrfaste">8.23 findStrFastE</a> — 快速查找文字（返回坐标字符串）
+- <a href="#824-findstrfastex">8.24 findStrFastEx</a> — 快速查找文字（返回所有坐标）
+- <a href="#825-findstrfasts">8.25 findStrFastS</a> — 快速智能查找文字
+- <a href="#826-findstrfastexs">8.26 findStrFastExS</a> — 快速智能查找文字（返回所有坐标）
+- <a href="#827-findstrwithfont">8.27 findStrWithFont</a> — 按字体查找文字
+- <a href="#828-findstrwithfonte">8.28 findStrWithFontE</a> — 按字体查找文字（返回坐标字符串）
+- <a href="#829-findstrwithfontex">8.29 findStrWithFontEx</a> — 按字体查找文字（返回所有坐标）
+- <a href="#830-getwords">8.30 getWords</a> — 提取文字
+- <a href="#831-getwordsnodict">8.31 getWordsNoDict</a> — 无字库提取文字
+- <a href="#832-fetchword">8.32 fetchWord</a> — 提取文字样本到字库
+- <a href="#833-getresultcount">8.33 getResultCount</a> — 获取结果匹配数量
+- <a href="#834-getresultpos">8.34 getResultPos</a> — 获取结果坐标
+- <a href="#835-getwordresultcount">8.35 getWordResultCount</a> — 获取字符数量
+- <a href="#836-getwordresultpos">8.36 getWordResultPos</a> — 获取字符坐标
+- <a href="#837-getwordresultstr">8.37 getWordResultStr</a> — 获取字符识别结果
+- <a href="#838-setcolgapnodict">8.38 setColGapNoDict</a> — 设置无字库列间距
+- <a href="#839-setrowgapnodict">8.39 setRowGapNoDict</a> — 设置无字库行间距
+- <a href="#840-setwordgapnodict">8.40 setWordGapNoDict</a> — 设置无字库字间距
+- <a href="#841-setwordlineheightnodict">8.41 setWordLineHeightNoDict</a> — 设置无字库行高
+- <a href="#842-setexactocr">8.42 setExactOcr</a> — 设置精确 OCR 模式
+- <a href="#843-setmincolgap">8.43 setMinColGap</a> — 设置最小列间距
+- <a href="#844-setminrowgap">8.44 setMinRowGap</a> — 设置最小行间距
+- <a href="#845-setwordgap">8.45 setWordGap</a> — 设置字间距
+- <a href="#846-setwordlineheight">8.46 setWordLineHeight</a> — 设置行高
 
 </details>
 
@@ -368,50 +369,50 @@
 
 <summary>模块 9：系统操作（44 个） <a href="#模块-9系统操作">🔗</a></summary>
 
-- <a href="#91-dm_beep">9.1 dm_beep</a> — 蜂鸣
-- <a href="#92-dm_delay">9.2 dm_delay</a> — 延时
-- <a href="#93-dm_delays">9.3 dm_delays</a> — 随机延时
-- <a href="#94-dm_runapp">9.4 dm_runApp</a> — 运行程序
-- <a href="#95-dm_stop">9.5 dm_stop</a> — 停止进程
-- <a href="#96-dm_play">9.6 dm_play</a> — 播放音频
-- <a href="#97-dm_exitos">9.7 dm_exitOs</a> — 关机/重启/注销
-- <a href="#98-dm_setscreen">9.8 dm_setScreen</a> — 设置分辨率
-- <a href="#99-dm_getscreenwidth">9.9 dm_getScreenWidth</a> — 获取屏幕宽度
-- <a href="#910-dm_getscreenheight">9.10 dm_getScreenHeight</a> — 获取屏幕高度
-- <a href="#911-dm_getscreendepth">9.11 dm_getScreenDepth</a> — 获取屏幕色深
-- <a href="#912-dm_getdpi">9.12 dm_getDPI</a> — 获取 DPI
-- <a href="#913-dm_gettime">9.13 dm_getTime</a> — 获取时间戳
-- <a href="#914-dm_getostype">9.14 dm_getOsType</a> — 获取操作系统类型
-- <a href="#915-dm_getosbuildnumber">9.15 dm_getOsBuildNumber</a> — 获取系统构建号
-- <a href="#916-dm_is64bit">9.16 dm_is64Bit</a> — 判断是否为 64 位
-- <a href="#917-dm_issurrpotvt">9.17 dm_isSurrpotVt</a> — 判断是否支持虚拟化
-- <a href="#918-dm_getsysteminfo">9.18 dm_getSystemInfo</a> — 获取系统信息
-- <a href="#919-dm_getdir">9.19 dm_getDir</a> — 获取系统目录
-- <a href="#920-dm_getlocale">9.20 dm_getLocale</a> — 获取区域设置
-- <a href="#921-dm_getcputype">9.21 dm_getCpuType</a> — 获取 CPU 类型
-- <a href="#922-dm_getcpuusage">9.22 dm_getCpuUsage</a> — 获取 CPU 使用率
-- <a href="#923-dm_getmemoryusage">9.23 dm_getMemoryUsage</a> — 获取内存使用率
-- <a href="#924-dm_getdiskserial">9.24 dm_getDiskSerial</a> — 获取磁盘序列号
-- <a href="#925-dm_getdiskmodel">9.25 dm_getDiskModel</a> — 获取磁盘型号
-- <a href="#926-dm_getdiskreversion">9.26 dm_getDiskReversion</a> — 获取磁盘固件版本
-- <a href="#927-dm_getmachinecode">9.27 dm_getMachineCode</a> — 获取机器码
-- <a href="#928-dm_getmachinecodenomac">9.28 dm_getMachineCodeNoMac</a> — 获取无 MAC 机器码
-- <a href="#929-dm_getnettime">9.29 dm_getNetTime</a> — 获取网络时间
-- <a href="#930-dm_getnettimebyip">9.30 dm_getNetTimeByIp</a> — 按 IP 获取网络时间
-- <a href="#931-dm_getnettimesafe">9.31 dm_getNetTimeSafe</a> — 安全获取网络时间
-- <a href="#932-dm_getclipboard">9.32 dm_getClipboard</a> — 获取剪贴板
-- <a href="#933-dm_setclipboard">9.33 dm_setClipboard</a> — 设置剪贴板
-- <a href="#934-dm_getdisplayinfo">9.34 dm_getDisplayInfo</a> — 获取显示器信息
-- <a href="#935-dm_disableclosedisplayandsleep">9.35 dm_disableCloseDisplayAndSleep</a> — 禁用关闭显示器和睡眠
-- <a href="#936-dm_disablepowersave">9.36 dm_disablePowerSave</a> — 禁用节能模式
-- <a href="#937-dm_disablescreensave">9.37 dm_disableScreenSave</a> — 禁用屏保
-- <a href="#938-dm_disablefontsmooth">9.38 dm_disableFontSmooth</a> — 禁用字体平滑
-- <a href="#939-dm_enablefontsmooth">9.39 dm_enableFontSmooth</a> — 启用字体平滑
-- <a href="#940-dm_checkfontsmooth">9.40 dm_checkFontSmooth</a> — 检查字体平滑状态
-- <a href="#941-dm_checkuac">9.41 dm_checkUAC</a> — 检查 UAC 状态
-- <a href="#942-dm_setuac">9.42 dm_setUAC</a> — 设置 UAC
-- <a href="#943-dm_setdisplayaccel">9.43 dm_setDisplayAcceler</a> — 设置显示加速
-- <a href="#944-dm_showtaskbaricon">9.44 dm_showTaskBarIcon</a> — 显示/隐藏任务栏图标
+- <a href="#91-beep">9.1 beep</a> — 蜂鸣
+- <a href="#92-delay">9.2 delay</a> — 延时
+- <a href="#93-delays">9.3 delays</a> — 随机延时
+- <a href="#94-runapp">9.4 runApp</a> — 运行程序
+- <a href="#95-stop">9.5 stop</a> — 停止进程
+- <a href="#96-play">9.6 play</a> — 播放音频
+- <a href="#97-exitos">9.7 exitOs</a> — 关机/重启/注销
+- <a href="#98-setscreen">9.8 setScreen</a> — 设置分辨率
+- <a href="#99-getscreenwidth">9.9 getScreenWidth</a> — 获取屏幕宽度
+- <a href="#910-getscreenheight">9.10 getScreenHeight</a> — 获取屏幕高度
+- <a href="#911-getscreendepth">9.11 getScreenDepth</a> — 获取屏幕色深
+- <a href="#912-getdpi">9.12 getDPI</a> — 获取 DPI
+- <a href="#913-gettime">9.13 getTime</a> — 获取时间戳
+- <a href="#914-getostype">9.14 getOsType</a> — 获取操作系统类型
+- <a href="#915-getosbuildnumber">9.15 getOsBuildNumber</a> — 获取系统构建号
+- <a href="#916-is64bit">9.16 is64Bit</a> — 判断是否为 64 位
+- <a href="#917-issurrpotvt">9.17 isSurrpotVt</a> — 判断是否支持虚拟化
+- <a href="#918-getsysteminfo">9.18 getSystemInfo</a> — 获取系统信息
+- <a href="#919-getdir">9.19 getDir</a> — 获取系统目录
+- <a href="#920-getlocale">9.20 getLocale</a> — 获取区域设置
+- <a href="#921-getcputype">9.21 getCpuType</a> — 获取 CPU 类型
+- <a href="#922-getcpuusage">9.22 getCpuUsage</a> — 获取 CPU 使用率
+- <a href="#923-getmemoryusage">9.23 getMemoryUsage</a> — 获取内存使用率
+- <a href="#924-getdiskserial">9.24 getDiskSerial</a> — 获取磁盘序列号
+- <a href="#925-getdiskmodel">9.25 getDiskModel</a> — 获取磁盘型号
+- <a href="#926-getdiskreversion">9.26 getDiskReversion</a> — 获取磁盘固件版本
+- <a href="#927-getmachinecode">9.27 getMachineCode</a> — 获取机器码
+- <a href="#928-getmachinecodenomac">9.28 getMachineCodeNoMac</a> — 获取无 MAC 机器码
+- <a href="#929-getnettime">9.29 getNetTime</a> — 获取网络时间
+- <a href="#930-getnettimebyip">9.30 getNetTimeByIp</a> — 按 IP 获取网络时间
+- <a href="#931-getnettimesafe">9.31 getNetTimeSafe</a> — 安全获取网络时间
+- <a href="#932-getclipboard">9.32 getClipboard</a> — 获取剪贴板
+- <a href="#933-setclipboard">9.33 setClipboard</a> — 设置剪贴板
+- <a href="#934-getdisplayinfo">9.34 getDisplayInfo</a> — 获取显示器信息
+- <a href="#935-disableclosedisplayandsleep">9.35 disableCloseDisplayAndSleep</a> — 禁用关闭显示器和睡眠
+- <a href="#936-disablepowersave">9.36 disablePowerSave</a> — 禁用节能模式
+- <a href="#937-disablescreensave">9.37 disableScreenSave</a> — 禁用屏保
+- <a href="#938-disablefontsmooth">9.38 disableFontSmooth</a> — 禁用字体平滑
+- <a href="#939-enablefontsmooth">9.39 enableFontSmooth</a> — 启用字体平滑
+- <a href="#940-checkfontsmooth">9.40 checkFontSmooth</a> — 检查字体平滑状态
+- <a href="#941-checkuac">9.41 checkUAC</a> — 检查 UAC 状态
+- <a href="#942-setuac">9.42 setUAC</a> — 设置 UAC
+- <a href="#943-setdisplayacceler">9.43 setDisplayAcceler</a> — 设置显示加速
+- <a href="#944-showtaskbaricon">9.44 showTaskBarIcon</a> — 显示/隐藏任务栏图标
 
 </details>
 
@@ -419,15 +420,15 @@
 
 <summary>模块 10：杂项（9 个） <a href="#模块-10杂项">🔗</a></summary>
 
-- <a href="#101-dm_entercri">10.1 dm_enterCri</a> — 进入临界区
-- <a href="#102-dm_leavecri">10.2 dm_leaveCri</a> — 离开临界区
-- <a href="#103-dm_initcri">10.3 dm_initCri</a> — 初始化临界区
-- <a href="#104-dm_releaseref">10.4 dm_releaseRef</a> — 释放引用计数
-- <a href="#105-dm_setexitthread">10.5 dm_setExitThread</a> — 设置线程退出模式
-- <a href="#106-dm_executecmd">10.6 dm_executeCmd</a> — 执行命令行
-- <a href="#107-dm_activeinputmethod">10.7 dm_activeInputMethod</a> — 激活输入法
-- <a href="#108-dm_checkinputmethod">10.8 dm_checkInputMethod</a> — 检查输入法
-- <a href="#109-dm_findinputmethod">10.9 dm_findInputMethod</a> — 查找输入法
+- <a href="#101-entercri">10.1 enterCri</a> — 进入临界区
+- <a href="#102-leavecri">10.2 leaveCri</a> — 离开临界区
+- <a href="#103-initcri">10.3 initCri</a> — 初始化临界区
+- <a href="#104-releaseref">10.4 releaseRef</a> — 释放引用计数
+- <a href="#105-setexitthread">10.5 setExitThread</a> — 设置线程退出模式
+- <a href="#106-executecmd">10.6 executeCmd</a> — 执行命令行
+- <a href="#107-activeinputmethod">10.7 activeInputMethod</a> — 激活输入法
+- <a href="#108-checkinputmethod">10.8 checkInputMethod</a> — 检查输入法
+- <a href="#109-findinputmethod">10.9 findInputMethod</a> — 查找输入法
 
 </details>
 
@@ -435,15 +436,15 @@
 
 <summary>模块 11：汇编（9 个） <a href="#模块-11汇编">🔗</a></summary>
 
-- <a href="#111-dm_asmadd">11.1 dm_asmAdd</a> — 添加汇编指令
-- <a href="#112-dm_asmcall">11.2 dm_asmCall</a> — 执行汇编代码
-- <a href="#113-dm_asmcallex">11.3 dm_asmCallEx</a> — 指定地址执行汇编
-- <a href="#114-dm_asmclear">11.4 dm_asmClear</a> — 清除汇编代码
-- <a href="#115-dm_asmettimeout">11.5 dm_asmSetTimeout</a> — 设置汇编超时
-- <a href="#116-dm_assemble">11.6 dm_assemble</a> — 编译汇编为机器码
-- <a href="#117-dm_disassemble">11.7 dm_disAssemble</a> — 反汇编机器码
-- <a href="#118-dm_setasmhwndasprocessid">11.8 dm_setAsmHwndAsProcessId</a> — 设置 hwnd 为进程 ID
-- <a href="#119-dm_setshowasmerrormsg">11.9 dm_setShowAsmErrorMsg</a> — 显示汇编错误消息
+- <a href="#111-asmadd">11.1 asmAdd</a> — 添加汇编指令
+- <a href="#112-asmcall">11.2 asmCall</a> — 执行汇编代码
+- <a href="#113-asmcallex">11.3 asmCallEx</a> — 指定地址执行汇编
+- <a href="#114-asmclear">11.4 asmClear</a> — 清除汇编代码
+- <a href="#115-asmsettimeout">11.5 asmSetTimeout</a> — 设置汇编超时
+- <a href="#116-assemble">11.6 assemble</a> — 编译汇编为机器码
+- <a href="#117-disassemble">11.7 disAssemble</a> — 反汇编机器码
+- <a href="#118-setasmhwndasprocessid">11.8 setAsmHwndAsProcessId</a> — 设置 hwnd 为进程 ID
+- <a href="#119-setshowasmerrormsg">11.9 setShowAsmErrorMsg</a> — 显示汇编错误消息
 
 </details>
 
@@ -451,23 +452,23 @@
 
 <summary>模块 12：AI 功能（17 个） <a href="#模块-12ai-功能">🔗</a></summary>
 
-- <a href="#121-dm_loadai">12.1 dm_loadAi</a> — 加载 AI 模型
-- <a href="#122-dm_loadaimemory">12.2 dm_loadAiMemory</a> — 从内存加载 AI 模型
-- <a href="#123-dm_aienablefindpicwindow">12.3 dm_aiEnableFindPicWindow</a> — 启用 AI 找图窗口模式
-- <a href="#124-dm_aifindpic">12.4 dm_aiFindPic</a> — AI 找图
-- <a href="#125-dm_aifindpicex">12.5 dm_aiFindPicEx</a> — AI 找图（返回所有坐标）
-- <a href="#126-dm_aifindpicmem">12.6 dm_aiFindPicMem</a> — AI 找图（内存模式）
-- <a href="#127-dm_aifindpicmemex">12.7 dm_aiFindPicMemEx</a> — AI 找图内存版
-- <a href="#128-dm_aiyolodetectobjects">12.8 dm_aiYoloDetectObjects</a> — YOLO 目标检测
-- <a href="#129-dm_aiyolodetectobjectstodatabmp">12.9 dm_aiYoloDetectObjectsToDataBmp</a> — 检测结果绘制到 BMP
-- <a href="#1210-dm_aiyolodetectobjectstofile">12.10 dm_aiYoloDetectObjectsToFile</a> — 检测结果保存到文件
-- <a href="#1211-dm_aiyolosetmodel">12.11 dm_aiYoloSetModel</a> — 设置 YOLO 模型
-- <a href="#1212-dm_aiyolosetmodelmemory">12.12 dm_aiYoloSetModelMemory</a> — 从内存加载 YOLO 模型
-- <a href="#1213-dm_aiyolofreemodel">12.13 dm_aiYoloFreeModel</a> — 释放 YOLO 模型
-- <a href="#1214-dm_aiyolousemodel">12.14 dm_aiYoloUseModel</a> — 切换 YOLO 模型
-- <a href="#1215-dm_aiyolosetversion">12.15 dm_aiYoloSetVersion</a> — 设置 YOLO 版本
-- <a href="#1216-dm_aiyoloobjectstostring">12.16 dm_aiYoloObjectsToString</a> — 转换检测结果
-- <a href="#1217-dm_aiyolosortsobjects">12.17 dm_aiYoloSortsObjects</a> — 排序检测结果
+- <a href="#121-loadai">12.1 loadAi</a> — 加载 AI 模型
+- <a href="#122-loadaimemory">12.2 loadAiMemory</a> — 从内存加载 AI 模型
+- <a href="#123-aienablefindpicwindow">12.3 aiEnableFindPicWindow</a> — 启用 AI 找图窗口模式
+- <a href="#124-aifindpic">12.4 aiFindPic</a> — AI 找图
+- <a href="#125-aifindpicex">12.5 aiFindPicEx</a> — AI 找图（返回所有坐标）
+- <a href="#126-aifindpicmem">12.6 aiFindPicMem</a> — AI 找图（内存模式）
+- <a href="#127-aifindpicmemex">12.7 aiFindPicMemEx</a> — AI 找图内存版
+- <a href="#128-aiyolodetectobjects">12.8 aiYoloDetectObjects</a> — YOLO 目标检测
+- <a href="#129-aiyolodetectobjectstodatabmp">12.9 aiYoloDetectObjectsToDataBmp</a> — 检测结果绘制到 BMP
+- <a href="#1210-aiyolodetectobjectstofile">12.10 aiYoloDetectObjectsToFile</a> — 检测结果保存到文件
+- <a href="#1211-aiyolosetmodel">12.11 aiYoloSetModel</a> — 设置 YOLO 模型
+- <a href="#1212-aiyolosetmodelmemory">12.12 aiYoloSetModelMemory</a> — 从内存加载 YOLO 模型
+- <a href="#1213-aiyolofreemodel">12.13 aiYoloFreeModel</a> — 释放 YOLO 模型
+- <a href="#1214-aiyolousemodel">12.14 aiYoloUseModel</a> — 切换 YOLO 模型
+- <a href="#1215-aiyolosetversion">12.15 aiYoloSetVersion</a> — 设置 YOLO 版本
+- <a href="#1216-aiyoloobjectstostring">12.16 aiYoloObjectsToString</a> — 转换检测结果
+- <a href="#1217-aiyolosortsobjects">12.17 aiYoloSortsObjects</a> — 排序检测结果
 
 </details>
 
@@ -475,29 +476,29 @@
 
 <summary>模块 13：Foobar 界面控件（23 个） <a href="#模块-13foobar-界面控件">🔗</a></summary>
 
-- <a href="#131-dm_createfoobarrect">13.1 dm_createFoobarRect</a> — 创建矩形 Foobar
-- <a href="#132-dm_createfoobarellipse">13.2 dm_createFoobarEllipse</a> — 创建椭圆 Foobar
-- <a href="#133-dm_createfoobarroundrect">13.3 dm_createFoobarRoundRect</a> — 创建圆角矩形 Foobar
-- <a href="#134-dm_createfoobarcustom">13.4 dm_createFoobarCustom</a> — 创建自定义形状 Foobar
-- <a href="#135-dm_foobarclose">13.5 dm_foobarClose</a> — 关闭 Foobar
-- <a href="#136-dm_foobarlock">13.6 dm_foobarLock</a> — 锁定 Foobar
-- <a href="#137-dm_foobarunlock">13.7 dm_foobarUnlock</a> — 解锁 Foobar
-- <a href="#138-dm_foobarupdate">13.8 dm_foobarUpdate</a> — 更新 Foobar
-- <a href="#139-dm_foobarsetfont">13.9 dm_foobarSetFont</a> — 设置 Foobar 字体
-- <a href="#1310-dm_foobarsetsave">13.10 dm_foobarSetSave</a> — 设置 Foobar 自动保存
-- <a href="#1311-dm_foobarsettrans">13.11 dm_foobarSetTrans</a> — 设置 Foobar 透明度
-- <a href="#1312-dm_foobardrawtext">13.12 dm_foobarDrawText</a> — 绘制文本
-- <a href="#1313-dm_foobarprinttext">13.13 dm_foobarPrintText</a> — 打印文本
-- <a href="#1314-dm_foobardrawrect">13.14 dm_foobarDrawRect</a> — 绘制矩形
-- <a href="#1315-dm_foobardrawline">13.15 dm_foobarDrawLine</a> — 绘制直线
-- <a href="#1316-dm_foobarfillrect">13.16 dm_foobarFillRect</a> — 填充矩形
-- <a href="#1317-dm_foobardrawpic">13.17 dm_foobarDrawPic</a> — 绘制图片
-- <a href="#1318-dm_foobarcleartext">13.18 dm_foobarClearText</a> — 清除文本
-- <a href="#1319-dm_foobartextrect">13.19 dm_foobarTextRect</a> — 设置文本区域
-- <a href="#1320-dm_foobartextlinegap">13.20 dm_foobarTextLineGap</a> — 设置行间距
-- <a href="#1321-dm_foobartextprintdir">13.21 dm_foobarTextPrintDir</a> — 设置打印方向
-- <a href="#1322-dm_foobarstartgif">13.22 dm_foobarStartGif</a> — 播放 GIF
-- <a href="#1323-dm_foobarstopgif">13.23 dm_foobarStopGif</a> — 停止 GIF
+- <a href="#131-createfoobarrect">13.1 createFoobarRect</a> — 创建矩形 Foobar
+- <a href="#132-createfoobarellipse">13.2 createFoobarEllipse</a> — 创建椭圆 Foobar
+- <a href="#133-createfoobarroundrect">13.3 createFoobarRoundRect</a> — 创建圆角矩形 Foobar
+- <a href="#134-createfoobarcustom">13.4 createFoobarCustom</a> — 创建自定义形状 Foobar
+- <a href="#135-foobarclose">13.5 foobarClose</a> — 关闭 Foobar
+- <a href="#136-foobarlock">13.6 foobarLock</a> — 锁定 Foobar
+- <a href="#137-foobarunlock">13.7 foobarUnlock</a> — 解锁 Foobar
+- <a href="#138-foobarupdate">13.8 foobarUpdate</a> — 更新 Foobar
+- <a href="#139-foobarsetfont">13.9 foobarSetFont</a> — 设置 Foobar 字体
+- <a href="#1310-foobarsetsave">13.10 foobarSetSave</a> — 设置 Foobar 自动保存
+- <a href="#1311-foobarsettrans">13.11 foobarSetTrans</a> — 设置 Foobar 透明度
+- <a href="#1312-foobardrawtext">13.12 foobarDrawText</a> — 绘制文本
+- <a href="#1313-foobarprinttext">13.13 foobarPrintText</a> — 打印文本
+- <a href="#1314-foobardrawrect">13.14 foobarDrawRect</a> — 绘制矩形
+- <a href="#1315-foobardrawline">13.15 foobarDrawLine</a> — 绘制直线
+- <a href="#1316-foobarfillrect">13.16 foobarFillRect</a> — 填充矩形
+- <a href="#1317-foobardrawpic">13.17 foobarDrawPic</a> — 绘制图片
+- <a href="#1318-foobarcleartext">13.18 foobarClearText</a> — 清除文本
+- <a href="#1319-foobartextrect">13.19 foobarTextRect</a> — 设置文本区域
+- <a href="#1320-foobartextlinegap">13.20 foobarTextLineGap</a> — 设置行间距
+- <a href="#1321-foobartextprintdir">13.21 foobarTextPrintDir</a> — 设置打印方向
+- <a href="#1322-foobarstartgif">13.22 foobarStartGif</a> — 播放 GIF
+- <a href="#1323-foobarstopgif">13.23 foobarStopGif</a> — 停止 GIF
 
 </details>
 
@@ -505,15 +506,15 @@
 
 <summary>模块 14：答题（9 个） <a href="#模块-14答题">🔗</a></summary>
 
-- <a href="#141-dm_faqcapture">14.1 dm_faqCapture</a> — 截取答题区域
-- <a href="#142-dm_faqcapturefromfile">14.2 dm_faqCaptureFromFile</a> — 从文件加载答题图片
-- <a href="#143-dm_faqcapturestring">14.3 dm_faqCaptureString</a> — 截取答题区域为字符串
-- <a href="#144-dm_faqgetsize">14.4 dm_faqGetSize</a> — 获取答题数据大小
-- <a href="#145-dm_faqpost">14.5 dm_faqPost</a> — 发送答题图片到服务器
-- <a href="#146-dm_faqsend">14.6 dm_faqSend</a> — 发送答题请求
-- <a href="#147-dm_faqfetch">14.7 dm_faqFetch</a> — 获取答案
-- <a href="#148-dm_faqcancel">14.8 dm_faqCancel</a> — 取消答题请求
-- <a href="#149-dm_faqisposted">14.9 dm_faqIsPosted</a> — 检查是否已发送
+- <a href="#141-faqcapture">14.1 faqCapture</a> — 截取答题区域
+- <a href="#142-faqcapturefromfile">14.2 faqCaptureFromFile</a> — 从文件加载答题图片
+- <a href="#143-faqcapturestring">14.3 faqCaptureString</a> — 截取答题区域为字符串
+- <a href="#144-faqgetsize">14.4 faqGetSize</a> — 获取答题数据大小
+- <a href="#145-faqpost">14.5 faqPost</a> — 发送答题图片到服务器
+- <a href="#146-faqsend">14.6 faqSend</a> — 发送答题请求
+- <a href="#147-faqfetch">14.7 faqFetch</a> — 获取答案
+- <a href="#148-faqcancel">14.8 faqCancel</a> — 取消答题请求
+- <a href="#149-faqisposted">14.9 faqIsPosted</a> — 检查是否已发送
 
 </details>
 
@@ -521,9 +522,9 @@
 
 <summary>模块 15：算法（3 个） <a href="#模块-15算法">🔗</a></summary>
 
-- <a href="#151-dm_excludepos">15.1 dm_excludePos</a> — 排除区域坐标
-- <a href="#152-dm_findnearestpos">15.2 dm_findNearestPos</a> — 查找最近坐标
-- <a href="#153-dm_sortposdistance">15.3 dm_sortPosDistance</a> — 按距离排序坐标
+- <a href="#151-excludepos">15.1 excludePos</a> — 排除区域坐标
+- <a href="#152-findnearestpos">15.2 findNearestPos</a> — 查找最近坐标
+- <a href="#153-sortposdistance">15.3 sortPosDistance</a> — 按距离排序坐标
 
 </details>
 
@@ -531,11 +532,11 @@
 
 <summary>模块 16：防护盾（5 个） <a href="#模块-16防护盾">🔗</a></summary>
 
-- <a href="#161-dm_dmguard">16.1 dm_dmGuard</a> — 启用/禁用防护盾
-- <a href="#162-dm_dmguardextract">16.2 dm_dmGuardExtract</a> — 提取驱动文件
-- <a href="#163-dm_dmguardloadcustom">16.3 dm_dmGuardLoadCustom</a> — 加载自定义防护数据
-- <a href="#164-dm_dmguardparams">16.4 dm_dmGuardParams</a> — 设置防护参数
-- <a href="#165-dm_unloaddriver">16.5 dm_unLoadDriver</a> — 卸载驱动
+- <a href="#161-dmguard">16.1 dmGuard</a> — 启用/禁用防护盾
+- <a href="#162-dmguardextract">16.2 dmGuardExtract</a> — 提取驱动文件
+- <a href="#163-dmguardloadcustom">16.3 dmGuardLoadCustom</a> — 加载自定义防护数据
+- <a href="#164-dmguardparams">16.4 dmGuardParams</a> — 设置防护参数
+- <a href="#165-unloaddriver">16.5 unLoadDriver</a> — 卸载驱动
 
 </details>
 
@@ -547,12 +548,12 @@
 
 ---
 
-### 1.1 dm_reg
+### 1.1 reg
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_reg(const char* reg_code, const char* ver_info);
+long DM_CALL reg(const char* reg_code, const char* ver_info);
 ```
 
 **功能说明**：注册插件（基于机器码）。使用本机机器码与注册码进行绑定验证，注册成功后才能在非演示模式下使用全部功能。
@@ -587,20 +588,20 @@ else:
 
 ```c
 // C++
-dm_reg("my_reg_code_12345", "1.0.0");
+reg("my_reg_code_12345", "1.0.0");
 ```
 
 ---
 
-### 1.2 dm_regEx
+### 1.2 regEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_regEx(const char* reg_code, const char* ver_info, const char* ip);
+long DM_CALL regEx(const char* reg_code, const char* ver_info, const char* ip);
 ```
 
-**功能说明**：基于 IP 地址的注册方式。与 `dm_reg` 不同，此函数使用指定 IP 而非本机机器码进行验证。
+**功能说明**：基于 IP 地址的注册方式。与 `reg` 不同，此函数使用指定 IP 而非本机机器码进行验证。
 
 **参数列表**：
 
@@ -621,44 +622,44 @@ ret = dm.reg_ex("reg_code", "1.0.0", "192.168.1.100")
 
 ---
 
-### 1.3 dm_regNoMac
+### 1.3 regNoMac
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_regNoMac(const char* reg_code, const char* ver_info);
+long DM_CALL regNoMac(const char* reg_code, const char* ver_info);
 ```
 
-**功能说明**：注册插件（不绑定机器码）。与 `dm_reg` 的区别在于不验证机器码，适用于无需绑定的场景。
+**功能说明**：注册插件（不绑定机器码）。与 `reg` 的区别在于不验证机器码，适用于无需绑定的场景。
 
-**参数列表**：同 `dm_reg`
+**参数列表**：同 `reg`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 1.4 dm_regExNoMac
+### 1.4 regExNoMac
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_regExNoMac(const char* reg_code, const char* ver_info, const char* ip);
+long DM_CALL regExNoMac(const char* reg_code, const char* ver_info, const char* ip);
 ```
 
-**功能说明**：注册插件（不绑定机器码，基于 IP）。结合 `dm_regEx` 和 `dm_regNoMac` 的特点。
+**功能说明**：注册插件（不绑定机器码，基于 IP）。结合 `regEx` 和 `regNoMac` 的特点。
 
-**参数列表**：同 `dm_regEx`
+**参数列表**：同 `regEx`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 1.5 dm_ver
+### 1.5 ver
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_ver();
+const char* DM_CALL ver();
 ```
 
 **功能说明**：获取当前插件的版本号字符串。
@@ -681,24 +682,24 @@ print(f"大漠插件版本: {ver}")
 
 ```c
 // C++
-const char* ver = dm_ver();
+const char* ver = ver();
 printf("版本: %s\n", ver);
 ```
 
 ```autohotkey
 ; AHK
-ver := DllCall("dm_hook.dll\dm_ver", "AStr")
+ver := DllCall("dm_hook.dll\ver", "AStr")
 MsgBox, 版本: %ver%
 ```
 
 ---
 
-### 1.6 dm_getID
+### 1.6 getID
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getID();
+long DM_CALL getID();
 ```
 
 **功能说明**：获取当前 dm 对象的唯一标识 ID。每个 dm 对象实例在创建时分配一个递增的 ID，可用于区分不同的对象。
@@ -719,12 +720,12 @@ print(f"当前对象 ID: {obj_id}")
 
 ---
 
-### 1.7 dm_getDmCount
+### 1.7 getDmCount
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getDmCount();
+long DM_CALL getDmCount();
 ```
 
 **功能说明**：获取当前进程中所有 dm 对象的总数量。用于调试和资源管理。
@@ -737,12 +738,12 @@ long DM_CALL dm_getDmCount();
 
 ---
 
-### 1.8 dm_getLastError
+### 1.8 getLastError
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getLastError();
+long DM_CALL getLastError();
 ```
 
 **功能说明**：获取最近一次 API 调用产生的错误码。每次调用 API 后，内部错误码会被更新，建议在 API 返回非 0 值时调用此函数获取详细错误信息。
@@ -765,12 +766,12 @@ if ret == 0:
 
 ---
 
-### 1.9 dm_getPath
+### 1.9 getPath
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getPath();
+const char* DM_CALL getPath();
 ```
 
 **功能说明**：获取当前设置的全局路径。此路径是插件查找图片、字库等文件的默认目录。
@@ -791,12 +792,12 @@ print(f"当前全局路径: {path}")
 
 ---
 
-### 1.10 dm_setPath
+### 1.10 setPath
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setPath(const char* path);
+long DM_CALL setPath(const char* path);
 ```
 
 **功能说明**：设置全局路径。设置后，所有涉及文件操作的 API 将以此路径为基准查找文件。
@@ -815,19 +816,19 @@ long DM_CALL dm_setPath(const char* path);
 
 ```python
 # Python
-dm.setPath("C:\\dm_project\\resources")
+dm.setPath("C:\\project\\resources")
 # 或使用相对路径
 dm.setPath(".\\resources")
 ```
 
 ---
 
-### 1.11 dm_getBasePath
+### 1.11 getBasePath
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getBasePath();
+const char* DM_CALL getBasePath();
 ```
 
 **功能说明**：获取 dm_hook.dll 文件所在的目录路径。通常用于定位与 DLL 同目录的资源文件。
@@ -840,12 +841,12 @@ const char* DM_CALL dm_getBasePath();
 
 ---
 
-### 1.12 dm_setShowErrorMsg
+### 1.12 setShowErrorMsg
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setShowErrorMsg(long show);
+long DM_CALL setShowErrorMsg(long show);
 ```
 
 **功能说明**：设置是否在发生错误时弹出消息框提示。适用于调试阶段开启，发布阶段关闭。
@@ -869,12 +870,12 @@ dm.set_show_error_msg(0)  # 发布时关闭错误弹窗
 
 ---
 
-### 1.13 dm_enablePicCache
+### 1.13 enablePicCache
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enablePicCache(long enable);
+long DM_CALL enablePicCache(long enable);
 ```
 
 **功能说明**：启用或禁用图片缓存。启用后，`loadPic` 加载的图片会缓存在内存中，后续找图操作更快，但会占用更多内存。
@@ -902,12 +903,12 @@ dm.enable_pic_cache(1)  # 启用图片缓存提升性能
 
 ---
 
-### 2.1 dm_findWindow
+### 2.1 findWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findWindow(const char* cls, const char* title);
+long DM_CALL findWindow(const char* cls, const char* title);
 ```
 
 **功能说明**：根据类名和/或标题查找顶层窗口。两个参数均支持空字符串（表示忽略该条件）和模糊匹配。
@@ -941,12 +942,12 @@ hwnd = dm.find_window("Chrome_WidgetWin_1", "GitHub")
 
 ---
 
-### 2.2 dm_findWindowEx
+### 2.2 findWindowEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findWindowEx(intptr_t parent, long cls, const char* title);
+long DM_CALL findWindowEx(intptr_t parent, long cls, const char* title);
 ```
 
 **功能说明**：在指定父窗口中查找子窗口。
@@ -974,12 +975,12 @@ if hwnd:
 
 ---
 
-### 2.3 dm_findWindowByProcess
+### 2.3 findWindowByProcess
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findWindowByProcess(const char* process_name, const char* cls, const char* title);
+long DM_CALL findWindowByProcess(const char* process_name, const char* cls, const char* title);
 ```
 
 **功能说明**：根据进程名查找窗口。先按进程名匹配，再按类名和标题筛选。
@@ -1004,12 +1005,12 @@ print(f"记事本窗口: {hwnd}")
 
 ---
 
-### 2.4 dm_findWindowByProcessId
+### 2.4 findWindowByProcessId
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findWindowByProcessId(long process_id, const char* cls, const char* title);
+long DM_CALL findWindowByProcessId(long process_id, const char* cls, const char* title);
 ```
 
 **功能说明**：根据进程 ID 查找窗口。
@@ -1026,12 +1027,12 @@ long DM_CALL dm_findWindowByProcessId(long process_id, const char* cls, const ch
 
 ---
 
-### 2.5 dm_findWindowSuper
+### 2.5 findWindowSuper
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findWindowSuper(const char* cls, const char* title, long flag);
+long DM_CALL findWindowSuper(const char* cls, const char* title, long flag);
 ```
 
 **功能说明**：高级窗口查找，支持多种匹配模式。
@@ -1066,12 +1067,12 @@ hwnd = dm.find_window_super("", ".*记事本.*", 4)
 
 ---
 
-### 2.6 dm_enumWindow
+### 2.6 enumWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enumWindow(intptr_t parent, const char* title, long filter);
+long DM_CALL enumWindow(intptr_t parent, const char* title, long filter);
 ```
 
 **功能说明**：枚举指定父窗口下的所有子窗口，返回句柄字符串。
@@ -1096,12 +1097,12 @@ print(f"所有窗口句柄: {hwnds}")
 
 ---
 
-### 2.7 dm_enumWindowByProcess
+### 2.7 enumWindowByProcess
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enumWindowByProcess(const char* process_name, const char* title, long filter);
+long DM_CALL enumWindowByProcess(const char* process_name, const char* title, long filter);
 ```
 
 **功能说明**：枚举指定进程的所有窗口。
@@ -1112,18 +1113,18 @@ long DM_CALL dm_enumWindowByProcess(const char* process_name, const char* title,
 | ------------ | ----------- | -- | --------------------- |
 | process_name | const char* | 是  | 进程名称                  |
 | title        | const char* | 否  | 标题过滤                  |
-| filter       | long        | 是  | 过滤方式（同 dm_enumWindow） |
+| filter       | long        | 是  | 过滤方式（同 enumWindow） |
 
 **返回值**：窗口句柄列表，以 `"|"` 分隔。
 
 ---
 
-### 2.8 dm_enumWindowByProcessId
+### 2.8 enumWindowByProcessId
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enumWindowByProcessId(long pid, const char* title, long filter);
+long DM_CALL enumWindowByProcessId(long pid, const char* title, long filter);
 ```
 
 **功能说明**：根据进程 ID 枚举窗口。
@@ -1140,12 +1141,12 @@ long DM_CALL dm_enumWindowByProcessId(long pid, const char* title, long filter);
 
 ---
 
-### 2.9 dm_enumWindowSuper
+### 2.9 enumWindowSuper
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enumWindowSuper(const char* spec1, long flag1, const char* spec2, long flag2, long filter);
+long DM_CALL enumWindowSuper(const char* spec1, long flag1, const char* spec2, long flag2, long filter);
 ```
 
 **功能说明**：高级窗口枚举，支持两个条件的任意组合匹配。
@@ -1160,18 +1161,18 @@ long DM_CALL dm_enumWindowSuper(const char* spec1, long flag1, const char* spec2
 | flag2  | long        | 是  | 第二个条件的匹配模式     |
 | filter | long        | 是  | 返回格式过滤         |
 
-**flag 取值**：同 `dm_findWindowSuper` 的 flag。
+**flag 取值**：同 `findWindowSuper` 的 flag。
 
 **返回值**：窗口句柄列表，以 `"|"` 分隔。
 
 ---
 
-### 2.10 dm_enumProcess
+### 2.10 enumProcess
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enumProcess(const char* name);
+long DM_CALL enumProcess(const char* name);
 ```
 
 **功能说明**：枚举系统中所有匹配指定名称的进程，返回进程 ID 列表。
@@ -1194,12 +1195,12 @@ print(f"记事本进程 PID: {pids}")
 
 ---
 
-### 2.11 dm_getWindow
+### 2.11 getWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getWindow(intptr_t hwnd, long flag);
+long DM_CALL getWindow(intptr_t hwnd, long flag);
 ```
 
 **功能说明**：获取与指定窗口有特定关系的其他窗口句柄。
@@ -1225,12 +1226,12 @@ long DM_CALL dm_getWindow(intptr_t hwnd, long flag);
 
 ---
 
-### 2.12 dm_getForegroundWindow
+### 2.12 getForegroundWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getForegroundWindow();
+long DM_CALL getForegroundWindow();
 ```
 
 **功能说明**：获取当前系统中前台（活动）窗口的句柄。
@@ -1250,12 +1251,12 @@ print(f"当前前台窗口: {title}")
 
 ---
 
-### 2.13 dm_getForegroundFocus
+### 2.13 getForegroundFocus
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getForegroundFocus();
+long DM_CALL getForegroundFocus();
 ```
 
 **功能说明**：获取当前拥有键盘焦点的窗口句柄。与 `getForegroundWindow` 不同，焦点窗口可能不是前台窗口（如前台窗口中的子控件）。
@@ -1266,12 +1267,12 @@ long DM_CALL dm_getForegroundFocus();
 
 ---
 
-### 2.14 dm_getMousePointWindow
+### 2.14 getMousePointWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getMousePointWindow();
+long DM_CALL getMousePointWindow();
 ```
 
 **功能说明**：获取当前鼠标位置下方的窗口句柄。
@@ -1290,12 +1291,12 @@ print(f"鼠标下方窗口: {dm.getWindowTitle(hwnd)}")
 
 ---
 
-### 2.15 dm_getPointWindow
+### 2.15 getPointWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getPointWindow(long x, long y);
+long DM_CALL getPointWindow(long x, long y);
 ```
 
 **功能说明**：获取指定屏幕坐标点下方的窗口句柄。
@@ -1311,12 +1312,12 @@ long DM_CALL dm_getPointWindow(long x, long y);
 
 ---
 
-### 2.16 dm_getSpecialWindow
+### 2.16 getSpecialWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getSpecialWindow(long flag);
+long DM_CALL getSpecialWindow(long flag);
 ```
 
 **功能说明**：获取特殊窗口句柄。
@@ -1339,12 +1340,12 @@ long DM_CALL dm_getSpecialWindow(long flag);
 
 ---
 
-### 2.17 dm_getWindowClass
+### 2.17 getWindowClass
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getWindowClass(intptr_t hwnd);
+const char* DM_CALL getWindowClass(intptr_t hwnd);
 ```
 
 **功能说明**：获取指定窗口的类名。
@@ -1370,12 +1371,12 @@ print(f"窗口类名: {cls}")
 
 ---
 
-### 2.18 dm_getWindowProcessId
+### 2.18 getWindowProcessId
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getWindowProcessId(intptr_t hwnd);
+long DM_CALL getWindowProcessId(intptr_t hwnd);
 ```
 
 **功能说明**：获取指定窗口所属进程的 PID。
@@ -1399,12 +1400,12 @@ print(f"进程 PID: {pid}")
 
 ---
 
-### 2.19 dm_getWindowProcessPath
+### 2.19 getWindowProcessPath
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getWindowProcessPath(intptr_t hwnd);
+const char* DM_CALL getWindowProcessPath(intptr_t hwnd);
 ```
 
 **功能说明**：获取指定窗口所属进程的完整可执行文件路径。
@@ -1430,12 +1431,12 @@ print(f"进程路径: {path}")
 
 ---
 
-### 2.20 dm_getWindowThreadId
+### 2.20 getWindowThreadId
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getWindowThreadId(intptr_t hwnd);
+long DM_CALL getWindowThreadId(intptr_t hwnd);
 ```
 
 **功能说明**：获取指定窗口所属线程的 ID。
@@ -1450,12 +1451,12 @@ long DM_CALL dm_getWindowThreadId(intptr_t hwnd);
 
 ---
 
-### 2.21 dm_getWindowTitle
+### 2.21 getWindowTitle
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getWindowTitle(intptr_t hwnd);
+const char* DM_CALL getWindowTitle(intptr_t hwnd);
 ```
 
 **功能说明**：获取指定窗口的标题文本。
@@ -1481,12 +1482,12 @@ print(f"窗口标题: {title}")
 
 ---
 
-### 2.22 dm_getWindowRect
+### 2.22 getWindowRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getWindowRect(intptr_t hwnd, long* x1, long* y1, long* x2, long* y2);
+long DM_CALL getWindowRect(intptr_t hwnd, long* x1, long* y1, long* x2, long* y2);
 ```
 
 **功能说明**：获取窗口在屏幕上的矩形区域（包括标题栏、边框等）。
@@ -1518,17 +1519,17 @@ if ret == 0:
 
 ---
 
-### 2.23 dm_getClientRect
+### 2.23 getClientRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getClientRect(intptr_t hwnd, long* x1, long* y1, long* x2, long* y2);
+long DM_CALL getClientRect(intptr_t hwnd, long* x1, long* y1, long* x2, long* y2);
 ```
 
 **功能说明**：获取窗口客户区（不包括标题栏、边框等）的矩形区域。
 
-**参数列表**：同 `dm_getWindowRect`
+**参数列表**：同 `getWindowRect`
 
 **返回值**：0=成功，非0=失败。
 
@@ -1542,12 +1543,12 @@ dm.get_client_rect(hwnd, x1, y1, x2, y2)
 
 ---
 
-### 2.24 dm_getClientSize
+### 2.24 getClientSize
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getClientSize(intptr_t hwnd, long* width, long* height);
+long DM_CALL getClientSize(intptr_t hwnd, long* width, long* height);
 ```
 
 **功能说明**：获取窗口客户区的宽度和高度。
@@ -1564,12 +1565,12 @@ long DM_CALL dm_getClientSize(intptr_t hwnd, long* width, long* height);
 
 ---
 
-### 2.25 dm_getWindowState
+### 2.25 getWindowState
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getWindowState(intptr_t hwnd, long flag);
+long DM_CALL getWindowState(intptr_t hwnd, long flag);
 ```
 
 **功能说明**：获取窗口的当前状态。
@@ -1594,12 +1595,12 @@ long DM_CALL dm_getWindowState(intptr_t hwnd, long flag);
 
 ---
 
-### 2.26 dm_getProcessInfo
+### 2.26 getProcessInfo
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getProcessInfo(long pid, const char* type);
+long DM_CALL getProcessInfo(long pid, const char* type);
 ```
 
 **功能说明**：获取指定进程的详细信息。
@@ -1615,12 +1616,12 @@ long DM_CALL dm_getProcessInfo(long pid, const char* type);
 
 ---
 
-### 2.27 dm_moveWindow
+### 2.27 moveWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_moveWindow(intptr_t hwnd, long x, long y);
+long DM_CALL moveWindow(intptr_t hwnd, long x, long y);
 ```
 
 **功能说明**：移动窗口到指定屏幕坐标位置。
@@ -1644,12 +1645,12 @@ dm.move_window(hwnd, 100, 100)  # 将窗口移动到 (100, 100)
 
 ---
 
-### 2.28 dm_setWindowSize
+### 2.28 setWindowSize
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWindowSize(intptr_t hwnd, long width, long height);
+long DM_CALL setWindowSize(intptr_t hwnd, long width, long height);
 ```
 
 **功能说明**：调整窗口的大小（包括标题栏和边框的完整窗口尺寸）。
@@ -1673,12 +1674,12 @@ dm.set_window_size(hwnd, 1024, 768)  # 调整为 1024x768
 
 ---
 
-### 2.29 dm_setWindowState
+### 2.29 setWindowState
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWindowState(intptr_t hwnd, long flag);
+long DM_CALL setWindowState(intptr_t hwnd, long flag);
 ```
 
 **功能说明**：设置窗口的状态（显示、隐藏、最小化、最大化、还原等）。
@@ -1714,12 +1715,12 @@ dm.set_window_state(hwnd, 4)  # 还原
 
 ---
 
-### 2.30 dm_setWindowText
+### 2.30 setWindowText
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWindowText(intptr_t hwnd, const char* title);
+long DM_CALL setWindowText(intptr_t hwnd, const char* title);
 ```
 
 **功能说明**：修改窗口的标题文本。
@@ -1735,12 +1736,12 @@ long DM_CALL dm_setWindowText(intptr_t hwnd, const char* title);
 
 ---
 
-### 2.31 dm_setWindowTransparent
+### 2.31 setWindowTransparent
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWindowTransparent(intptr_t hwnd, long trans);
+long DM_CALL setWindowTransparent(intptr_t hwnd, long trans);
 ```
 
 **功能说明**：设置窗口的透明度。
@@ -1756,12 +1757,12 @@ long DM_CALL dm_setWindowTransparent(intptr_t hwnd, long trans);
 
 ---
 
-### 2.32 dm_setClientSize
+### 2.32 setClientSize
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setClientSize(intptr_t hwnd, long width, long height);
+long DM_CALL setClientSize(intptr_t hwnd, long width, long height);
 ```
 
 **功能说明**：调整窗口客户区的大小（不包括标题栏和边框）。
@@ -1778,12 +1779,12 @@ long DM_CALL dm_setClientSize(intptr_t hwnd, long width, long height);
 
 ---
 
-### 2.33 dm_setSendStringDelay
+### 2.33 setSendStringDelay
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setSendStringDelay(long delay);
+long DM_CALL setSendStringDelay(long delay);
 ```
 
 **功能说明**：设置发送字符串时的字符间延迟时间。
@@ -1798,12 +1799,12 @@ long DM_CALL dm_setSendStringDelay(long delay);
 
 ---
 
-### 2.34 dm_sendPaste
+### 2.34 sendPaste
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_sendPaste(intptr_t hwnd);
+long DM_CALL sendPaste(intptr_t hwnd);
 ```
 
 **功能说明**：向指定窗口发送粘贴命令（Ctrl+V）。需要先将文本复制到剪贴板。
@@ -1818,12 +1819,12 @@ long DM_CALL dm_sendPaste(intptr_t hwnd);
 
 ---
 
-### 2.35 dm_sendString
+### 2.35 sendString
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_sendString(intptr_t hwnd, const char* str);
+long DM_CALL sendString(intptr_t hwnd, const char* str);
 ```
 
 **功能说明**：向指定窗口发送文本字符串（后台模式）。适用于标准 Windows 文本框控件。
@@ -1846,60 +1847,60 @@ dm.send_string(hwnd, "Hello, World!")
 
 ---
 
-### 2.36 dm_sendString2
+### 2.36 sendString2
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_sendString2(intptr_t hwnd, const char* str);
+long DM_CALL sendString2(intptr_t hwnd, const char* str);
 ```
 
 **功能说明**：发送字符串的另一种实现方式，适用于某些 `sendString` 无法正常输入的场景。
 
-**参数列表**：同 `dm_sendString`
+**参数列表**：同 `sendString`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 2.37 dm_sendStringIme
+### 2.37 sendStringIme
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_sendStringIme(intptr_t hwnd, const char* str);
+long DM_CALL sendStringIme(intptr_t hwnd, const char* str);
 ```
 
 **功能说明**：通过 IME（输入法）发送字符串，适用于需要输入中文等非 ASCII 字符的场景。
 
-**参数列表**：同 `dm_sendString`
+**参数列表**：同 `sendString`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 2.38 dm_sendStringIme2
+### 2.38 sendStringIme2
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_sendStringIme2(intptr_t hwnd, const char* str);
+long DM_CALL sendStringIme2(intptr_t hwnd, const char* str);
 ```
 
 **功能说明**：IME 发送字符串的备选方式。
 
-**参数列表**：同 `dm_sendString`
+**参数列表**：同 `sendString`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 2.39 dm_clientToScreen
+### 2.39 clientToScreen
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_clientToScreen(intptr_t hwnd, long* x, long* y);
+long DM_CALL clientToScreen(intptr_t hwnd, long* x, long* y);
 ```
 
 **功能说明**：将窗口客户区坐标转换为屏幕坐标。
@@ -1916,17 +1917,17 @@ long DM_CALL dm_clientToScreen(intptr_t hwnd, long* x, long* y);
 
 ---
 
-### 2.40 dm_screenToClient
+### 2.40 screenToClient
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_screenToClient(intptr_t hwnd, long* x, long* y);
+long DM_CALL screenToClient(intptr_t hwnd, long* x, long* y);
 ```
 
 **功能说明**：将屏幕坐标转换为窗口客户区坐标。
 
-**参数列表**：同 `dm_clientToScreen`（方向相反）
+**参数列表**：同 `clientToScreen`（方向相反）
 
 **返回值**：0=成功，非0=失败。
 
@@ -1938,12 +1939,12 @@ long DM_CALL dm_screenToClient(intptr_t hwnd, long* x, long* y);
 
 ---
 
-### 3.1 dm_keyDown
+### 3.1 keyDown
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_keyDown(long vk_code);
+long DM_CALL keyDown(long vk_code);
 ```
 
 **功能说明**：模拟按下指定虚拟键码的按键（不释放）。
@@ -1968,12 +1969,12 @@ dm.key_up(0x11)    # 松开 Ctrl
 
 ---
 
-### 3.2 dm_keyDownChar
+### 3.2 keyDownChar
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_keyDownChar(const char* key_str);
+long DM_CALL keyDownChar(const char* key_str);
 ```
 
 **功能说明**：模拟按下指定字符键（通过字符表示，而非虚拟键码）。
@@ -1988,12 +1989,12 @@ long DM_CALL dm_keyDownChar(const char* key_str);
 
 ---
 
-### 3.3 dm_keyPress
+### 3.3 keyPress
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_keyPress(long vk_code);
+long DM_CALL keyPress(long vk_code);
 ```
 
 **功能说明**：模拟按下并释放指定虚拟键码的按键（一次完整的按键操作）。
@@ -2018,12 +2019,12 @@ dm.keyPress(ord('A')) # 按 A 键
 
 ---
 
-### 3.4 dm_keyPressChar
+### 3.4 keyPressChar
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_keyPressChar(const char* key_str);
+long DM_CALL keyPressChar(const char* key_str);
 ```
 
 **功能说明**：模拟按下并释放指定字符键。
@@ -2038,12 +2039,12 @@ long DM_CALL dm_keyPressChar(const char* key_str);
 
 ---
 
-### 3.5 dm_keyPressStr
+### 3.5 keyPressStr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_keyPressStr(const char* key_str, long delay);
+long DM_CALL keyPressStr(const char* key_str, long delay);
 ```
 
 **功能说明**：模拟依次按下并释放一串按键序列。
@@ -2066,12 +2067,12 @@ dm.key_press_str("Hello World!", 50)  # 每个字符间隔 50ms
 
 ---
 
-### 3.6 dm_keyUp
+### 3.6 keyUp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_keyUp(long vk_code);
+long DM_CALL keyUp(long vk_code);
 ```
 
 **功能说明**：释放指定虚拟键码的按键（与 `keyDown` 配对使用）。
@@ -2086,14 +2087,14 @@ long DM_CALL dm_keyUp(long vk_code);
 
 ---
 
-### 3.7 dm_keyUpChar
+### 3.7 keyUpChar
 
 **函数签名**：
 
 
 
 ```c
-long DM_CALL dm_keyUpChar(const char* key_str);
+long DM_CALL keyUpChar(const char* key_str);
 ```
 
 **功能说明**：释放指定字符键。
@@ -2108,12 +2109,12 @@ long DM_CALL dm_keyUpChar(const char* key_str);
 
 ---
 
-### 3.8 dm_waitKey
+### 3.8 waitKey
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_waitKey(long vk_code, long time_out);
+long DM_CALL waitKey(long vk_code, long time_out);
 ```
 
 **功能说明**：等待指定按键被按下，支持超时。
@@ -2129,12 +2130,12 @@ long DM_CALL dm_waitKey(long vk_code, long time_out);
 
 ---
 
-### 3.9 dm_getKeyState
+### 3.9 getKeyState
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getKeyState(long vk_code);
+long DM_CALL getKeyState(long vk_code);
 ```
 
 **功能说明**：查询指定按键的当前状态（按下或释放）。
@@ -2149,12 +2150,12 @@ long DM_CALL dm_getKeyState(long vk_code);
 
 ---
 
-### 3.10 dm_leftClick
+### 3.10 leftClick
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_leftClick();
+long DM_CALL leftClick();
 ```
 
 **功能说明**：模拟鼠标左键单击（按下+释放）。
@@ -2173,12 +2174,12 @@ dm.leftClick()        # 左键单击
 
 ---
 
-### 3.11 dm_leftDoubleClick
+### 3.11 leftDoubleClick
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_leftDoubleClick();
+long DM_CALL leftDoubleClick();
 ```
 
 **功能说明**：模拟鼠标左键双击。
@@ -2189,12 +2190,12 @@ long DM_CALL dm_leftDoubleClick();
 
 ---
 
-### 3.12 dm_leftDown
+### 3.12 leftDown
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_leftDown();
+long DM_CALL leftDown();
 ```
 
 **功能说明**：模拟鼠标左键按下（不释放，需与 `leftUp` 配对使用）。
@@ -2205,12 +2206,12 @@ long DM_CALL dm_leftDown();
 
 ---
 
-### 3.13 dm_leftUp
+### 3.13 leftUp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_leftUp();
+long DM_CALL leftUp();
 ```
 
 **功能说明**：模拟鼠标左键释放。
@@ -2221,12 +2222,12 @@ long DM_CALL dm_leftUp();
 
 ---
 
-### 3.14 dm_rightClick
+### 3.14 rightClick
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_rightClick();
+long DM_CALL rightClick();
 ```
 
 **功能说明**：模拟鼠标右键单击。
@@ -2237,12 +2238,12 @@ long DM_CALL dm_rightClick();
 
 ---
 
-### 3.15 dm_rightDown
+### 3.15 rightDown
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_rightDown();
+long DM_CALL rightDown();
 ```
 
 **功能说明**：模拟鼠标右键按下。
@@ -2253,12 +2254,12 @@ long DM_CALL dm_rightDown();
 
 ---
 
-### 3.16 dm_rightUp
+### 3.16 rightUp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_rightUp();
+long DM_CALL rightUp();
 ```
 
 **功能说明**：模拟鼠标右键释放。
@@ -2269,12 +2270,12 @@ long DM_CALL dm_rightUp();
 
 ---
 
-### 3.17 dm_middleClick
+### 3.17 middleClick
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_middleClick();
+long DM_CALL middleClick();
 ```
 
 **功能说明**：模拟鼠标中键单击。
@@ -2285,12 +2286,12 @@ long DM_CALL dm_middleClick();
 
 ---
 
-### 3.18 dm_middleDown
+### 3.18 middleDown
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_middleDown();
+long DM_CALL middleDown();
 ```
 
 **功能说明**：模拟鼠标中键按下。
@@ -2301,12 +2302,12 @@ long DM_CALL dm_middleDown();
 
 ---
 
-### 3.19 dm_middleUp
+### 3.19 middleUp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_middleUp();
+long DM_CALL middleUp();
 ```
 
 **功能说明**：模拟鼠标中键释放。
@@ -2317,12 +2318,12 @@ long DM_CALL dm_middleUp();
 
 ---
 
-### 3.20 dm_moveTo
+### 3.20 moveTo
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_moveTo(long x, long y);
+long DM_CALL moveTo(long x, long y);
 ```
 
 **功能说明**：将鼠标移动到指定屏幕坐标位置。
@@ -2350,12 +2351,12 @@ dm.leftClick()
 
 ---
 
-### 3.21 dm_moveToEx
+### 3.21 moveToEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_moveToEx(long x, long y, long w, long h);
+long DM_CALL moveToEx(long x, long y, long w, long h);
 ```
 
 **功能说明**：将鼠标移动到指定矩形区域内的随机位置。用于模拟更自然的鼠标行为，避免每次都移动到同一个精确坐标。
@@ -2382,12 +2383,12 @@ dm.leftClick()
 
 ---
 
-### 3.22 dm_moveR
+### 3.22 moveR
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_moveR(long rx, long ry);
+long DM_CALL moveR(long rx, long ry);
 ```
 
 **功能说明**：将鼠标从当前位置相对移动指定的偏移量。
@@ -2411,12 +2412,12 @@ dm.move_r(50, -30)  # 向右 50 像素，向上 30 像素
 
 ---
 
-### 3.23 dm_wheelDown
+### 3.23 wheelDown
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_wheelDown(long repeat);
+long DM_CALL wheelDown(long repeat);
 ```
 
 **功能说明**：模拟鼠标滚轮向下滚动。
@@ -2431,12 +2432,12 @@ long DM_CALL dm_wheelDown(long repeat);
 
 ---
 
-### 3.24 dm_wheelUp
+### 3.24 wheelUp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_wheelUp(long repeat);
+long DM_CALL wheelUp(long repeat);
 ```
 
 **功能说明**：模拟鼠标滚轮向上滚动。
@@ -2451,12 +2452,12 @@ long DM_CALL dm_wheelUp(long repeat);
 
 ---
 
-### 3.25 dm_getCursorPos
+### 3.25 getCursorPos
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getCursorPos(long* x, long* y);
+long DM_CALL getCursorPos(long* x, long* y);
 ```
 
 **功能说明**：获取当前鼠标指针的屏幕坐标位置。
@@ -2481,12 +2482,12 @@ print(f"鼠标位置: ({x.value}, {y.value})")
 
 ---
 
-### 3.26 dm_getCursorShape
+### 3.26 getCursorShape
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getCursorShape();
+long DM_CALL getCursorShape();
 ```
 
 **功能说明**：获取当前鼠标光标的形状 ID。
@@ -2497,12 +2498,12 @@ long DM_CALL dm_getCursorShape();
 
 ---
 
-### 3.27 dm_getCursorShapeEx
+### 3.27 getCursorShapeEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getCursorShapeEx(long type);
+const char* DM_CALL getCursorShapeEx(long type);
 ```
 
 **功能说明**：获取当前鼠标光标形状的详细描述信息。
@@ -2517,12 +2518,12 @@ const char* DM_CALL dm_getCursorShapeEx(long type);
 
 ---
 
-### 3.28 dm_getCursorSpot
+### 3.28 getCursorSpot
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getCursorSpot();
+long DM_CALL getCursorSpot();
 ```
 
 **功能说明**：获取当前鼠标光标的热点（点击有效点）位置。
@@ -2533,12 +2534,12 @@ long DM_CALL dm_getCursorSpot();
 
 ---
 
-### 3.29 dm_setMouseDelay
+### 3.29 setMouseDelay
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setMouseDelay(long type, long delay);
+long DM_CALL setMouseDelay(long type, long delay);
 ```
 
 **功能说明**：设置鼠标操作之间的延迟时间。
@@ -2554,28 +2555,28 @@ long DM_CALL dm_setMouseDelay(long type, long delay);
 
 ---
 
-### 3.30 dm_setKeypadDelay
+### 3.30 setKeypadDelay
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setKeypadDelay(long type, long delay);
+long DM_CALL setKeypadDelay(long type, long delay);
 ```
 
 **功能说明**：设置键盘操作之间的延迟时间。
 
-**参数列表**：同 `dm_setMouseDelay`
+**参数列表**：同 `setMouseDelay`
 
 **返回值**：0=成功。
 
 ---
 
-### 3.31 dm_setMouseSpeed
+### 3.31 setMouseSpeed
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setMouseSpeed(long speed);
+long DM_CALL setMouseSpeed(long speed);
 ```
 
 **功能说明**：设置鼠标移动速度。
@@ -2590,12 +2591,12 @@ long DM_CALL dm_setMouseSpeed(long speed);
 
 ---
 
-### 3.32 dm_getMouseSpeed
+### 3.32 getMouseSpeed
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getMouseSpeed();
+long DM_CALL getMouseSpeed();
 ```
 
 **功能说明**：获取当前鼠标移动速度设置。
@@ -2606,12 +2607,12 @@ long DM_CALL dm_getMouseSpeed();
 
 ---
 
-### 3.33 dm_enableMouseAccuracy
+### 3.33 enableMouseAccuracy
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableMouseAccuracy(long enable);
+long DM_CALL enableMouseAccuracy(long enable);
 ```
 
 **功能说明**：启用或禁用鼠标加速（提高指针精确度）。关闭后可获得更精确的鼠标移动控制。
@@ -2626,12 +2627,12 @@ long DM_CALL dm_enableMouseAccuracy(long enable);
 
 ---
 
-### 3.34 dm_setSimMode
+### 3.34 setSimMode
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setSimMode(long mode);
+long DM_CALL setSimMode(long mode);
 ```
 
 **功能说明**：设置键鼠模拟的模式。
@@ -2652,12 +2653,12 @@ long DM_CALL dm_setSimMode(long mode);
 
 ---
 
-### 4.1 dm_capture
+### 4.1 capture
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_capture(long x1, long y1, long x2, long y2, const char* file);
+long DM_CALL capture(long x1, long y1, long x2, long y2, const char* file);
 ```
 
 **功能说明**：截取屏幕指定区域并保存为 BMP 格式图片文件。
@@ -2689,12 +2690,12 @@ dm.capture(100, 100, 500, 400, "region.bmp")
 
 ---
 
-### 4.2 dm_captureGif
+### 4.2 captureGif
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_captureGif(long x1, long y1, long x2, long y2, const char* file, long delay, long time);
+long DM_CALL captureGif(long x1, long y1, long x2, long y2, const char* file, long delay, long time);
 ```
 
 **功能说明**：截取屏幕指定区域并保存为动态 GIF 图片。用于录制屏幕区域的变化。
@@ -2723,12 +2724,12 @@ dm.capture_gif(0, 0, 800, 600, "animation.gif", 100, 5000)
 
 ---
 
-### 4.3 dm_captureJpg
+### 4.3 captureJpg
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_captureJpg(long x1, long y1, long x2, long y2, const char* file, long quality);
+long DM_CALL captureJpg(long x1, long y1, long x2, long y2, const char* file, long quality);
 ```
 
 **功能说明**：截取屏幕指定区域并保存为 JPEG 格式图片，支持压缩质量设置。
@@ -2755,12 +2756,12 @@ dm.capture_jpg(0, 0, 1920, 1080, "screenshot.jpg", 85)  # 85% 质量
 
 ---
 
-### 4.4 dm_capturePng
+### 4.4 capturePng
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_capturePng(long x1, long y1, long x2, long y2, const char* file);
+long DM_CALL capturePng(long x1, long y1, long x2, long y2, const char* file);
 ```
 
 **功能说明**：截取屏幕指定区域并保存为 PNG 格式图片（无损压缩）。
@@ -2786,12 +2787,12 @@ dm.capture_png(100, 100, 500, 400, "region.png")
 
 ---
 
-### 4.5 dm_capturePre
+### 4.5 capturePre
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_capturePre(const char* file);
+long DM_CALL capturePre(const char* file);
 ```
 
 **功能说明**：将上一次截图操作的结果保存到指定文件。用于连续截图场景中避免重复截取。
@@ -2806,12 +2807,12 @@ long DM_CALL dm_capturePre(const char* file);
 
 ---
 
-### 4.6 dm_getColor
+### 4.6 getColor
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getColor(long x, long y);
+const char* DM_CALL getColor(long x, long y);
 ```
 
 **功能说明**：获取屏幕指定点的颜色值，返回 RGB 格式（RRGGBB）。
@@ -2843,12 +2844,12 @@ print(f"R={r} G={g} B={b}")
 
 ---
 
-### 4.7 dm_getColorBGR
+### 4.7 getColorBGR
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getColorBGR(long x, long y);
+const char* DM_CALL getColorBGR(long x, long y);
 ```
 
 **功能说明**：获取屏幕指定点的颜色值，返回 BGR 格式（BBGGRR）。与 Windows 内部颜色格式一致。
@@ -2864,12 +2865,12 @@ const char* DM_CALL dm_getColorBGR(long x, long y);
 
 ---
 
-### 4.8 dm_getColorHSV
+### 4.8 getColorHSV
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getColorHSV(long x, long y);
+const char* DM_CALL getColorHSV(long x, long y);
 ```
 
 **功能说明**：获取屏幕指定点的颜色，返回 HSV（色相、饱和度、明度）格式。
@@ -2885,12 +2886,12 @@ const char* DM_CALL dm_getColorHSV(long x, long y);
 
 ---
 
-### 4.9 dm_getColorNum
+### 4.9 getColorNum
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getColorNum(long x1, long y1, long x2, long y2, const char* color, long sim);
+long DM_CALL getColorNum(long x1, long y1, long x2, long y2, const char* color, long sim);
 ```
 
 **功能说明**：统计指定区域内符合指定颜色的像素数量。
@@ -2919,12 +2920,12 @@ print(f"红色像素数量: {count}")
 
 ---
 
-### 4.10 dm_getAveRGB
+### 4.10 getAveRGB
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getAveRGB(long x1, long y1, long x2, long y2);
+const char* DM_CALL getAveRGB(long x1, long y1, long x2, long y2);
 ```
 
 **功能说明**：获取指定区域的平均颜色（RGB格式）。
@@ -2942,28 +2943,28 @@ const char* DM_CALL dm_getAveRGB(long x1, long y1, long x2, long y2);
 
 ---
 
-### 4.11 dm_getAveHSV
+### 4.11 getAveHSV
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getAveHSV(long x1, long y1, long x2, long y2);
+const char* DM_CALL getAveHSV(long x1, long y1, long x2, long y2);
 ```
 
 **功能说明**：获取指定区域的平均颜色（HSV格式）。
 
-**参数列表**：同 `dm_getAveRGB`
+**参数列表**：同 `getAveRGB`
 
 **返回值**：平均颜色 HSV 字符串。
 
 ---
 
-### 4.12 dm_cmpColor
+### 4.12 cmpColor
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_cmpColor(long x, long y, const char* color, long sim);
+long DM_CALL cmpColor(long x, long y, const char* color, long sim);
 ```
 
 **功能说明**：比较屏幕指定点的颜色是否与目标颜色匹配（在指定相似度范围内）。
@@ -2994,12 +2995,12 @@ if dm.cmp_color(500, 300, "FF0000-202020", 0.8) == 0:
 
 ---
 
-### 4.13 dm_findColor
+### 4.13 findColor
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findColor(long x1, long y1, long x2, long y2, const char* color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findColor(long x1, long y1, long x2, long y2, const char* color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：在指定屏幕区域内查找指定颜色，返回第一个匹配的坐标。
@@ -3048,12 +3049,12 @@ else:
 
 ---
 
-### 4.14 dm_findColorEx
+### 4.14 findColorEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findColorEx(long x1, long y1, long x2, long y2, const char* color, long sim, long dir);
+const char* DM_CALL findColorEx(long x1, long y1, long x2, long y2, const char* color, long sim, long dir);
 ```
 
 **功能说明**：在指定区域查找颜色，返回所有匹配位置的坐标字符串。
@@ -3088,12 +3089,12 @@ if result:
 
 ---
 
-### 4.15 dm_findColorBlock
+### 4.15 findColorBlock
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findColorBlock(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height, long* intX, long* intY);
+long DM_CALL findColorBlock(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height, long* intX, long* intY);
 ```
 
 **功能说明**：在指定区域查找指定颜色的色块（连续满足颜色条件的像素区域）。
@@ -3118,44 +3119,44 @@ long DM_CALL dm_findColorBlock(long x1, long y1, long x2, long y2, const char* c
 
 ---
 
-### 4.16 dm_findColorBlockEx
+### 4.16 findColorBlockEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findColorBlockEx(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height);
+const char* DM_CALL findColorBlockEx(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height);
 ```
 
 **功能说明**：在指定区域查找色块，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findColorBlock`（无输出参数）
+**参数列表**：同 `findColorBlock`（无输出参数）
 
 **返回值**：坐标字符串，格式 `"x1|y1,x2|y2,..."`。
 
 ---
 
-### 4.17 dm_findColorE
+### 4.17 findColorE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findColorE(long x1, long y1, long x2, long y2, const char* color, long sim, long dir);
+const char* DM_CALL findColorE(long x1, long y1, long x2, long y2, const char* color, long sim, long dir);
 ```
 
 **功能说明**：查找颜色，返回第一个匹配位置的坐标字符串（包括偏色信息）。
 
-**参数列表**：同 `dm_findColorEx`
+**参数列表**：同 `findColorEx`
 
 **返回值**：坐标字符串，格式 `"x|y"`，未找到返回空字符串。
 
 ---
 
-### 4.18 dm_findMulColor
+### 4.18 findMulColor
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findMulColor(long x1, long y1, long x2, long y2, const char* color, long sim);
+long DM_CALL findMulColor(long x1, long y1, long x2, long y2, const char* color, long sim);
 ```
 
 **功能说明**：在指定区域内查找多种颜色。多颜色用 `|` 分隔，只要找到其中任意一种即返回成功。
@@ -3185,12 +3186,12 @@ if ret == 0:
 
 ---
 
-### 4.19 dm_findMultiColor
+### 4.19 findMultiColor
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findMultiColor(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findMultiColor(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：多点找色。先找到指定主色，再按偏移检查周围的颜色，全部匹配才算找到。比单点找色更精确。
@@ -3230,44 +3231,44 @@ if ret == 0:
 
 ---
 
-### 4.20 dm_findMultiColorEx
+### 4.20 findMultiColorEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findMultiColorEx(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir);
+const char* DM_CALL findMultiColorEx(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir);
 ```
 
 **功能说明**：多点找色，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findMultiColor`（无输出参数）
+**参数列表**：同 `findMultiColor`（无输出参数）
 
 **返回值**：坐标字符串，格式 `"x1|y1,x2|y2,..."`。
 
 ---
 
-### 4.21 dm_findMultiColorE
+### 4.21 findMultiColorE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findMultiColorE(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir);
+const char* DM_CALL findMultiColorE(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir);
 ```
 
 **功能说明**：多点找色，返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findMultiColorEx`
+**参数列表**：同 `findMultiColorEx`
 
 **返回值**：坐标字符串，格式 `"x|y"`。
 
 ---
 
-### 4.22 dm_findPic
+### 4.22 findPic
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findPic(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findPic(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：在指定屏幕区域内查找指定的图片，返回第一个匹配的坐标。
@@ -3309,33 +3310,33 @@ ret = dm.findPic(0, 0, 1920, 1080, "btn_start.bmp|btn_ok.bmp|btn_confirm.bmp", "
 
 ---
 
-### 4.23 dm_findPicE
+### 4.23 findPicE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：查找图片，返回第一个匹配位置的坐标字符串（包含图片索引）。
 
-**参数列表**：同 `dm_findPic`（无输出参数）
+**参数列表**：同 `findPic`（无输出参数）
 
 **返回值**：坐标字符串，格式 `"图片索引|x|y"`，未找到返回空字符串。
 
 ---
 
-### 4.24 dm_findPicEx
+### 4.24 findPicEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：查找图片，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPic`
+**参数列表**：同 `findPic`
 
 **返回值**：坐标字符串，格式 `"索引|x1|y1,索引|x2|y2,..."`，未找到返回空字符串。
 
@@ -3354,44 +3355,44 @@ if results:
 
 ---
 
-### 4.25 dm_findPicExS
+### 4.25 findPicExS
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicExS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicExS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：查找图片（智能模式），返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPicEx`
+**参数列表**：同 `findPicEx`
 
-**返回值**：同 `dm_findPicEx`
+**返回值**：同 `findPicEx`
 
 ---
 
-### 4.26 dm_findPicS
+### 4.26 findPicS
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findPicS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findPicS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：查找图片（智能模式），支持透明图片查找。
 
-**参数列表**：同 `dm_findPic`
+**参数列表**：同 `findPic`
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 4.27 dm_findPicMem
+### 4.27 findPicMem
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findPicMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findPicMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：从内存中查找图片（图片数据已在内存中，无需从文件加载）。
@@ -3411,140 +3412,140 @@ long DM_CALL dm_findPicMem(long x1, long y1, long x2, long y2, const char* pic_i
 
 ---
 
-### 4.28 dm_findPicMemE
+### 4.28 findPicMemE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：内存找图，返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPicMem`（无输出参数）
+**参数列表**：同 `findPicMem`（无输出参数）
 
 **返回值**：坐标字符串。
 
 ---
 
-### 4.29 dm_findPicMemEx
+### 4.29 findPicMemEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：内存找图，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPicMem`
+**参数列表**：同 `findPicMem`
 
 **返回值**：坐标字符串，多个位置以 `,` 分隔。
 
 ---
 
-### 4.30 dm_findPicSim
+### 4.30 findPicSim
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findPicSim(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findPicSim(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：智能找图，支持透明色和更灵活的匹配算法。
 
-**参数列表**：同 `dm_findPic`
+**参数列表**：同 `findPic`
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 4.31 dm_findPicSimE
+### 4.31 findPicSimE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicSimE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicSimE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：智能找图，返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPicSim`（无输出参数）
+**参数列表**：同 `findPicSim`（无输出参数）
 
 **返回值**：坐标字符串。
 
 ---
 
-### 4.32 dm_findPicSimEx
+### 4.32 findPicSimEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicSimEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicSimEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：智能找图，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPicSim`
+**参数列表**：同 `findPicSim`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 4.33 dm_findPicSimMem
+### 4.33 findPicSimMem
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findPicSimMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findPicSimMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：智能找图（内存模式），从内存图片数据中查找。
 
-**参数列表**：同 `dm_findPicMem`
+**参数列表**：同 `findPicMem`
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 4.34 dm_findPicSimMemE
+### 4.34 findPicSimMemE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicSimMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicSimMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：智能找图（内存模式），返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPicSimMem`（无输出参数）
+**参数列表**：同 `findPicSimMem`（无输出参数）
 
 **返回值**：坐标字符串。
 
 ---
 
-### 4.35 dm_findPicSimMemEx
+### 4.35 findPicSimMemEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findPicSimMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
+const char* DM_CALL findPicSimMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
 
 **功能说明**：智能找图（内存模式），返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findPicSimMem`
+**参数列表**：同 `findPicSimMem`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 4.36 dm_findShape
+### 4.36 findShape
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findShape(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir, long* intX, long* intY);
+long DM_CALL findShape(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：在指定区域查找指定的形状（颜色轮廓）。根据偏移颜色描述的形状特征进行匹配。
@@ -3563,44 +3564,44 @@ long DM_CALL dm_findShape(long x1, long y1, long x2, long y2, const char* offset
 
 ---
 
-### 4.37 dm_findShapeE
+### 4.37 findShapeE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findShapeE(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir);
+const char* DM_CALL findShapeE(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir);
 ```
 
 **功能说明**：查找形状，返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findShape`（无输出参数）
+**参数列表**：同 `findShape`（无输出参数）
 
 **返回值**：坐标字符串。
 
 ---
 
-### 4.38 dm_findShapeEx
+### 4.38 findShapeEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findShapeEx(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir);
+const char* DM_CALL findShapeEx(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir);
 ```
 
 **功能说明**：查找形状，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findShape`
+**参数列表**：同 `findShape`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 4.39 dm_getPicSize
+### 4.39 getPicSize
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getPicSize(const char* pic_name);
+const char* DM_CALL getPicSize(const char* pic_name);
 ```
 
 **功能说明**：获取指定图片文件的尺寸（宽度和高度）。
@@ -3625,12 +3626,12 @@ if size:
 
 ---
 
-### 4.40 dm_freePic
+### 4.40 freePic
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_freePic(const char* pic_name);
+long DM_CALL freePic(const char* pic_name);
 ```
 
 **功能说明**：释放指定图片占用的内存缓存。
@@ -3645,12 +3646,12 @@ long DM_CALL dm_freePic(const char* pic_name);
 
 ---
 
-### 4.41 dm_loadPic
+### 4.41 loadPic
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_loadPic(const char* pic_name);
+long DM_CALL loadPic(const char* pic_name);
 ```
 
 **功能说明**：将指定图片文件加载到内存缓存中，预先加载可提高后续找图速度。
@@ -3675,12 +3676,12 @@ dm.findPic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0, x, y)
 
 ---
 
-### 4.42 dm_loadPicByte
+### 4.42 loadPicByte
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_loadPicByte(const char* pic_name, long data, long size);
+long DM_CALL loadPicByte(const char* pic_name, long data, long size);
 ```
 
 **功能说明**：从内存字节数据加载图片，而非从文件加载。
@@ -3697,12 +3698,12 @@ long DM_CALL dm_loadPicByte(const char* pic_name, long data, long size);
 
 ---
 
-### 4.43 dm_appendPicAddr
+### 4.43 appendPicAddr
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_appendPicAddr(const char* pic_info, long addr, long size);
+const char* DM_CALL appendPicAddr(const char* pic_info, long addr, long size);
 ```
 
 **功能说明**：向图片信息字符串中追加内存图片数据地址，用于构建内存图片列表。
@@ -3719,12 +3720,12 @@ const char* DM_CALL dm_appendPicAddr(const char* pic_info, long addr, long size)
 
 ---
 
-### 4.44 dm_matchPicName
+### 4.44 matchPicName
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_matchPicName(const char* pic_name);
+const char* DM_CALL matchPicName(const char* pic_name);
 ```
 
 **功能说明**：根据当前设置的路径，匹配图片文件的完整路径。
@@ -3739,12 +3740,12 @@ const char* DM_CALL dm_matchPicName(const char* pic_name);
 
 ---
 
-### 4.45 dm_imageToBmp
+### 4.45 imageToBmp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_imageToBmp(const char* pic_name, const char* bmp_name);
+long DM_CALL imageToBmp(const char* pic_name, const char* bmp_name);
 ```
 
 **功能说明**：将指定图片文件转换为 BMP 格式。
@@ -3760,12 +3761,12 @@ long DM_CALL dm_imageToBmp(const char* pic_name, const char* bmp_name);
 
 ---
 
-### 4.46 dm_setPicPwd
+### 4.46 setPicPwd
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setPicPwd(const char* pwd);
+long DM_CALL setPicPwd(const char* pwd);
 ```
 
 **功能说明**：设置图片文件的加解密密码。用于加载加密的图片文件。
@@ -3780,12 +3781,12 @@ long DM_CALL dm_setPicPwd(const char* pwd);
 
 ---
 
-### 4.47 dm_setExcludeRegion
+### 4.47 setExcludeRegion
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setExcludeRegion(long mode, const char* info);
+long DM_CALL setExcludeRegion(long mode, const char* info);
 ```
 
 **功能说明**：设置排除区域，在找图/找色时忽略指定区域。
@@ -3801,12 +3802,12 @@ long DM_CALL dm_setExcludeRegion(long mode, const char* info);
 
 ---
 
-### 4.48 dm_getScreenData
+### 4.48 getScreenData
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getScreenData(long x1, long y1, long x2, long y2);
+long DM_CALL getScreenData(long x1, long y1, long x2, long y2);
 ```
 
 **功能说明**：获取屏幕指定区域的原始图像数据（返回内存地址）。
@@ -3820,16 +3821,16 @@ long DM_CALL dm_getScreenData(long x1, long y1, long x2, long y2);
 | x2 | long | 是  | 区域右下角 X |
 | y2 | long | 是  | 区域右下角 Y |
 
-**返回值**：图像数据内存地址（低32位），0=失败。需配合 `dm_getScreenDataBmp` 使用。
+**返回值**：图像数据内存地址（低32位），0=失败。需配合 `getScreenDataBmp` 使用。
 
 ---
 
-### 4.49 dm_getScreenDataBmp
+### 4.49 getScreenDataBmp
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getScreenDataBmp(long x1, long y1, long x2, long y2, long* size);
+const char* DM_CALL getScreenDataBmp(long x1, long y1, long x2, long y2, long* size);
 ```
 
 **功能说明**：获取屏幕指定区域的 BMP 图像数据，返回数据指针。
@@ -3845,12 +3846,12 @@ const char* DM_CALL dm_getScreenDataBmp(long x1, long y1, long x2, long y2, long
 
 ---
 
-### 4.50 dm_enableDisplayDebug
+### 4.50 enableDisplayDebug
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableDisplayDebug(long enable_debug);
+long DM_CALL enableDisplayDebug(long enable_debug);
 ```
 
 **功能说明**：启用或禁用显示调试模式。启用后会在屏幕上高亮显示找图/找色区域，方便调试。
@@ -3865,12 +3866,12 @@ long DM_CALL dm_enableDisplayDebug(long enable_debug);
 
 ---
 
-### 4.51 dm_enableFindPicMultithread
+### 4.51 enableFindPicMultithread
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableFindPicMultithread(long enable);
+long DM_CALL enableFindPicMultithread(long enable);
 ```
 
 **功能说明**：启用或禁用多线程找图。启用后可利用多核 CPU 加速找图操作。
@@ -3885,12 +3886,12 @@ long DM_CALL dm_enableFindPicMultithread(long enable);
 
 ---
 
-### 4.52 dm_enableGetColorByCapture
+### 4.52 enableGetColorByCapture
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableGetColorByCapture(long enable);
+long DM_CALL enableGetColorByCapture(long enable);
 ```
 
 **功能说明**：设置获取颜色时是否通过截图方式获取。启用后颜色获取更精确，但速度稍慢。
@@ -3905,12 +3906,12 @@ long DM_CALL dm_enableGetColorByCapture(long enable);
 
 ---
 
-### 4.53 dm_setFindPicMultithreadCount
+### 4.53 setFindPicMultithreadCount
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setFindPicMultithreadCount(long count);
+long DM_CALL setFindPicMultithreadCount(long count);
 ```
 
 **功能说明**：设置多线程找图的线程数量。
@@ -3925,12 +3926,12 @@ long DM_CALL dm_setFindPicMultithreadCount(long count);
 
 ---
 
-### 4.54 dm_setFindPicMultithreadLimit
+### 4.54 setFindPicMultithreadLimit
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setFindPicMultithreadLimit(long limit);
+long DM_CALL setFindPicMultithreadLimit(long limit);
 ```
 
 **功能说明**：设置多线程找图时每个线程的最大处理区域限制。
@@ -3945,12 +3946,12 @@ long DM_CALL dm_setFindPicMultithreadLimit(long limit);
 
 ---
 
-### 4.55 dm_bgr2RGB
+### 4.55 bgr2RGB
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_bgr2RGB(const char* bgr_color);
+long DM_CALL bgr2RGB(const char* bgr_color);
 ```
 
 **功能说明**：将 BGR 格式颜色字符串转换为 RGB 格式颜色值。
@@ -3965,12 +3966,12 @@ long DM_CALL dm_bgr2RGB(const char* bgr_color);
 
 ---
 
-### 4.56 dm_rgb2BGR
+### 4.56 rgb2BGR
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_rgb2BGR(const char* rgb_color);
+const char* DM_CALL rgb2BGR(const char* rgb_color);
 ```
 
 **功能说明**：将 RGB 格式颜色字符串转换为 BGR 格式字符串。
@@ -3985,12 +3986,12 @@ const char* DM_CALL dm_rgb2BGR(const char* rgb_color);
 
 ---
 
-### 4.57 dm_isDisplayDead
+### 4.57 isDisplayDead
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_isDisplayDead(long x1, long y1, long x2, long y2, long time);
+long DM_CALL isDisplayDead(long x1, long y1, long x2, long y2, long time);
 ```
 
 **功能说明**：检测指定区域是否在指定时间内画面静止（无变化）。用于判断界面是否卡死或加载完成。
@@ -4021,12 +4022,12 @@ if dm.is_display_dead(0, 0, 800, 600, 3000) == 1:
 
 ---
 
-### 5.1 dm_bindWindow
+### 5.1 bindWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_bindWindow(intptr_t hwnd, const char* display, const char* mouse, const char* keypad, long mode);
+long DM_CALL bindWindow(intptr_t hwnd, const char* display, const char* mouse, const char* keypad, long mode);
 ```
 
 **功能说明**：绑定窗口，使后续的图色、键鼠操作在后台（窗口最小化或遮挡时仍可操作）进行。
@@ -4080,12 +4081,12 @@ else:
 
 ---
 
-### 5.2 dm_bindWindowEx
+### 5.2 bindWindowEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_bindWindowEx(intptr_t hwnd, const char* display, const char* mouse, const char* keypad, const char* pub, long mode);
+long DM_CALL bindWindowEx(intptr_t hwnd, const char* display, const char* mouse, const char* keypad, const char* pub, long mode);
 ```
 
 **功能说明**：绑定窗口的扩展版本，支持额外的公共模式设置。
@@ -4105,12 +4106,12 @@ long DM_CALL dm_bindWindowEx(intptr_t hwnd, const char* display, const char* mou
 
 ---
 
-### 5.3 dm_unBindWindow
+### 5.3 unBindWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_unBindWindow();
+long DM_CALL unBindWindow();
 ```
 
 **功能说明**：解绑当前绑定的窗口，释放后台操作资源。
@@ -4121,12 +4122,12 @@ long DM_CALL dm_unBindWindow();
 
 ---
 
-### 5.4 dm_getBindWindow
+### 5.4 getBindWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getBindWindow();
+long DM_CALL getBindWindow();
 ```
 
 **功能说明**：获取当前绑定的窗口句柄。
@@ -4137,12 +4138,12 @@ long DM_CALL dm_getBindWindow();
 
 ---
 
-### 5.5 dm_isBind
+### 5.5 isBind
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_isBind(intptr_t hwnd);
+long DM_CALL isBind(intptr_t hwnd);
 ```
 
 **功能说明**：检查指定窗口是否已被绑定。
@@ -4157,12 +4158,12 @@ long DM_CALL dm_isBind(intptr_t hwnd);
 
 ---
 
-### 5.6 dm_forceUnBindWindow
+### 5.6 forceUnBindWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_forceUnBindWindow();
+long DM_CALL forceUnBindWindow();
 ```
 
 **功能说明**：强制解绑窗口，即使解绑过程出现异常也继续执行。
@@ -4173,12 +4174,12 @@ long DM_CALL dm_forceUnBindWindow();
 
 ---
 
-### 5.7 dm_setAero
+### 5.7 setAero
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setAero(long enable);
+long DM_CALL setAero(long enable);
 ```
 
 **功能说明**：启用或禁用 Aero 毛玻璃效果（Windows 7/8/10）。
@@ -4193,12 +4194,12 @@ long DM_CALL dm_setAero(long enable);
 
 ---
 
-### 5.8 dm_lockInput
+### 5.8 lockInput
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_lockInput(long enable);
+long DM_CALL lockInput(long enable);
 ```
 
 **功能说明**：锁定或解锁鼠标键盘输入，锁定后用户无法操作鼠标键盘。
@@ -4213,12 +4214,12 @@ long DM_CALL dm_lockInput(long enable);
 
 ---
 
-### 5.9 dm_lockMouseRect
+### 5.9 lockMouseRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_lockMouseRect(long x1, long y1, long x2, long y2);
+long DM_CALL lockMouseRect(long x1, long y1, long x2, long y2);
 ```
 
 **功能说明**：将鼠标锁定在指定的矩形区域内，无法移出。
@@ -4233,12 +4234,12 @@ long DM_CALL dm_lockMouseRect(long x1, long y1, long x2, long y2);
 
 ---
 
-### 5.10 dm_lockDisplay
+### 5.10 lockDisplay
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_lockDisplay(long enable);
+long DM_CALL lockDisplay(long enable);
 ```
 
 **功能说明**：锁定或解锁显示。锁定后屏幕画面不会更新。
@@ -4253,12 +4254,12 @@ long DM_CALL dm_lockDisplay(long enable);
 
 ---
 
-### 5.11 dm_enableBind
+### 5.11 enableBind
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableBind(long enable);
+long DM_CALL enableBind(long enable);
 ```
 
 **功能说明**：启用或禁用绑定模式。
@@ -4273,12 +4274,12 @@ long DM_CALL dm_enableBind(long enable);
 
 ---
 
-### 5.12 dm_enableFakeActive
+### 5.12 enableFakeActive
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableFakeActive(long enable);
+long DM_CALL enableFakeActive(long enable);
 ```
 
 **功能说明**：启用或禁用虚假激活模式。启用后，后台绑定窗口时不会真正激活窗口，但模拟前台操作。
@@ -4293,12 +4294,12 @@ long DM_CALL dm_enableFakeActive(long enable);
 
 ---
 
-### 5.13 dm_enableIme
+### 5.13 enableIme
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableIme(long enable);
+long DM_CALL enableIme(long enable);
 ```
 
 **功能说明**：启用或禁用输入法（IME）支持。
@@ -4313,12 +4314,12 @@ long DM_CALL dm_enableIme(long enable);
 
 ---
 
-### 5.14 dm_enableKeypadMsg
+### 5.14 enableKeypadMsg
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableKeypadMsg(long enable);
+long DM_CALL enableKeypadMsg(long enable);
 ```
 
 **功能说明**：启用或禁用键盘消息同步。
@@ -4333,12 +4334,12 @@ long DM_CALL dm_enableKeypadMsg(long enable);
 
 ---
 
-### 5.15 dm_enableKeypadPatch
+### 5.15 enableKeypadPatch
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableKeypadPatch(long enable);
+long DM_CALL enableKeypadPatch(long enable);
 ```
 
 **功能说明**：启用或禁用键盘补丁模式。用于解决某些游戏后台键盘无效的问题。
@@ -4353,12 +4354,12 @@ long DM_CALL dm_enableKeypadPatch(long enable);
 
 ---
 
-### 5.16 dm_enableKeypadSync
+### 5.16 enableKeypadSync
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableKeypadSync(long enable);
+long DM_CALL enableKeypadSync(long enable);
 ```
 
 **功能说明**：启用或禁用键盘同步模式。
@@ -4373,12 +4374,12 @@ long DM_CALL dm_enableKeypadSync(long enable);
 
 ---
 
-### 5.17 dm_enableMouseMsg
+### 5.17 enableMouseMsg
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableMouseMsg(long enable);
+long DM_CALL enableMouseMsg(long enable);
 ```
 
 **功能说明**：启用或禁用鼠标消息同步。
@@ -4393,12 +4394,12 @@ long DM_CALL dm_enableMouseMsg(long enable);
 
 ---
 
-### 5.18 dm_enableMouseSync
+### 5.18 enableMouseSync
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableMouseSync(long enable, long time_out);
+long DM_CALL enableMouseSync(long enable, long time_out);
 ```
 
 **功能说明**：启用或禁用鼠标同步模式，并设置超时时间。
@@ -4414,12 +4415,12 @@ long DM_CALL dm_enableMouseSync(long enable, long time_out);
 
 ---
 
-### 5.19 dm_enableRealKeypad
+### 5.19 enableRealKeypad
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableRealKeypad(long enable);
+long DM_CALL enableRealKeypad(long enable);
 ```
 
 **功能说明**：启用或禁用真实键盘模式。启用后，后台键盘操作使用硬件级模拟。
@@ -4434,12 +4435,12 @@ long DM_CALL dm_enableRealKeypad(long enable);
 
 ---
 
-### 5.20 dm_enableRealMouse
+### 5.20 enableRealMouse
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableRealMouse(long enable, long mousedelay, long mousestep);
+long DM_CALL enableRealMouse(long enable, long mousedelay, long mousestep);
 ```
 
 **功能说明**：启用或禁用真实鼠标模式，并设置延迟和步长。
@@ -4456,12 +4457,12 @@ long DM_CALL dm_enableRealMouse(long enable, long mousedelay, long mousestep);
 
 ---
 
-### 5.21 dm_enableSpeedDx
+### 5.21 enableSpeedDx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableSpeedDx(long enable);
+long DM_CALL enableSpeedDx(long enable);
 ```
 
 **功能说明**：启用或禁用 DX 加速模式。可提升后台截图速度。
@@ -4476,12 +4477,12 @@ long DM_CALL dm_enableSpeedDx(long enable);
 
 ---
 
-### 5.22 dm_getFps
+### 5.22 getFps
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getFps();
+long DM_CALL getFps();
 ```
 
 **功能说明**：获取当前后台刷新的帧率（FPS）。
@@ -4492,12 +4493,12 @@ long DM_CALL dm_getFps();
 
 ---
 
-### 5.23 dm_setDisplayDelay
+### 5.23 setDisplayDelay
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setDisplayDelay(long delay);
+long DM_CALL setDisplayDelay(long delay);
 ```
 
 **功能说明**：设置后台显示延迟（截图间隔）。
@@ -4512,12 +4513,12 @@ long DM_CALL dm_setDisplayDelay(long delay);
 
 ---
 
-### 5.24 dm_setDisplayRefreshDelay
+### 5.24 setDisplayRefreshDelay
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setDisplayRefreshDelay(long delay);
+long DM_CALL setDisplayRefreshDelay(long delay);
 ```
 
 **功能说明**：设置后台显示刷新延迟。
@@ -4532,12 +4533,12 @@ long DM_CALL dm_setDisplayRefreshDelay(long delay);
 
 ---
 
-### 5.25 dm_setInputDm
+### 5.25 setInputDm
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setInputDm(long enable);
+long DM_CALL setInputDm(long enable);
 ```
 
 **功能说明**：设置输入模式为 DM 模式。
@@ -4552,12 +4553,12 @@ long DM_CALL dm_setInputDm(long enable);
 
 ---
 
-### 5.26 dm_hackSpeed
+### 5.26 hackSpeed
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_hackSpeed(long rate);
+long DM_CALL hackSpeed(long rate);
 ```
 
 **功能说明**：设置游戏加速/减速倍率。用于控制游戏运行速度。
@@ -4572,12 +4573,12 @@ long DM_CALL dm_hackSpeed(long rate);
 
 ---
 
-### 5.27 dm_downCpu
+### 5.27 downCpu
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_downCpu(long enable, long rate);
+long DM_CALL downCpu(long enable, long rate);
 ```
 
 **功能说明**：降低 CPU 占用率，通过限制插件刷新频率来减少 CPU 开销。
@@ -4593,12 +4594,12 @@ long DM_CALL dm_downCpu(long enable, long rate);
 
 ---
 
-### 5.28 dm_switchBindWindow
+### 5.28 switchBindWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_switchBindWindow(intptr_t hwnd);
+long DM_CALL switchBindWindow(intptr_t hwnd);
 ```
 
 **功能说明**：在不解绑的情况下切换绑定的窗口句柄。
@@ -4619,12 +4620,12 @@ long DM_CALL dm_switchBindWindow(intptr_t hwnd);
 
 ---
 
-### 6.1 dm_openProcess
+### 6.1 openProcess
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_openProcess(long pid);
+long DM_CALL openProcess(long pid);
 ```
 
 **功能说明**：打开指定 PID 的进程，获取操作权限。后续的内存操作需要先调用此函数。
@@ -4654,12 +4655,12 @@ else:
 
 ---
 
-### 6.2 dm_getModuleBaseAddr
+### 6.2 getModuleBaseAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getModuleBaseAddr(intptr_t hwnd, const char* module);
+long DM_CALL getModuleBaseAddr(intptr_t hwnd, const char* module);
 ```
 
 **功能说明**：获取指定进程（通过窗口句柄）中指定模块的基址。
@@ -4686,12 +4687,12 @@ dll_base = dm.get_module_base_addr(hwnd, "user32.dll")
 
 ---
 
-### 6.3 dm_getModuleSize
+### 6.3 getModuleSize
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getModuleSize(intptr_t hwnd, const char* module);
+long DM_CALL getModuleSize(intptr_t hwnd, const char* module);
 ```
 
 **功能说明**：获取指定模块的大小（字节数）。
@@ -4707,12 +4708,12 @@ long DM_CALL dm_getModuleSize(intptr_t hwnd, const char* module);
 
 ---
 
-### 6.4 dm_getRemoteApiAddress
+### 6.4 getRemoteApiAddress
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getRemoteApiAddress(intptr_t hwnd, const char* module, const char* api);
+long DM_CALL getRemoteApiAddress(intptr_t hwnd, const char* module, const char* api);
 ```
 
 **功能说明**：获取远程进程中指定 API 函数的地址。用于远程调用或 Hook。
@@ -4729,12 +4730,12 @@ long DM_CALL dm_getRemoteApiAddress(intptr_t hwnd, const char* module, const cha
 
 ---
 
-### 6.5 dm_readInt
+### 6.5 readInt
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readInt(intptr_t hwnd, long addr, long* ret);
+long DM_CALL readInt(intptr_t hwnd, long addr, long* ret);
 ```
 
 **功能说明**：从指定进程的指定内存地址读取一个 4 字节整数。
@@ -4763,12 +4764,12 @@ if ret == 0:
 
 ---
 
-### 6.6 dm_readIntAddr
+### 6.6 readIntAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readIntAddr(intptr_t hwnd, long addr, long type, long* ret);
+long DM_CALL readIntAddr(intptr_t hwnd, long addr, long type, long* ret);
 ```
 
 **功能说明**：从指定地址读取指定类型的整数值。
@@ -4786,12 +4787,12 @@ long DM_CALL dm_readIntAddr(intptr_t hwnd, long addr, long type, long* ret);
 
 ---
 
-### 6.7 dm_readFloat
+### 6.7 readFloat
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readFloat(intptr_t hwnd, long addr, float* ret);
+long DM_CALL readFloat(intptr_t hwnd, long addr, float* ret);
 ```
 
 **功能说明**：从指定内存地址读取一个 float（4 字节浮点数）。
@@ -4808,28 +4809,28 @@ long DM_CALL dm_readFloat(intptr_t hwnd, long addr, float* ret);
 
 ---
 
-### 6.8 dm_readFloatAddr
+### 6.8 readFloatAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readFloatAddr(intptr_t hwnd, long addr, float* ret);
+long DM_CALL readFloatAddr(intptr_t hwnd, long addr, float* ret);
 ```
 
 **功能说明**：从指定地址读取 float 值（支持多级指针）。
 
-**参数列表**：同 `dm_readFloat`
+**参数列表**：同 `readFloat`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.9 dm_readDouble
+### 6.9 readDouble
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readDouble(intptr_t hwnd, long addr, double* ret);
+long DM_CALL readDouble(intptr_t hwnd, long addr, double* ret);
 ```
 
 **功能说明**：从指定内存地址读取一个 double（8 字节双精度浮点数）。
@@ -4846,28 +4847,28 @@ long DM_CALL dm_readDouble(intptr_t hwnd, long addr, double* ret);
 
 ---
 
-### 6.10 dm_readDoubleAddr
+### 6.10 readDoubleAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readDoubleAddr(intptr_t hwnd, long addr, double* ret);
+long DM_CALL readDoubleAddr(intptr_t hwnd, long addr, double* ret);
 ```
 
 **功能说明**：从指定地址读取 double 值（支持多级指针）。
 
-**参数列表**：同 `dm_readDouble`
+**参数列表**：同 `readDouble`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.11 dm_readString
+### 6.11 readString
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_readString(intptr_t hwnd, long addr, long type, long len);
+const char* DM_CALL readString(intptr_t hwnd, long addr, long type, long len);
 ```
 
 **功能说明**：从指定内存地址读取字符串。
@@ -4897,28 +4898,28 @@ w_name = dm.read_string(hwnd, 0x00A1B2C3, 1, 128)
 
 ---
 
-### 6.12 dm_readStringAddr
+### 6.12 readStringAddr
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_readStringAddr(intptr_t hwnd, long addr, long type, long len);
+const char* DM_CALL readStringAddr(intptr_t hwnd, long addr, long type, long len);
 ```
 
 **功能说明**：从指定地址读取字符串（支持多级指针）。
 
-**参数列表**：同 `dm_readString`
+**参数列表**：同 `readString`
 
 **返回值**：读取到的字符串。
 
 ---
 
-### 6.13 dm_readData
+### 6.13 readData
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_readData(intptr_t hwnd, long addr, long len);
+const char* DM_CALL readData(intptr_t hwnd, long addr, long len);
 ```
 
 **功能说明**：从指定内存地址读取原始字节数据。
@@ -4935,28 +4936,28 @@ const char* DM_CALL dm_readData(intptr_t hwnd, long addr, long len);
 
 ---
 
-### 6.14 dm_readDataAddr
+### 6.14 readDataAddr
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_readDataAddr(intptr_t hwnd, long addr, long len);
+const char* DM_CALL readDataAddr(intptr_t hwnd, long addr, long len);
 ```
 
 **功能说明**：从指定地址读取原始字节数据（支持多级指针）。
 
-**参数列表**：同 `dm_readData`
+**参数列表**：同 `readData`
 
 **返回值**：十六进制编码的数据字符串。
 
 ---
 
-### 6.15 dm_readDataToBin
+### 6.15 readDataToBin
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readDataToBin(intptr_t hwnd, long addr, long len);
+long DM_CALL readDataToBin(intptr_t hwnd, long addr, long len);
 ```
 
 **功能说明**：读取内存数据并保存到二进制缓冲区，返回数据的内存地址。
@@ -4973,28 +4974,28 @@ long DM_CALL dm_readDataToBin(intptr_t hwnd, long addr, long len);
 
 ---
 
-### 6.16 dm_readDataAddrToBin
+### 6.16 readDataAddrToBin
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_readDataAddrToBin(intptr_t hwnd, long addr, long len);
+long DM_CALL readDataAddrToBin(intptr_t hwnd, long addr, long len);
 ```
 
 **功能说明**：从指定地址读取数据到二进制缓冲区（支持多级指针）。
 
-**参数列表**：同 `dm_readDataToBin`
+**参数列表**：同 `readDataToBin`
 
 **返回值**：二进制数据的内存地址。
 
 ---
 
-### 6.17 dm_findInt
+### 6.17 findInt
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findInt(intptr_t hwnd, const char* addr_range, long int_value_min, long int_value_max);
+const char* DM_CALL findInt(intptr_t hwnd, const char* addr_range, long int_value_min, long int_value_max);
 ```
 
 **功能说明**：在指定地址范围内搜索指定范围的整数值。
@@ -5022,12 +5023,12 @@ if result:
 
 ---
 
-### 6.18 dm_findIntEx
+### 6.18 findIntEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findIntEx(intptr_t hwnd, const char* addr_range, long int_value_min, long int_value_max, long step, long multi_thread, long mode);
+const char* DM_CALL findIntEx(intptr_t hwnd, const char* addr_range, long int_value_min, long int_value_max, long step, long multi_thread, long mode);
 ```
 
 **功能说明**：高级整数搜索，支持步进、多线程和多种搜索模式。
@@ -5048,12 +5049,12 @@ const char* DM_CALL dm_findIntEx(intptr_t hwnd, const char* addr_range, long int
 
 ---
 
-### 6.19 dm_findFloat
+### 6.19 findFloat
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findFloat(intptr_t hwnd, const char* addr_range, float float_value_min, float float_value_max);
+const char* DM_CALL findFloat(intptr_t hwnd, const char* addr_range, float float_value_min, float float_value_max);
 ```
 
 **功能说明**：在指定地址范围内搜索指定范围的 float 浮点数值。
@@ -5071,28 +5072,28 @@ const char* DM_CALL dm_findFloat(intptr_t hwnd, const char* addr_range, float fl
 
 ---
 
-### 6.20 dm_findFloatEx
+### 6.20 findFloatEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findFloatEx(intptr_t hwnd, const char* addr_range, float float_value_min, float float_value_max, long step, long multi_thread, long mode);
+const char* DM_CALL findFloatEx(intptr_t hwnd, const char* addr_range, float float_value_min, float float_value_max, long step, long multi_thread, long mode);
 ```
 
 **功能说明**：高级浮点数搜索，支持步进、多线程和多种搜索模式。
 
-**参数列表**：同 `dm_findIntEx` 的额外参数
+**参数列表**：同 `findIntEx` 的额外参数
 
 **返回值**：匹配的地址字符串。
 
 ---
 
-### 6.21 dm_findDouble
+### 6.21 findDouble
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findDouble(intptr_t hwnd, const char* addr_range, double double_value_min, double double_value_max);
+const char* DM_CALL findDouble(intptr_t hwnd, const char* addr_range, double double_value_min, double double_value_max);
 ```
 
 **功能说明**：在指定地址范围内搜索指定范围的 double 双精度浮点数值。
@@ -5110,28 +5111,28 @@ const char* DM_CALL dm_findDouble(intptr_t hwnd, const char* addr_range, double 
 
 ---
 
-### 6.22 dm_findDoubleEx
+### 6.22 findDoubleEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findDoubleEx(intptr_t hwnd, const char* addr_range, double double_value_min, double double_value_max, long step, long multi_thread, long mode);
+const char* DM_CALL findDoubleEx(intptr_t hwnd, const char* addr_range, double double_value_min, double double_value_max, long step, long multi_thread, long mode);
 ```
 
 **功能说明**：高级双精度浮点数搜索。
 
-**参数列表**：同 `dm_findIntEx`
+**参数列表**：同 `findIntEx`
 
 **返回值**：匹配的地址字符串。
 
 ---
 
-### 6.23 dm_findString
+### 6.23 findString
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findString(intptr_t hwnd, const char* addr_range, const char* string_value, long type);
+const char* DM_CALL findString(intptr_t hwnd, const char* addr_range, const char* string_value, long type);
 ```
 
 **功能说明**：在指定地址范围内搜索字符串。
@@ -5149,28 +5150,28 @@ const char* DM_CALL dm_findString(intptr_t hwnd, const char* addr_range, const c
 
 ---
 
-### 6.24 dm_findStringEx
+### 6.24 findStringEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStringEx(intptr_t hwnd, const char* addr_range, const char* string_value, long type, long step, long multi_thread, long mode);
+const char* DM_CALL findStringEx(intptr_t hwnd, const char* addr_range, const char* string_value, long type, long step, long multi_thread, long mode);
 ```
 
 **功能说明**：高级字符串搜索。
 
-**参数列表**：同 `dm_findIntEx`
+**参数列表**：同 `findIntEx`
 
 **返回值**：匹配的地址字符串。
 
 ---
 
-### 6.25 dm_findData
+### 6.25 findData
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findData(intptr_t hwnd, const char* addr_range, const char* data);
+const char* DM_CALL findData(intptr_t hwnd, const char* addr_range, const char* data);
 ```
 
 **功能说明**：在指定地址范围内搜索指定的字节数据。
@@ -5187,12 +5188,12 @@ const char* DM_CALL dm_findData(intptr_t hwnd, const char* addr_range, const cha
 
 ---
 
-### 6.26 dm_findDataEx
+### 6.26 findDataEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findDataEx(intptr_t hwnd, const char* addr_range, const char* data, long step, long multi_thread, long mode);
+const char* DM_CALL findDataEx(intptr_t hwnd, const char* addr_range, const char* data, long step, long multi_thread, long mode);
 ```
 
 **功能说明**：高级字节数据搜索。
@@ -5212,12 +5213,12 @@ const char* DM_CALL dm_findDataEx(intptr_t hwnd, const char* addr_range, const c
 
 ---
 
-### 6.27 dm_writeInt
+### 6.27 writeInt
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeInt(intptr_t hwnd, long addr, long type, long v);
+long DM_CALL writeInt(intptr_t hwnd, long addr, long type, long v);
 ```
 
 **功能说明**：向指定内存地址写入整数值。
@@ -5246,28 +5247,28 @@ if ret == 0:
 
 ---
 
-### 6.28 dm_writeIntAddr
+### 6.28 writeIntAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeIntAddr(intptr_t hwnd, long addr, long type, long v);
+long DM_CALL writeIntAddr(intptr_t hwnd, long addr, long type, long v);
 ```
 
 **功能说明**：向指定地址写入整数值（支持多级指针）。
 
-**参数列表**：同 `dm_writeInt`
+**参数列表**：同 `writeInt`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.29 dm_writeFloat
+### 6.29 writeFloat
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeFloat(intptr_t hwnd, long addr, float v);
+long DM_CALL writeFloat(intptr_t hwnd, long addr, float v);
 ```
 
 **功能说明**：向指定内存地址写入 float 浮点数值。
@@ -5284,28 +5285,28 @@ long DM_CALL dm_writeFloat(intptr_t hwnd, long addr, float v);
 
 ---
 
-### 6.30 dm_writeFloatAddr
+### 6.30 writeFloatAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeFloatAddr(intptr_t hwnd, long addr, float v);
+long DM_CALL writeFloatAddr(intptr_t hwnd, long addr, float v);
 ```
 
 **功能说明**：向指定地址写入 float 值（支持多级指针）。
 
-**参数列表**：同 `dm_writeFloat`
+**参数列表**：同 `writeFloat`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.31 dm_writeDouble
+### 6.31 writeDouble
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeDouble(intptr_t hwnd, long addr, double v);
+long DM_CALL writeDouble(intptr_t hwnd, long addr, double v);
 ```
 
 **功能说明**：向指定内存地址写入 double 双精度浮点数值。
@@ -5322,28 +5323,28 @@ long DM_CALL dm_writeDouble(intptr_t hwnd, long addr, double v);
 
 ---
 
-### 6.32 dm_writeDoubleAddr
+### 6.32 writeDoubleAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeDoubleAddr(intptr_t hwnd, long addr, double v);
+long DM_CALL writeDoubleAddr(intptr_t hwnd, long addr, double v);
 ```
 
 **功能说明**：向指定地址写入 double 值（支持多级指针）。
 
-**参数列表**：同 `dm_writeDouble`
+**参数列表**：同 `writeDouble`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.33 dm_writeString
+### 6.33 writeString
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeString(intptr_t hwnd, long addr, long type, const char* v);
+long DM_CALL writeString(intptr_t hwnd, long addr, long type, const char* v);
 ```
 
 **功能说明**：向指定内存地址写入字符串。
@@ -5361,28 +5362,28 @@ long DM_CALL dm_writeString(intptr_t hwnd, long addr, long type, const char* v);
 
 ---
 
-### 6.34 dm_writeStringAddr
+### 6.34 writeStringAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeStringAddr(intptr_t hwnd, long addr, long type, const char* v);
+long DM_CALL writeStringAddr(intptr_t hwnd, long addr, long type, const char* v);
 ```
 
 **功能说明**：向指定地址写入字符串（支持多级指针）。
 
-**参数列表**：同 `dm_writeString`
+**参数列表**：同 `writeString`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.35 dm_writeData
+### 6.35 writeData
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeData(intptr_t hwnd, long addr, const char* data);
+long DM_CALL writeData(intptr_t hwnd, long addr, const char* data);
 ```
 
 **功能说明**：向指定内存地址写入原始字节数据。
@@ -5399,28 +5400,28 @@ long DM_CALL dm_writeData(intptr_t hwnd, long addr, const char* data);
 
 ---
 
-### 6.36 dm_writeDataAddr
+### 6.36 writeDataAddr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeDataAddr(intptr_t hwnd, long addr, const char* data);
+long DM_CALL writeDataAddr(intptr_t hwnd, long addr, const char* data);
 ```
 
 **功能说明**：向指定地址写入字节数据（支持多级指针）。
 
-**参数列表**：同 `dm_writeData`
+**参数列表**：同 `writeData`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.37 dm_writeDataFromBin
+### 6.37 writeDataFromBin
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeDataFromBin(intptr_t hwnd, long addr, long data, long len);
+long DM_CALL writeDataFromBin(intptr_t hwnd, long addr, long data, long len);
 ```
 
 **功能说明**：从二进制缓冲区向指定内存地址写入数据。
@@ -5438,28 +5439,28 @@ long DM_CALL dm_writeDataFromBin(intptr_t hwnd, long addr, long data, long len);
 
 ---
 
-### 6.38 dm_writeDataAddrFromBin
+### 6.38 writeDataAddrFromBin
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeDataAddrFromBin(intptr_t hwnd, long addr, long data, long len);
+long DM_CALL writeDataAddrFromBin(intptr_t hwnd, long addr, long data, long len);
 ```
 
 **功能说明**：从二进制缓冲区向指定地址写入数据（支持多级指针）。
 
-**参数列表**：同 `dm_writeDataFromBin`
+**参数列表**：同 `writeDataFromBin`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 6.39 dm_virtualAllocEx
+### 6.39 virtualAllocEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_virtualAllocEx(intptr_t hwnd, long size, long type, long protect);
+long DM_CALL virtualAllocEx(intptr_t hwnd, long size, long type, long protect);
 ```
 
 **功能说明**：在远程进程中分配虚拟内存。
@@ -5477,12 +5478,12 @@ long DM_CALL dm_virtualAllocEx(intptr_t hwnd, long size, long type, long protect
 
 ---
 
-### 6.40 dm_virtualFreeEx
+### 6.40 virtualFreeEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_virtualFreeEx(intptr_t hwnd, long addr);
+long DM_CALL virtualFreeEx(intptr_t hwnd, long addr);
 ```
 
 **功能说明**：释放远程进程中分配的虚拟内存。
@@ -5498,12 +5499,12 @@ long DM_CALL dm_virtualFreeEx(intptr_t hwnd, long addr);
 
 ---
 
-### 6.41 dm_virtualProtectEx
+### 6.41 virtualProtectEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_virtualProtectEx(intptr_t hwnd, long addr, long size, long type, long* old_protect);
+long DM_CALL virtualProtectEx(intptr_t hwnd, long addr, long size, long type, long* old_protect);
 ```
 
 **功能说明**：修改远程进程中指定内存区域的保护属性。
@@ -5522,12 +5523,12 @@ long DM_CALL dm_virtualProtectEx(intptr_t hwnd, long addr, long size, long type,
 
 ---
 
-### 6.42 dm_virtualQueryEx
+### 6.42 virtualQueryEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_virtualQueryEx(intptr_t hwnd, long addr, long pmbi);
+const char* DM_CALL virtualQueryEx(intptr_t hwnd, long addr, long pmbi);
 ```
 
 **功能说明**：查询远程进程中指定内存区域的信息。
@@ -5544,12 +5545,12 @@ const char* DM_CALL dm_virtualQueryEx(intptr_t hwnd, long addr, long pmbi);
 
 ---
 
-### 6.43 dm_freeProcessMemory
+### 6.43 freeProcessMemory
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_freeProcessMemory(intptr_t hwnd);
+long DM_CALL freeProcessMemory(intptr_t hwnd);
 ```
 
 **功能说明**：释放进程内存操作相关的内部资源。
@@ -5564,12 +5565,12 @@ long DM_CALL dm_freeProcessMemory(intptr_t hwnd);
 
 ---
 
-### 6.44 dm_getCommandLine
+### 6.44 getCommandLine
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getCommandLine(intptr_t hwnd);
+const char* DM_CALL getCommandLine(intptr_t hwnd);
 ```
 
 **功能说明**：获取指定进程的命令行参数。
@@ -5584,12 +5585,12 @@ const char* DM_CALL dm_getCommandLine(intptr_t hwnd);
 
 ---
 
-### 6.45 dm_terminateProcess
+### 6.45 terminateProcess
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_terminateProcess(long pid);
+long DM_CALL terminateProcess(long pid);
 ```
 
 **功能说明**：终止指定 PID 的进程。
@@ -5604,12 +5605,12 @@ long DM_CALL dm_terminateProcess(long pid);
 
 ---
 
-### 6.46 dm_terminateProcessTree
+### 6.46 terminateProcessTree
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_terminateProcessTree(long pid);
+long DM_CALL terminateProcessTree(long pid);
 ```
 
 **功能说明**：终止指定进程及其所有子进程。
@@ -5624,12 +5625,12 @@ long DM_CALL dm_terminateProcessTree(long pid);
 
 ---
 
-### 6.47 dm_setMemoryFindResultToFile
+### 6.47 setMemoryFindResultToFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setMemoryFindResultToFile(long enable);
+long DM_CALL setMemoryFindResultToFile(long enable);
 ```
 
 **功能说明**：设置内存搜索的结果是否保存到文件。
@@ -5644,12 +5645,12 @@ long DM_CALL dm_setMemoryFindResultToFile(long enable);
 
 ---
 
-### 6.48 dm_setMemoryHwndAsProcessId
+### 6.48 setMemoryHwndAsProcessId
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setMemoryHwndAsProcessId(long enable);
+long DM_CALL setMemoryHwndAsProcessId(long enable);
 ```
 
 **功能说明**：设置内存操作时是否将 hwnd 参数作为进程 ID 使用（而非窗口句柄）。
@@ -5664,12 +5665,12 @@ long DM_CALL dm_setMemoryHwndAsProcessId(long enable);
 
 ---
 
-### 6.49 dm_setParam64ToPointer
+### 6.49 setParam64ToPointer
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setParam64ToPointer(long enable);
+long DM_CALL setParam64ToPointer(long enable);
 ```
 
 **功能说明**：设置 64 位参数是否作为指针处理。
@@ -5684,12 +5685,12 @@ long DM_CALL dm_setParam64ToPointer(long enable);
 
 ---
 
-### 6.50 dm_int64ToInt32
+### 6.50 int64ToInt32
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_int64ToInt32(long v_high, long v_low, long flag);
+const char* DM_CALL int64ToInt32(long v_high, long v_low, long flag);
 ```
 
 **功能说明**：将 64 位整数转换为 32 位地址。
@@ -5706,12 +5707,12 @@ const char* DM_CALL dm_int64ToInt32(long v_high, long v_low, long flag);
 
 ---
 
-### 6.51 dm_intToData
+### 6.51 intToData
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_intToData(long v, long type);
+const char* DM_CALL intToData(long v, long type);
 ```
 
 **功能说明**：将整数值转换为十六进制数据字符串。
@@ -5727,12 +5728,12 @@ const char* DM_CALL dm_intToData(long v, long type);
 
 ---
 
-### 6.52 dm_floatToData
+### 6.52 floatToData
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_floatToData(float v);
+const char* DM_CALL floatToData(float v);
 ```
 
 **功能说明**：将 float 浮点数值转换为十六进制数据字符串。
@@ -5747,12 +5748,12 @@ const char* DM_CALL dm_floatToData(float v);
 
 ---
 
-### 6.53 dm_doubleToData
+### 6.53 doubleToData
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_doubleToData(double v);
+const char* DM_CALL doubleToData(double v);
 ```
 
 **功能说明**：将 double 双精度浮点数值转换为十六进制数据字符串。
@@ -5767,12 +5768,12 @@ const char* DM_CALL dm_doubleToData(double v);
 
 ---
 
-### 6.54 dm_stringToData
+### 6.54 stringToData
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_stringToData(const char* v, long type);
+const char* DM_CALL stringToData(const char* v, long type);
 ```
 
 **功能说明**：将字符串转换为十六进制数据字符串。
@@ -5794,12 +5795,12 @@ const char* DM_CALL dm_stringToData(const char* v, long type);
 
 ---
 
-### 7.1 dm_writeFile
+### 7.1 writeFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeFile(const char* file, const char* content);
+long DM_CALL writeFile(const char* file, const char* content);
 ```
 
 **功能说明**：将文本内容写入文件（覆盖模式）。
@@ -5822,12 +5823,12 @@ dm.write_file("log.txt", "操作日志：开始执行任务")
 
 ---
 
-### 7.2 dm_readFile
+### 7.2 readFile
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_readFile(const char* file);
+const char* DM_CALL readFile(const char* file);
 ```
 
 **功能说明**：读取文件内容。
@@ -5842,12 +5843,12 @@ const char* DM_CALL dm_readFile(const char* file);
 
 ---
 
-### 7.3 dm_deleteFile
+### 7.3 deleteFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_deleteFile(const char* file);
+long DM_CALL deleteFile(const char* file);
 ```
 
 **功能说明**：删除指定文件。
@@ -5862,12 +5863,12 @@ long DM_CALL dm_deleteFile(const char* file);
 
 ---
 
-### 7.4 dm_copyFile
+### 7.4 copyFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_copyFile(const char* src, const char* dest, long over);
+long DM_CALL copyFile(const char* src, const char* dest, long over);
 ```
 
 **功能说明**：复制文件。
@@ -5884,12 +5885,12 @@ long DM_CALL dm_copyFile(const char* src, const char* dest, long over);
 
 ---
 
-### 7.5 dm_moveFile
+### 7.5 moveFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_moveFile(const char* src, const char* dest);
+long DM_CALL moveFile(const char* src, const char* dest);
 ```
 
 **功能说明**：移动或重命名文件。
@@ -5905,12 +5906,12 @@ long DM_CALL dm_moveFile(const char* src, const char* dest);
 
 ---
 
-### 7.6 dm_createFolder
+### 7.6 createFolder
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_createFolder(const char* folder);
+long DM_CALL createFolder(const char* folder);
 ```
 
 **功能说明**：创建文件夹。
@@ -5925,12 +5926,12 @@ long DM_CALL dm_createFolder(const char* folder);
 
 ---
 
-### 7.7 dm_deleteFolder
+### 7.7 deleteFolder
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_deleteFolder(const char* folder);
+long DM_CALL deleteFolder(const char* folder);
 ```
 
 **功能说明**：删除文件夹及其所有内容。
@@ -5945,12 +5946,12 @@ long DM_CALL dm_deleteFolder(const char* folder);
 
 ---
 
-### 7.8 dm_isFileExist
+### 7.8 isFileExist
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_isFileExist(const char* file);
+long DM_CALL isFileExist(const char* file);
 ```
 
 **功能说明**：判断文件是否存在。
@@ -5965,12 +5966,12 @@ long DM_CALL dm_isFileExist(const char* file);
 
 ---
 
-### 7.9 dm_isFolderExist
+### 7.9 isFolderExist
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_isFolderExist(const char* folder);
+long DM_CALL isFolderExist(const char* folder);
 ```
 
 **功能说明**：判断文件夹是否存在。
@@ -5985,12 +5986,12 @@ long DM_CALL dm_isFolderExist(const char* folder);
 
 ---
 
-### 7.10 dm_getFileLength
+### 7.10 getFileLength
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getFileLength(const char* file);
+long DM_CALL getFileLength(const char* file);
 ```
 
 **功能说明**：获取文件大小（字节数）。
@@ -6005,12 +6006,12 @@ long DM_CALL dm_getFileLength(const char* file);
 
 ---
 
-### 7.11 dm_getRealPath
+### 7.11 getRealPath
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getRealPath(const char* path);
+const char* DM_CALL getRealPath(const char* path);
 ```
 
 **功能说明**：获取相对路径的绝对路径（基于当前全局路径）。
@@ -6025,12 +6026,12 @@ const char* DM_CALL dm_getRealPath(const char* path);
 
 ---
 
-### 7.12 dm_selectFile
+### 7.12 selectFile
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_selectFile();
+const char* DM_CALL selectFile();
 ```
 
 **功能说明**：打开文件选择对话框，让用户选择一个文件。
@@ -6041,12 +6042,12 @@ const char* DM_CALL dm_selectFile();
 
 ---
 
-### 7.13 dm_selectDirectory
+### 7.13 selectDirectory
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_selectDirectory();
+const char* DM_CALL selectDirectory();
 ```
 
 **功能说明**：打开文件夹选择对话框，让用户选择一个目录。
@@ -6057,12 +6058,12 @@ const char* DM_CALL dm_selectDirectory();
 
 ---
 
-### 7.14 dm_downloadFile
+### 7.14 downloadFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_downloadFile(const char* url, const char* save_file, long timeout);
+long DM_CALL downloadFile(const char* url, const char* save_file, long timeout);
 ```
 
 **功能说明**：从指定 URL 下载文件到本地。
@@ -6088,12 +6089,12 @@ if ret == 0:
 
 ---
 
-### 7.15 dm_encodeFile
+### 7.15 encodeFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_encodeFile(const char* file, const char* pwd);
+long DM_CALL encodeFile(const char* file, const char* pwd);
 ```
 
 **功能说明**：使用密码加密文件。
@@ -6109,15 +6110,15 @@ long DM_CALL dm_encodeFile(const char* file, const char* pwd);
 
 ---
 
-### 7.16 dm_decodeFile
+### 7.16 decodeFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_decodeFile(const char* file, const char* pwd);
+long DM_CALL decodeFile(const char* file, const char* pwd);
 ```
 
-**功能说明**：使用密码解密由 `dm_encodeFile` 加密的文件。
+**功能说明**：使用密码解密由 `encodeFile` 加密的文件。
 
 **参数列表**：
 
@@ -6130,12 +6131,12 @@ long DM_CALL dm_decodeFile(const char* file, const char* pwd);
 
 ---
 
-### 7.17 dm_writeIni
+### 7.17 writeIni
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeIni(const char* section, const char* key, const char* value, const char* file);
+long DM_CALL writeIni(const char* section, const char* key, const char* value, const char* file);
 ```
 
 **功能说明**：向 INI 文件写入键值对。
@@ -6161,12 +6162,12 @@ dm.write_ini("config", "volume", "80", "settings.ini")
 
 ---
 
-### 7.18 dm_readIni
+### 7.18 readIni
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_readIni(const char* section, const char* key, const char* file);
+const char* DM_CALL readIni(const char* section, const char* key, const char* file);
 ```
 
 **功能说明**：从 INI 文件读取指定键的值。
@@ -6191,12 +6192,12 @@ print(f"用户名: {username}")
 
 ---
 
-### 7.19 dm_deleteIni
+### 7.19 deleteIni
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_deleteIni(const char* section, const char* key, const char* file);
+long DM_CALL deleteIni(const char* section, const char* key, const char* file);
 ```
 
 **功能说明**：删除 INI 文件中的指定键或整个节。
@@ -6213,12 +6214,12 @@ long DM_CALL dm_deleteIni(const char* section, const char* key, const char* file
 
 ---
 
-### 7.20 dm_enumIniKey
+### 7.20 enumIniKey
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_enumIniKey(const char* section, const char* file);
+const char* DM_CALL enumIniKey(const char* section, const char* file);
 ```
 
 **功能说明**：枚举 INI 文件中指定节的所有键名。
@@ -6234,12 +6235,12 @@ const char* DM_CALL dm_enumIniKey(const char* section, const char* file);
 
 ---
 
-### 7.21 dm_enumIniSection
+### 7.21 enumIniSection
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_enumIniSection(const char* file);
+const char* DM_CALL enumIniSection(const char* file);
 ```
 
 **功能说明**：枚举 INI 文件中所有节名称。
@@ -6254,12 +6255,12 @@ const char* DM_CALL dm_enumIniSection(const char* file);
 
 ---
 
-### 7.22 dm_writeIniPwd
+### 7.22 writeIniPwd
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_writeIniPwd(const char* section, const char* key, const char* value, const char* file, const char* pwd);
+long DM_CALL writeIniPwd(const char* section, const char* key, const char* value, const char* file, const char* pwd);
 ```
 
 **功能说明**：向加密的 INI 文件写入键值对。
@@ -6270,65 +6271,65 @@ long DM_CALL dm_writeIniPwd(const char* section, const char* key, const char* va
 
 ---
 
-### 7.23 dm_readIniPwd
+### 7.23 readIniPwd
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_readIniPwd(const char* section, const char* key, const char* file, const char* pwd);
+const char* DM_CALL readIniPwd(const char* section, const char* key, const char* file, const char* pwd);
 ```
 
 **功能说明**：从加密的 INI 文件读取键值。
 
-**参数列表**：同 `dm_writeIniPwd` 参数
+**参数列表**：同 `writeIniPwd` 参数
 
 **返回值**：键对应的值字符串。
 
 ---
 
-### 7.24 dm_deleteIniPwd
+### 7.24 deleteIniPwd
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_deleteIniPwd(const char* section, const char* key, const char* file, const char* pwd);
+long DM_CALL deleteIniPwd(const char* section, const char* key, const char* file, const char* pwd);
 ```
 
 **功能说明**：删除加密 INI 文件中的键或节。
 
-**参数列表**：同 `dm_deleteIni` + `pwd`
+**参数列表**：同 `deleteIni` + `pwd`
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 7.25 dm_enumIniKeyPwd
+### 7.25 enumIniKeyPwd
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_enumIniKeyPwd(const char* section, const char* file, const char* pwd);
+const char* DM_CALL enumIniKeyPwd(const char* section, const char* file, const char* pwd);
 ```
 
 **功能说明**：枚举加密 INI 文件中指定节的所有键名。
 
-**参数列表**：同 `dm_enumIniKey` + `pwd`
+**参数列表**：同 `enumIniKey` + `pwd`
 
 **返回值**：键名列表。
 
 ---
 
-### 7.26 dm_enumIniSectionPwd
+### 7.26 enumIniSectionPwd
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_enumIniSectionPwd(const char* file, const char* pwd);
+const char* DM_CALL enumIniSectionPwd(const char* file, const char* pwd);
 ```
 
 **功能说明**：枚举加密 INI 文件中所有节名称。
 
-**参数列表**：同 `dm_enumIniSection` + `pwd`
+**参数列表**：同 `enumIniSection` + `pwd`
 
 **返回值**：节名称列表。
 
@@ -6340,12 +6341,12 @@ const char* DM_CALL dm_enumIniSectionPwd(const char* file, const char* pwd);
 
 ---
 
-### 8.1 dm_setDict
+### 8.1 setDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setDict(long index, const char* file);
+long DM_CALL setDict(long index, const char* file);
 ```
 
 **功能说明**：从文件加载字库到指定索引位置。
@@ -6369,12 +6370,12 @@ dm.setDict(1, "font_dict.txt")  # 加载字库到索引1
 
 ---
 
-### 8.2 dm_setDictMem
+### 8.2 setDictMem
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setDictMem(long index, const char* data, long size);
+long DM_CALL setDictMem(long index, const char* data, long size);
 ```
 
 **功能说明**：从内存数据加载字库到指定索引。
@@ -6391,12 +6392,12 @@ long DM_CALL dm_setDictMem(long index, const char* data, long size);
 
 ---
 
-### 8.3 dm_setDictPwd
+### 8.3 setDictPwd
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setDictPwd(const char* pwd);
+long DM_CALL setDictPwd(const char* pwd);
 ```
 
 **功能说明**：设置字库文件的加解密密码。
@@ -6411,12 +6412,12 @@ long DM_CALL dm_setDictPwd(const char* pwd);
 
 ---
 
-### 8.4 dm_useDict
+### 8.4 useDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_useDict(long index);
+long DM_CALL useDict(long index);
 ```
 
 **功能说明**：切换到指定索引的字库作为当前使用的字库。
@@ -6431,12 +6432,12 @@ long DM_CALL dm_useDict(long index);
 
 ---
 
-### 8.5 dm_getDict
+### 8.5 getDict
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getDict(long index, long font_index);
+const char* DM_CALL getDict(long index, long font_index);
 ```
 
 **功能说明**：获取指定字库中指定字体的字库信息。
@@ -6452,12 +6453,12 @@ const char* DM_CALL dm_getDict(long index, long font_index);
 
 ---
 
-### 8.6 dm_getDictCount
+### 8.6 getDictCount
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getDictCount(long index);
+long DM_CALL getDictCount(long index);
 ```
 
 **功能说明**：获取指定字库中的字体数量。
@@ -6472,12 +6473,12 @@ long DM_CALL dm_getDictCount(long index);
 
 ---
 
-### 8.7 dm_getDictInfo
+### 8.7 getDictInfo
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getDictInfo(const char* file, long index);
+const char* DM_CALL getDictInfo(const char* file, long index);
 ```
 
 **功能说明**：获取字库文件的详细信息。
@@ -6493,12 +6494,12 @@ const char* DM_CALL dm_getDictInfo(const char* file, long index);
 
 ---
 
-### 8.8 dm_getNowDict
+### 8.8 getNowDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getNowDict();
+long DM_CALL getNowDict();
 ```
 
 **功能说明**：获取当前正在使用的字库索引。
@@ -6509,12 +6510,12 @@ long DM_CALL dm_getNowDict();
 
 ---
 
-### 8.9 dm_addDict
+### 8.9 addDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_addDict(const char* dict_info);
+long DM_CALL addDict(const char* dict_info);
 ```
 
 **功能说明**：向当前字库中添加字体信息。
@@ -6529,12 +6530,12 @@ long DM_CALL dm_addDict(const char* dict_info);
 
 ---
 
-### 8.10 dm_saveDict
+### 8.10 saveDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_saveDict(long index, const char* file);
+long DM_CALL saveDict(long index, const char* file);
 ```
 
 **功能说明**：将指定索引的字库保存到文件。
@@ -6550,12 +6551,12 @@ long DM_CALL dm_saveDict(long index, const char* file);
 
 ---
 
-### 8.11 dm_clearDict
+### 8.11 clearDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_clearDict(long index);
+long DM_CALL clearDict(long index);
 ```
 
 **功能说明**：清除指定索引的字库内容。
@@ -6570,12 +6571,12 @@ long DM_CALL dm_clearDict(long index);
 
 ---
 
-### 8.12 dm_enableShareDict
+### 8.12 enableShareDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableShareDict(long enable);
+long DM_CALL enableShareDict(long enable);
 ```
 
 **功能说明**：启用或禁用字库共享。启用后，同一进程中的多个 dm 对象可以共享字库数据。
@@ -6590,12 +6591,12 @@ long DM_CALL dm_enableShareDict(long enable);
 
 ---
 
-### 8.13 dm_ocr
+### 8.13 ocr
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_ocr(long x1, long y1, long x2, long y2, const char* color_format, long sim);
+const char* DM_CALL ocr(long x1, long y1, long x2, long y2, const char* color_format, long sim);
 ```
 
 **功能说明**：对指定区域进行文字识别（OCR），返回识别到的文本内容。
@@ -6631,44 +6632,44 @@ text = dm.ocr(100, 100, 500, 200, "FFFFFF-101010", 0.8)
 
 ---
 
-### 8.14 dm_ocrEx
+### 8.14 ocrEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_ocrEx(long x1, long y1, long x2, long y2, const char* color_format, long sim);
+const char* DM_CALL ocrEx(long x1, long y1, long x2, long y2, const char* color_format, long sim);
 ```
 
 **功能说明**：增强版 OCR，返回更详细的识别结果（包括每个字符的位置信息）。
 
-**参数列表**：同 `dm_ocr`
+**参数列表**：同 `ocr`
 
 **返回值**：识别结果字符串，包含文本和位置信息。
 
 ---
 
-### 8.15 dm_ocrExOne
+### 8.15 ocrExOne
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_ocrExOne(long x1, long y1, long x2, long y2, const char* color_format, long sim);
+const char* DM_CALL ocrExOne(long x1, long y1, long x2, long y2, const char* color_format, long sim);
 ```
 
 **功能说明**：OCR 识别单行文字（优化了单行场景的识别精度）。
 
-**参数列表**：同 `dm_ocr`
+**参数列表**：同 `ocr`
 
 **返回值**：识别到的文本内容。
 
 ---
 
-### 8.16 dm_ocrInFile
+### 8.16 ocrInFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_ocrInFile(long x1, long y1, long x2, long y2, const char* color_format, long sim, const char* file);
+long DM_CALL ocrInFile(long x1, long y1, long x2, long y2, const char* color_format, long sim, const char* file);
 ```
 
 **功能说明**：OCR 识别结果保存到文件。
@@ -6679,12 +6680,12 @@ long DM_CALL dm_ocrInFile(long x1, long y1, long x2, long y2, const char* color_
 
 ---
 
-### 8.17 dm_findStr
+### 8.17 findStr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findStr(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
+long DM_CALL findStr(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
 
 **功能说明**：在指定区域内查找指定文字，返回第一个匹配的位置。
@@ -6716,156 +6717,156 @@ if ret == 0:
 
 ---
 
-### 8.18 dm_findStrE
+### 8.18 findStrE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
+const char* DM_CALL findStrE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
 
 **功能说明**：查找文字，返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStr`（无输出参数）
+**参数列表**：同 `findStr`（无输出参数）
 
 **返回值**：坐标字符串 `"x|y"`，未找到返回空字符串。
 
 ---
 
-### 8.19 dm_findStrEx
+### 8.19 findStrEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
+const char* DM_CALL findStrEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
 
 **功能说明**：查找文字，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStr`
+**参数列表**：同 `findStr`
 
 **返回值**：坐标字符串，多个位置以 `,` 分隔。
 
 ---
 
-### 8.20 dm_findStrS
+### 8.20 findStrS
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findStrS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
+long DM_CALL findStrS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
 
 **功能说明**：查找文字（智能模式），支持更灵活的匹配。
 
-**参数列表**：同 `dm_findStr`
+**参数列表**：同 `findStr`
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 8.21 dm_findStrExS
+### 8.21 findStrExS
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
+const char* DM_CALL findStrExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
 
 **功能说明**：查找文字（智能模式），返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStr`
+**参数列表**：同 `findStr`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 8.22 dm_findStrFast
+### 8.22 findStrFast
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findStrFast(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
+long DM_CALL findStrFast(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
 
 **功能说明**：快速查找文字（速度优先，精度略低）。
 
-**参数列表**：同 `dm_findStr`
+**参数列表**：同 `findStr`
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 8.23 dm_findStrFastE
+### 8.23 findStrFastE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrFastE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
+const char* DM_CALL findStrFastE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
 
 **功能说明**：快速查找文字，返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStrFast`
+**参数列表**：同 `findStrFast`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 8.24 dm_findStrFastEx
+### 8.24 findStrFastEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrFastEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
+const char* DM_CALL findStrFastEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
 
 **功能说明**：快速查找文字，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStrFast`
+**参数列表**：同 `findStrFast`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 8.25 dm_findStrFastS
+### 8.25 findStrFastS
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findStrFastS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
+long DM_CALL findStrFastS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
 
 **功能说明**：快速查找文字（智能模式），返回第一个匹配位置。
 
-**参数列表**：同 `dm_findStr`
+**参数列表**：同 `findStr`
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 8.26 dm_findStrFastExS
+### 8.26 findStrFastExS
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrFastExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
+const char* DM_CALL findStrFastExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
 
 **功能说明**：快速查找文字（智能模式），返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStrFast`
+**参数列表**：同 `findStrFast`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 8.27 dm_findStrWithFont
+### 8.27 findStrWithFont
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findStrWithFont(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size, long* intX, long* intY);
+long DM_CALL findStrWithFont(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size, long* intX, long* intY);
 ```
 
 **功能说明**：根据指定字体信息查找文字。
@@ -6887,44 +6888,44 @@ long DM_CALL dm_findStrWithFont(long x1, long y1, long x2, long y2, const char* 
 
 ---
 
-### 8.28 dm_findStrWithFontE
+### 8.28 findStrWithFontE
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrWithFontE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size);
+const char* DM_CALL findStrWithFontE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size);
 ```
 
 **功能说明**：按字体查找文字，返回第一个匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStrWithFont`（无输出参数）
+**参数列表**：同 `findStrWithFont`（无输出参数）
 
 **返回值**：坐标字符串。
 
 ---
 
-### 8.29 dm_findStrWithFontEx
+### 8.29 findStrWithFontEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findStrWithFontEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size);
+const char* DM_CALL findStrWithFontEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size);
 ```
 
 **功能说明**：按字体查找文字，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_findStrWithFont`
+**参数列表**：同 `findStrWithFont`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 8.30 dm_getWords
+### 8.30 getWords
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getWords(long x1, long y1, long x2, long y2, const char* color, const char* words);
+const char* DM_CALL getWords(long x1, long y1, long x2, long y2, const char* color, const char* words);
 ```
 
 **功能说明**：在指定区域中提取文字。用于手动制作字库时获取文字样本。
@@ -6941,12 +6942,12 @@ const char* DM_CALL dm_getWords(long x1, long y1, long x2, long y2, const char* 
 
 ---
 
-### 8.31 dm_getWordsNoDict
+### 8.31 getWordsNoDict
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getWordsNoDict(long x1, long y1, long x2, long y2, const char* color);
+const char* DM_CALL getWordsNoDict(long x1, long y1, long x2, long y2, const char* color);
 ```
 
 **功能说明**：在无字库模式下提取文字（不依赖字库，通过颜色分割）。
@@ -6962,12 +6963,12 @@ const char* DM_CALL dm_getWordsNoDict(long x1, long y1, long x2, long y2, const 
 
 ---
 
-### 8.32 dm_fetchWord
+### 8.32 fetchWord
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_fetchWord(long x1, long y1, long x2, long y2, const char* color, const char* words);
+long DM_CALL fetchWord(long x1, long y1, long x2, long y2, const char* color, const char* words);
 ```
 
 **功能说明**：提取文字样本并添加到当前字库中。
@@ -6984,12 +6985,12 @@ long DM_CALL dm_fetchWord(long x1, long y1, long x2, long y2, const char* color,
 
 ---
 
-### 8.33 dm_getResultCount
+### 8.33 getResultCount
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getResultCount(const char* ret);
+long DM_CALL getResultCount(const char* ret);
 ```
 
 **功能说明**：获取查找结果字符串中的匹配数量。
@@ -7013,12 +7014,12 @@ print(f"找到 {count} 个'确定'")
 
 ---
 
-### 8.34 dm_getResultPos
+### 8.34 getResultPos
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getResultPos(const char* ret, long index, long* intX, long* intY);
+long DM_CALL getResultPos(const char* ret, long index, long* intX, long* intY);
 ```
 
 **功能说明**：从查找结果字符串中获取指定索引的坐标。
@@ -7036,12 +7037,12 @@ long DM_CALL dm_getResultPos(const char* ret, long index, long* intX, long* intY
 
 ---
 
-### 8.35 dm_getWordResultCount
+### 8.35 getWordResultCount
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getWordResultCount(const char* str);
+long DM_CALL getWordResultCount(const char* str);
 ```
 
 **功能说明**：获取文字识别结果中的字符数量。
@@ -7056,12 +7057,12 @@ long DM_CALL dm_getWordResultCount(const char* str);
 
 ---
 
-### 8.36 dm_getWordResultPos
+### 8.36 getWordResultPos
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getWordResultPos(const char* str, long index, long* intX, long* intY);
+long DM_CALL getWordResultPos(const char* str, long index, long* intX, long* intY);
 ```
 
 **功能说明**：从 OCR 识别结果中获取指定索引字符的坐标。
@@ -7078,12 +7079,12 @@ long DM_CALL dm_getWordResultPos(const char* str, long index, long* intX, long* 
 
 ---
 
-### 8.37 dm_getWordResultStr
+### 8.37 getWordResultStr
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getWordResultStr(const char* str, long index);
+const char* DM_CALL getWordResultStr(const char* str, long index);
 ```
 
 **功能说明**：从 OCR 识别结果中获取指定索引字符的识别结果。
@@ -7099,12 +7100,12 @@ const char* DM_CALL dm_getWordResultStr(const char* str, long index);
 
 ---
 
-### 8.38 dm_setColGapNoDict
+### 8.38 setColGapNoDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setColGapNoDict(long col_gap);
+long DM_CALL setColGapNoDict(long col_gap);
 ```
 
 **功能说明**：设置无字库模式下的列间距（用于文字分割）。
@@ -7119,12 +7120,12 @@ long DM_CALL dm_setColGapNoDict(long col_gap);
 
 ---
 
-### 8.39 dm_setRowGapNoDict
+### 8.39 setRowGapNoDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setRowGapNoDict(long row_gap);
+long DM_CALL setRowGapNoDict(long row_gap);
 ```
 
 **功能说明**：设置无字库模式下的行间距。
@@ -7139,12 +7140,12 @@ long DM_CALL dm_setRowGapNoDict(long row_gap);
 
 ---
 
-### 8.40 dm_setWordGapNoDict
+### 8.40 setWordGapNoDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWordGapNoDict(long word_gap);
+long DM_CALL setWordGapNoDict(long word_gap);
 ```
 
 **功能说明**：设置无字库模式下的字间距。
@@ -7159,12 +7160,12 @@ long DM_CALL dm_setWordGapNoDict(long word_gap);
 
 ---
 
-### 8.41 dm_setWordLineHeightNoDict
+### 8.41 setWordLineHeightNoDict
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWordLineHeightNoDict(long line_height);
+long DM_CALL setWordLineHeightNoDict(long line_height);
 ```
 
 **功能说明**：设置无字库模式下的行高。
@@ -7179,12 +7180,12 @@ long DM_CALL dm_setWordLineHeightNoDict(long line_height);
 
 ---
 
-### 8.42 dm_setExactOcr
+### 8.42 setExactOcr
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setExactOcr(long exact_ocr);
+long DM_CALL setExactOcr(long exact_ocr);
 ```
 
 **功能说明**：设置精确 OCR 模式。启用后识别精度更高，但速度会变慢。
@@ -7199,12 +7200,12 @@ long DM_CALL dm_setExactOcr(long exact_ocr);
 
 ---
 
-### 8.43 dm_setMinColGap
+### 8.43 setMinColGap
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setMinColGap(long min_col_gap);
+long DM_CALL setMinColGap(long min_col_gap);
 ```
 
 **功能说明**：设置最小列间距。
@@ -7219,12 +7220,12 @@ long DM_CALL dm_setMinColGap(long min_col_gap);
 
 ---
 
-### 8.44 dm_setMinRowGap
+### 8.44 setMinRowGap
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setMinRowGap(long min_row_gap);
+long DM_CALL setMinRowGap(long min_row_gap);
 ```
 
 **功能说明**：设置最小行间距。
@@ -7239,12 +7240,12 @@ long DM_CALL dm_setMinRowGap(long min_row_gap);
 
 ---
 
-### 8.45 dm_setWordGap
+### 8.45 setWordGap
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWordGap(long word_gap);
+long DM_CALL setWordGap(long word_gap);
 ```
 
 **功能说明**：设置字间距（有字库模式）。
@@ -7259,12 +7260,12 @@ long DM_CALL dm_setWordGap(long word_gap);
 
 ---
 
-### 8.46 dm_setWordLineHeight
+### 8.46 setWordLineHeight
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setWordLineHeight(long line_height);
+long DM_CALL setWordLineHeight(long line_height);
 ```
 
 **功能说明**：设置行高（有字库模式）。
@@ -7285,12 +7286,12 @@ long DM_CALL dm_setWordLineHeight(long line_height);
 
 ---
 
-### 9.1 dm_beep
+### 9.1 beep
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_beep(long f, long duration);
+long DM_CALL beep(long f, long duration);
 ```
 
 **功能说明**：发出蜂鸣声。
@@ -7306,12 +7307,12 @@ long DM_CALL dm_beep(long f, long duration);
 
 ---
 
-### 9.2 dm_delay
+### 9.2 delay
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_delay(long mis);
+long DM_CALL delay(long mis);
 ```
 
 **功能说明**：延时等待指定的毫秒数。
@@ -7334,12 +7335,12 @@ dm.delay(500)      # 等待 0.5 秒
 
 ---
 
-### 9.3 dm_delays
+### 9.3 delays
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_delays(long mis_min, long mis_max);
+long DM_CALL delays(long mis_min, long mis_max);
 ```
 
 **功能说明**：随机延时，在指定范围内随机等待一个时间。用于模拟更自然的操作行为。
@@ -7362,12 +7363,12 @@ dm.delays(500, 1500)  # 随机等待 0.5-1.5 秒
 
 ---
 
-### 9.4 dm_runApp
+### 9.4 runApp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_runApp(const char* app_path, long mode);
+long DM_CALL runApp(const char* app_path, long mode);
 ```
 
 **功能说明**：运行指定的应用程序或文件。
@@ -7401,12 +7402,12 @@ pid = dm.run_app("C:\\game.exe", 1)    # 隐藏运行游戏
 
 ---
 
-### 9.5 dm_stop
+### 9.5 stop
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_stop(long id);
+long DM_CALL stop(long id);
 ```
 
 **功能说明**：停止指定进程。
@@ -7415,18 +7416,18 @@ long DM_CALL dm_stop(long id);
 
 | 参数 | 类型   | 必填 | 说明                      |
 | -- | ---- | -- | ----------------------- |
-| id | long | 是  | 进程 ID（由 `dm_runApp` 返回） |
+| id | long | 是  | 进程 ID（由 `runApp` 返回） |
 
 **返回值**：0=成功，非0=失败。
 
 ---
 
-### 9.6 dm_play
+### 9.6 play
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_play(const char* media_file);
+long DM_CALL play(const char* media_file);
 ```
 
 **功能说明**：播放指定的音频文件。
@@ -7441,12 +7442,12 @@ long DM_CALL dm_play(const char* media_file);
 
 ---
 
-### 9.7 dm_exitOs
+### 9.7 exitOs
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_exitOs(long type);
+long DM_CALL exitOs(long type);
 ```
 
 **功能说明**：执行系统关机、重启或注销操作。
@@ -7461,12 +7462,12 @@ long DM_CALL dm_exitOs(long type);
 
 ---
 
-### 9.8 dm_setScreen
+### 9.8 setScreen
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setScreen(long width, long height, long depth);
+long DM_CALL setScreen(long width, long height, long depth);
 ```
 
 **功能说明**：设置屏幕分辨率。
@@ -7483,12 +7484,12 @@ long DM_CALL dm_setScreen(long width, long height, long depth);
 
 ---
 
-### 9.9 dm_getScreenWidth
+### 9.9 getScreenWidth
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getScreenWidth();
+long DM_CALL getScreenWidth();
 ```
 
 **功能说明**：获取屏幕宽度（像素）。
@@ -7508,12 +7509,12 @@ print(f"当前屏幕分辨率: {w}x{h}")
 
 ---
 
-### 9.10 dm_getScreenHeight
+### 9.10 getScreenHeight
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getScreenHeight();
+long DM_CALL getScreenHeight();
 ```
 
 **功能说明**：获取屏幕高度（像素）。
@@ -7524,12 +7525,12 @@ long DM_CALL dm_getScreenHeight();
 
 ---
 
-### 9.11 dm_getScreenDepth
+### 9.11 getScreenDepth
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getScreenDepth();
+long DM_CALL getScreenDepth();
 ```
 
 **功能说明**：获取屏幕颜色深度（色位数）。
@@ -7540,12 +7541,12 @@ long DM_CALL dm_getScreenDepth();
 
 ---
 
-### 9.12 dm_getDPI
+### 9.12 getDPI
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getDPI();
+long DM_CALL getDPI();
 ```
 
 **功能说明**：获取系统 DPI（每英寸点数）设置。
@@ -7556,12 +7557,12 @@ long DM_CALL dm_getDPI();
 
 ---
 
-### 9.13 dm_getTime
+### 9.13 getTime
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getTime();
+long DM_CALL getTime();
 ```
 
 **功能说明**：获取当前系统时间戳（毫秒级）。
@@ -7582,12 +7583,12 @@ print(f"操作耗时: {elapsed} 毫秒")
 
 ---
 
-### 9.14 dm_getOsType
+### 9.14 getOsType
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getOsType();
+long DM_CALL getOsType();
 ```
 
 **功能说明**：获取操作系统类型。
@@ -7610,12 +7611,12 @@ long DM_CALL dm_getOsType();
 
 ---
 
-### 9.15 dm_getOsBuildNumber
+### 9.15 getOsBuildNumber
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getOsBuildNumber();
+long DM_CALL getOsBuildNumber();
 ```
 
 **功能说明**：获取操作系统构建号。
@@ -7626,12 +7627,12 @@ long DM_CALL dm_getOsBuildNumber();
 
 ---
 
-### 9.16 dm_is64Bit
+### 9.16 is64Bit
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_is64Bit();
+long DM_CALL is64Bit();
 ```
 
 **功能说明**：判断当前操作系统是否为 64 位。
@@ -7642,12 +7643,12 @@ long DM_CALL dm_is64Bit();
 
 ---
 
-### 9.17 dm_isSurrpotVt
+### 9.17 isSurrpotVt
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_isSurrpotVt();
+long DM_CALL isSurrpotVt();
 ```
 
 **功能说明**：判断 CPU 是否支持虚拟化技术（VT）。
@@ -7658,12 +7659,12 @@ long DM_CALL dm_isSurrpotVt();
 
 ---
 
-### 9.18 dm_getSystemInfo
+### 9.18 getSystemInfo
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getSystemInfo(long type, long method);
+const char* DM_CALL getSystemInfo(long type, long method);
 ```
 
 **功能说明**：获取系统信息。
@@ -7679,12 +7680,12 @@ const char* DM_CALL dm_getSystemInfo(long type, long method);
 
 ---
 
-### 9.19 dm_getDir
+### 9.19 getDir
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getDir(long type);
+const char* DM_CALL getDir(long type);
 ```
 
 **功能说明**：获取系统特殊目录路径。
@@ -7699,12 +7700,12 @@ const char* DM_CALL dm_getDir(long type);
 
 ---
 
-### 9.20 dm_getLocale
+### 9.20 getLocale
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getLocale();
+long DM_CALL getLocale();
 ```
 
 **功能说明**：获取系统区域设置（Locale）。
@@ -7715,12 +7716,12 @@ long DM_CALL dm_getLocale();
 
 ---
 
-### 9.21 dm_getCpuType
+### 9.21 getCpuType
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getCpuType();
+long DM_CALL getCpuType();
 ```
 
 **功能说明**：获取 CPU 类型。
@@ -7731,12 +7732,12 @@ long DM_CALL dm_getCpuType();
 
 ---
 
-### 9.22 dm_getCpuUsage
+### 9.22 getCpuUsage
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getCpuUsage();
+long DM_CALL getCpuUsage();
 ```
 
 **功能说明**：获取当前 CPU 使用率。
@@ -7747,12 +7748,12 @@ long DM_CALL dm_getCpuUsage();
 
 ---
 
-### 9.23 dm_getMemoryUsage
+### 9.23 getMemoryUsage
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getMemoryUsage();
+long DM_CALL getMemoryUsage();
 ```
 
 **功能说明**：获取当前内存使用率。
@@ -7763,12 +7764,12 @@ long DM_CALL dm_getMemoryUsage();
 
 ---
 
-### 9.24 dm_getDiskSerial
+### 9.24 getDiskSerial
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getDiskSerial();
+const char* DM_CALL getDiskSerial();
 ```
 
 **功能说明**：获取系统盘的序列号。
@@ -7779,12 +7780,12 @@ const char* DM_CALL dm_getDiskSerial();
 
 ---
 
-### 9.25 dm_getDiskModel
+### 9.25 getDiskModel
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getDiskModel();
+const char* DM_CALL getDiskModel();
 ```
 
 **功能说明**：获取系统盘的型号信息。
@@ -7795,12 +7796,12 @@ const char* DM_CALL dm_getDiskModel();
 
 ---
 
-### 9.26 dm_getDiskReversion
+### 9.26 getDiskReversion
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getDiskReversion();
+const char* DM_CALL getDiskReversion();
 ```
 
 **功能说明**：获取系统盘的固件版本号。
@@ -7811,12 +7812,12 @@ const char* DM_CALL dm_getDiskReversion();
 
 ---
 
-### 9.27 dm_getMachineCode
+### 9.27 getMachineCode
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getMachineCode();
+const char* DM_CALL getMachineCode();
 ```
 
 **功能说明**：获取本机机器码（基于硬件信息生成的唯一标识）。用于插件注册验证。
@@ -7835,12 +7836,12 @@ print(f"本机机器码: {code}")
 
 ---
 
-### 9.28 dm_getMachineCodeNoMac
+### 9.28 getMachineCodeNoMac
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getMachineCodeNoMac();
+const char* DM_CALL getMachineCodeNoMac();
 ```
 
 **功能说明**：获取不包含 MAC 地址的机器码。
@@ -7851,12 +7852,12 @@ const char* DM_CALL dm_getMachineCodeNoMac();
 
 ---
 
-### 9.29 dm_getNetTime
+### 9.29 getNetTime
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getNetTime();
+const char* DM_CALL getNetTime();
 ```
 
 **功能说明**：从网络时间服务器获取当前时间。
@@ -7867,12 +7868,12 @@ const char* DM_CALL dm_getNetTime();
 
 ---
 
-### 9.30 dm_getNetTimeByIp
+### 9.30 getNetTimeByIp
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getNetTimeByIp(const char* ip);
+const char* DM_CALL getNetTimeByIp(const char* ip);
 ```
 
 **功能说明**：从指定的 IP 地址获取网络时间。
@@ -7887,12 +7888,12 @@ const char* DM_CALL dm_getNetTimeByIp(const char* ip);
 
 ---
 
-### 9.31 dm_getNetTimeSafe
+### 9.31 getNetTimeSafe
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getNetTimeSafe(long time_out);
+const char* DM_CALL getNetTimeSafe(long time_out);
 ```
 
 **功能说明**：安全获取网络时间（带超时处理）。
@@ -7907,12 +7908,12 @@ const char* DM_CALL dm_getNetTimeSafe(long time_out);
 
 ---
 
-### 9.32 dm_getClipboard
+### 9.32 getClipboard
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_getClipboard();
+const char* DM_CALL getClipboard();
 ```
 
 **功能说明**：获取系统剪贴板中的文本内容。
@@ -7931,12 +7932,12 @@ print(f"剪贴板内容: {text}")
 
 ---
 
-### 9.33 dm_setClipboard
+### 9.33 setClipboard
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setClipboard(const char* value);
+long DM_CALL setClipboard(const char* value);
 ```
 
 **功能说明**：设置系统剪贴板文本内容。
@@ -7951,12 +7952,12 @@ long DM_CALL dm_setClipboard(const char* value);
 
 ---
 
-### 9.34 dm_getDisplayInfo
+### 9.34 getDisplayInfo
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_getDisplayInfo(long type);
+long DM_CALL getDisplayInfo(long type);
 ```
 
 **功能说明**：获取显示器信息。
@@ -7971,12 +7972,12 @@ long DM_CALL dm_getDisplayInfo(long type);
 
 ---
 
-### 9.35 dm_disableCloseDisplayAndSleep
+### 9.35 disableCloseDisplayAndSleep
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_disableCloseDisplayAndSleep(long enable);
+long DM_CALL disableCloseDisplayAndSleep(long enable);
 ```
 
 **功能说明**：禁用或启用关闭显示器和进入睡眠状态。
@@ -7991,12 +7992,12 @@ long DM_CALL dm_disableCloseDisplayAndSleep(long enable);
 
 ---
 
-### 9.36 dm_disablePowerSave
+### 9.36 disablePowerSave
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_disablePowerSave(long enable);
+long DM_CALL disablePowerSave(long enable);
 ```
 
 **功能说明**：禁用或启用节能模式。
@@ -8011,12 +8012,12 @@ long DM_CALL dm_disablePowerSave(long enable);
 
 ---
 
-### 9.37 dm_disableScreenSave
+### 9.37 disableScreenSave
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_disableScreenSave(long enable);
+long DM_CALL disableScreenSave(long enable);
 ```
 
 **功能说明**：禁用或启用屏幕保护程序。
@@ -8031,12 +8032,12 @@ long DM_CALL dm_disableScreenSave(long enable);
 
 ---
 
-### 9.38 dm_disableFontSmooth
+### 9.38 disableFontSmooth
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_disableFontSmooth();
+long DM_CALL disableFontSmooth();
 ```
 
 **功能说明**：禁用字体平滑（抗锯齿）效果。用于提高文字识别精度。
@@ -8047,12 +8048,12 @@ long DM_CALL dm_disableFontSmooth();
 
 ---
 
-### 9.39 dm_enableFontSmooth
+### 9.39 enableFontSmooth
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enableFontSmooth();
+long DM_CALL enableFontSmooth();
 ```
 
 **功能说明**：启用字体平滑（抗锯齿）效果。
@@ -8063,12 +8064,12 @@ long DM_CALL dm_enableFontSmooth();
 
 ---
 
-### 9.40 dm_checkFontSmooth
+### 9.40 checkFontSmooth
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_checkFontSmooth();
+long DM_CALL checkFontSmooth();
 ```
 
 **功能说明**：检查当前字体平滑是否启用。
@@ -8079,12 +8080,12 @@ long DM_CALL dm_checkFontSmooth();
 
 ---
 
-### 9.41 dm_checkUAC
+### 9.41 checkUAC
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_checkUAC();
+long DM_CALL checkUAC();
 ```
 
 **功能说明**：检查 UAC（用户账户控制）是否启用。
@@ -8095,12 +8096,12 @@ long DM_CALL dm_checkUAC();
 
 ---
 
-### 9.42 dm_setUAC
+### 9.42 setUAC
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setUAC(long enable);
+long DM_CALL setUAC(long enable);
 ```
 
 **功能说明**：启用或禁用 UAC（需要管理员权限）。
@@ -8115,12 +8116,12 @@ long DM_CALL dm_setUAC(long enable);
 
 ---
 
-### 9.43 dm_setDisplayAcceler
+### 9.43 setDisplayAcceler
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setDisplayAcceler(long flag);
+long DM_CALL setDisplayAcceler(long flag);
 ```
 
 **功能说明**：设置显示加速标志。
@@ -8135,12 +8136,12 @@ long DM_CALL dm_setDisplayAcceler(long flag);
 
 ---
 
-### 9.44 dm_showTaskBarIcon
+### 9.44 showTaskBarIcon
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_showTaskBarIcon(intptr_t hwnd, long show);
+long DM_CALL showTaskBarIcon(intptr_t hwnd, long show);
 ```
 
 **功能说明**：显示或隐藏指定窗口在任务栏上的图标。
@@ -8162,12 +8163,12 @@ long DM_CALL dm_showTaskBarIcon(intptr_t hwnd, long show);
 
 ---
 
-### 10.1 dm_enterCri
+### 10.1 enterCri
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_enterCri();
+long DM_CALL enterCri();
 ```
 
 **功能说明**：进入临界区（线程同步）。用于多线程环境下保护共享资源。
@@ -8178,15 +8179,15 @@ long DM_CALL dm_enterCri();
 
 ---
 
-### 10.2 dm_leaveCri
+### 10.2 leaveCri
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_leaveCri();
+long DM_CALL leaveCri();
 ```
 
-**功能说明**：离开临界区。与 `dm_enterCri` 配对使用。
+**功能说明**：离开临界区。与 `enterCri` 配对使用。
 
 **参数列表**：无
 
@@ -8194,12 +8195,12 @@ long DM_CALL dm_leaveCri();
 
 ---
 
-### 10.3 dm_initCri
+### 10.3 initCri
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_initCri();
+long DM_CALL initCri();
 ```
 
 **功能说明**：初始化临界区。
@@ -8210,12 +8211,12 @@ long DM_CALL dm_initCri();
 
 ---
 
-### 10.4 dm_releaseRef
+### 10.4 releaseRef
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_releaseRef();
+long DM_CALL releaseRef();
 ```
 
 **功能说明**：释放当前对象的引用计数。
@@ -8226,12 +8227,12 @@ long DM_CALL dm_releaseRef();
 
 ---
 
-### 10.5 dm_setExitThread
+### 10.5 setExitThread
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setExitThread(long mode);
+long DM_CALL setExitThread(long mode);
 ```
 
 **功能说明**：设置线程退出模式。
@@ -8246,12 +8247,12 @@ long DM_CALL dm_setExitThread(long mode);
 
 ---
 
-### 10.6 dm_executeCmd
+### 10.6 executeCmd
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_executeCmd(const char* cmd, long time_out);
+const char* DM_CALL executeCmd(const char* cmd, long time_out);
 ```
 
 **功能说明**：执行命令行命令，并返回命令输出结果。
@@ -8279,12 +8280,12 @@ print(f"C盘文件列表: {result}")
 
 ---
 
-### 10.7 dm_activeInputMethod
+### 10.7 activeInputMethod
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_activeInputMethod(intptr_t hwnd, const char* input_method);
+long DM_CALL activeInputMethod(intptr_t hwnd, const char* input_method);
 ```
 
 **功能说明**：激活指定窗口的输入法。
@@ -8300,12 +8301,12 @@ long DM_CALL dm_activeInputMethod(intptr_t hwnd, const char* input_method);
 
 ---
 
-### 10.8 dm_checkInputMethod
+### 10.8 checkInputMethod
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_checkInputMethod(intptr_t hwnd, const char* input_method);
+long DM_CALL checkInputMethod(intptr_t hwnd, const char* input_method);
 ```
 
 **功能说明**：检查指定窗口当前是否使用指定的输入法。
@@ -8321,12 +8322,12 @@ long DM_CALL dm_checkInputMethod(intptr_t hwnd, const char* input_method);
 
 ---
 
-### 10.9 dm_findInputMethod
+### 10.9 findInputMethod
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_findInputMethod(const char* input_method);
+long DM_CALL findInputMethod(const char* input_method);
 ```
 
 **功能说明**：查找系统中是否存在指定的输入法。
@@ -8347,12 +8348,12 @@ long DM_CALL dm_findInputMethod(const char* input_method);
 
 ---
 
-### 11.1 dm_asmAdd
+### 11.1 asmAdd
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_asmAdd(const char* asm_ins);
+long DM_CALL asmAdd(const char* asm_ins);
 ```
 
 **功能说明**：向汇编代码缓冲区中添加一条汇编指令。
@@ -8379,12 +8380,12 @@ dm.asm_add("ret")
 
 ---
 
-### 11.2 dm_asmCall
+### 11.2 asmCall
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_asmCall(intptr_t hwnd, long mode);
+long DM_CALL asmCall(intptr_t hwnd, long mode);
 ```
 
 **功能说明**：在远程进程中执行已添加的汇编代码。
@@ -8400,12 +8401,12 @@ long DM_CALL dm_asmCall(intptr_t hwnd, long mode);
 
 ---
 
-### 11.3 dm_asmCallEx
+### 11.3 asmCallEx
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_asmCallEx(intptr_t hwnd, long mode, long base_addr, long call_addr);
+long DM_CALL asmCallEx(intptr_t hwnd, long mode, long base_addr, long call_addr);
 ```
 
 **功能说明**：在远程进程中指定地址处执行汇编代码。
@@ -8423,12 +8424,12 @@ long DM_CALL dm_asmCallEx(intptr_t hwnd, long mode, long base_addr, long call_ad
 
 ---
 
-### 11.4 dm_asmClear
+### 11.4 asmClear
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_asmClear();
+long DM_CALL asmClear();
 ```
 
 **功能说明**：清除汇编代码缓冲区中的所有指令。
@@ -8439,12 +8440,12 @@ long DM_CALL dm_asmClear();
 
 ---
 
-### 11.5 dm_asmSetTimeout
+### 11.5 asmSetTimeout
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_asmSetTimeout(long timeout);
+long DM_CALL asmSetTimeout(long timeout);
 ```
 
 **功能说明**：设置汇编代码执行的超时时间。
@@ -8459,12 +8460,12 @@ long DM_CALL dm_asmSetTimeout(long timeout);
 
 ---
 
-### 11.6 dm_assemble
+### 11.6 assemble
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_assemble(long base_addr, long is_asm_code);
+const char* DM_CALL assemble(long base_addr, long is_asm_code);
 ```
 
 **功能说明**：将汇编代码缓冲区中的指令编译为机器码。
@@ -8480,12 +8481,12 @@ const char* DM_CALL dm_assemble(long base_addr, long is_asm_code);
 
 ---
 
-### 11.7 dm_disAssemble
+### 11.7 disAssemble
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_disAssemble(long asm_code, long base_addr, long is_asm_code);
+const char* DM_CALL disAssemble(long asm_code, long base_addr, long is_asm_code);
 ```
 
 **功能说明**：反汇编机器码为汇编指令。
@@ -8502,12 +8503,12 @@ const char* DM_CALL dm_disAssemble(long asm_code, long base_addr, long is_asm_co
 
 ---
 
-### 11.8 dm_setAsmHwndAsProcessId
+### 11.8 setAsmHwndAsProcessId
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setAsmHwndAsProcessId(long enable);
+long DM_CALL setAsmHwndAsProcessId(long enable);
 ```
 
 **功能说明**：设置汇编操作时是否将 hwnd 参数作为进程 ID 处理。
@@ -8522,12 +8523,12 @@ long DM_CALL dm_setAsmHwndAsProcessId(long enable);
 
 ---
 
-### 11.9 dm_setShowAsmErrorMsg
+### 11.9 setShowAsmErrorMsg
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_setShowAsmErrorMsg(long show);
+long DM_CALL setShowAsmErrorMsg(long show);
 ```
 
 **功能说明**：设置是否显示汇编错误消息框。
@@ -8548,12 +8549,12 @@ AI 功能模块提供基于 AI 模型的找图和 YOLO 目标检测功能。
 
 ---
 
-### 12.1 dm_loadAi
+### 12.1 loadAi
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_loadAi(const char* file);
+long DM_CALL loadAi(const char* file);
 ```
 
 **功能说明**：加载 AI 模型文件。
@@ -8568,12 +8569,12 @@ long DM_CALL dm_loadAi(const char* file);
 
 ---
 
-### 12.2 dm_loadAiMemory
+### 12.2 loadAiMemory
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_loadAiMemory(long data, long size);
+long DM_CALL loadAiMemory(long data, long size);
 ```
 
 **功能说明**：从内存加载 AI 模型数据。
@@ -8589,12 +8590,12 @@ long DM_CALL dm_loadAiMemory(long data, long size);
 
 ---
 
-### 12.3 dm_aiEnableFindPicWindow
+### 12.3 aiEnableFindPicWindow
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiEnableFindPicWindow(long enable);
+long DM_CALL aiEnableFindPicWindow(long enable);
 ```
 
 **功能说明**：启用或禁用 AI 找图窗口模式。
@@ -8609,76 +8610,76 @@ long DM_CALL dm_aiEnableFindPicWindow(long enable);
 
 ---
 
-### 12.4 dm_aiFindPic
+### 12.4 aiFindPic
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiFindPic(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir, long* intX, long* intY);
+long DM_CALL aiFindPic(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：使用 AI 模型查找图片，返回第一个匹配位置的坐标。
 
-**参数列表**：同 `dm_findPic`（参数格式相同）
+**参数列表**：同 `findPic`（参数格式相同）
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 12.5 dm_aiFindPicEx
+### 12.5 aiFindPicEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_aiFindPicEx(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir);
+const char* DM_CALL aiFindPicEx(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir);
 ```
 
 **功能说明**：AI 找图，返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_aiFindPic`（无输出参数）
+**参数列表**：同 `aiFindPic`（无输出参数）
 
 **返回值**：坐标字符串。
 
 ---
 
-### 12.6 dm_aiFindPicMem
+### 12.6 aiFindPicMem
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiFindPicMem(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir, long* intX, long* intY);
+long DM_CALL aiFindPicMem(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir, long* intX, long* intY);
 ```
 
 **功能说明**：AI 找图（内存模式），从内存图片数据中查找。
 
-**参数列表**：同 `dm_findPicMem`
+**参数列表**：同 `findPicMem`
 
 **返回值**：0=找到，1=未找到。
 
 ---
 
-### 12.7 dm_aiFindPicMemEx
+### 12.7 aiFindPicMemEx
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_aiFindPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir);
+const char* DM_CALL aiFindPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir);
 ```
 
 **功能说明**：AI 找图（内存模式），返回所有匹配位置的坐标字符串。
 
-**参数列表**：同 `dm_aiFindPicMem`
+**参数列表**：同 `aiFindPicMem`
 
 **返回值**：坐标字符串。
 
 ---
 
-### 12.8 dm_aiYoloDetectObjects
+### 12.8 aiYoloDetectObjects
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_aiYoloDetectObjects(long x1, long y1, long x2, long y2, float prob, float iou);
+const char* DM_CALL aiYoloDetectObjects(long x1, long y1, long x2, long y2, float prob, float iou);
 ```
 
 **功能说明**：使用 YOLO 模型进行目标检测，识别指定区域内的所有目标对象。
@@ -8706,12 +8707,12 @@ print(f"检测结果: {objects}")
 
 ---
 
-### 12.9 dm_aiYoloDetectObjectsToDataBmp
+### 12.9 aiYoloDetectObjectsToDataBmp
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiYoloDetectObjectsToDataBmp(long x1, long y1, long x2, long y2, float prob, float iou, long data, long size, long mode);
+long DM_CALL aiYoloDetectObjectsToDataBmp(long x1, long y1, long x2, long y2, float prob, float iou, long data, long size, long mode);
 ```
 
 **功能说明**：YOLO 检测并将结果绘制到内存 BMP 数据中。
@@ -8722,12 +8723,12 @@ long DM_CALL dm_aiYoloDetectObjectsToDataBmp(long x1, long y1, long x2, long y2,
 
 ---
 
-### 12.10 dm_aiYoloDetectObjectsToFile
+### 12.10 aiYoloDetectObjectsToFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiYoloDetectObjectsToFile(long x1, long y1, long x2, long y2, float prob, float iou, const char* file, long mode);
+long DM_CALL aiYoloDetectObjectsToFile(long x1, long y1, long x2, long y2, float prob, float iou, const char* file, long mode);
 ```
 
 **功能说明**：YOLO 检测并将结果绘制到图片文件。
@@ -8738,12 +8739,12 @@ long DM_CALL dm_aiYoloDetectObjectsToFile(long x1, long y1, long x2, long y2, fl
 
 ---
 
-### 12.11 dm_aiYoloSetModel
+### 12.11 aiYoloSetModel
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiYoloSetModel(const char* model_file, const char* model_type);
+long DM_CALL aiYoloSetModel(const char* model_file, const char* model_type);
 ```
 
 **功能说明**：设置 YOLO 模型文件。
@@ -8759,12 +8760,12 @@ long DM_CALL dm_aiYoloSetModel(const char* model_file, const char* model_type);
 
 ---
 
-### 12.12 dm_aiYoloSetModelMemory
+### 12.12 aiYoloSetModelMemory
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiYoloSetModelMemory(long data, long size, const char* model_type);
+long DM_CALL aiYoloSetModelMemory(long data, long size, const char* model_type);
 ```
 
 **功能说明**：从内存加载 YOLO 模型。
@@ -8781,12 +8782,12 @@ long DM_CALL dm_aiYoloSetModelMemory(long data, long size, const char* model_typ
 
 ---
 
-### 12.13 dm_aiYoloFreeModel
+### 12.13 aiYoloFreeModel
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiYoloFreeModel();
+long DM_CALL aiYoloFreeModel();
 ```
 
 **功能说明**：释放当前加载的 YOLO 模型资源。
@@ -8797,12 +8798,12 @@ long DM_CALL dm_aiYoloFreeModel();
 
 ---
 
-### 12.14 dm_aiYoloUseModel
+### 12.14 aiYoloUseModel
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiYoloUseModel(long index);
+long DM_CALL aiYoloUseModel(long index);
 ```
 
 **功能说明**：切换到指定索引的 YOLO 模型（如果加载了多个模型）。
@@ -8817,12 +8818,12 @@ long DM_CALL dm_aiYoloUseModel(long index);
 
 ---
 
-### 12.15 dm_aiYoloSetVersion
+### 12.15 aiYoloSetVersion
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_aiYoloSetVersion(const char* version);
+long DM_CALL aiYoloSetVersion(const char* version);
 ```
 
 **功能说明**：设置 YOLO 版本。
@@ -8837,12 +8838,12 @@ long DM_CALL dm_aiYoloSetVersion(const char* version);
 
 ---
 
-### 12.16 dm_aiYoloObjectsToString
+### 12.16 aiYoloObjectsToString
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_aiYoloObjectsToString(const char* objects);
+const char* DM_CALL aiYoloObjectsToString(const char* objects);
 ```
 
 **功能说明**：将 YOLO 检测结果对象转换为可读的字符串格式。
@@ -8857,12 +8858,12 @@ const char* DM_CALL dm_aiYoloObjectsToString(const char* objects);
 
 ---
 
-### 12.17 dm_aiYoloSortsObjects
+### 12.17 aiYoloSortsObjects
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_aiYoloSortsObjects(const char* objects, long sort_type);
+const char* DM_CALL aiYoloSortsObjects(const char* objects, long sort_type);
 ```
 
 **功能说明**：对 YOLO 检测结果进行排序。
@@ -8884,12 +8885,12 @@ Foobar 是窗口上的浮动图形控件系统，支持在窗口上绘制文字�
 
 ---
 
-### 13.1 dm_createFoobarRect
+### 13.1 createFoobarRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_createFoobarRect(intptr_t hwnd, long x, long y, long w, long h);
+long DM_CALL createFoobarRect(intptr_t hwnd, long x, long y, long w, long h);
 ```
 
 **功能说明**：在指定窗口上创建一个矩形 Foobar 控件。
@@ -8918,28 +8919,28 @@ dm.foobar_draw_text(fb, 0, 0, 300, 30, "Hello, World!", 0x00FF00, 0)
 
 ---
 
-### 13.2 dm_createFoobarEllipse
+### 13.2 createFoobarEllipse
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_createFoobarEllipse(intptr_t hwnd, long x, long y, long w, long h);
+long DM_CALL createFoobarEllipse(intptr_t hwnd, long x, long y, long w, long h);
 ```
 
 **功能说明**：在窗口上创建一个椭圆形状的 Foobar 控件。
 
-**参数列表**：同 `dm_createFoobarRect`
+**参数列表**：同 `createFoobarRect`
 
 **返回值**：Foobar 句柄，0=失败。
 
 ---
 
-### 13.3 dm_createFoobarRoundRect
+### 13.3 createFoobarRoundRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_createFoobarRoundRect(intptr_t hwnd, long x, long y, long w, long h, long rw, long rh);
+long DM_CALL createFoobarRoundRect(intptr_t hwnd, long x, long y, long w, long h, long rw, long rh);
 ```
 
 **功能说明**：在窗口上创建一个圆角矩形 Foobar 控件。
@@ -8957,12 +8958,12 @@ long DM_CALL dm_createFoobarRoundRect(intptr_t hwnd, long x, long y, long w, lon
 
 ---
 
-### 13.4 dm_createFoobarCustom
+### 13.4 createFoobarCustom
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_createFoobarCustom(intptr_t hwnd, long x, long y, long w, long h, const char* pic);
+long DM_CALL createFoobarCustom(intptr_t hwnd, long x, long y, long w, long h, const char* pic);
 ```
 
 **功能说明**：使用图片作为遮罩创建自定义形状的 Foobar 控件。
@@ -8979,12 +8980,12 @@ long DM_CALL dm_createFoobarCustom(intptr_t hwnd, long x, long y, long w, long h
 
 ---
 
-### 13.5 dm_foobarClose
+### 13.5 foobarClose
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarClose(intptr_t hwnd);
+long DM_CALL foobarClose(intptr_t hwnd);
 ```
 
 **功能说明**：关闭并销毁 Foobar 控件。
@@ -8999,12 +9000,12 @@ long DM_CALL dm_foobarClose(intptr_t hwnd);
 
 ---
 
-### 13.6 dm_foobarLock
+### 13.6 foobarLock
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarLock(intptr_t hwnd);
+long DM_CALL foobarLock(intptr_t hwnd);
 ```
 
 **功能说明**：锁定 Foobar 控件，防止内容被刷新。
@@ -9019,12 +9020,12 @@ long DM_CALL dm_foobarLock(intptr_t hwnd);
 
 ---
 
-### 13.7 dm_foobarUnlock
+### 13.7 foobarUnlock
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarUnlock(intptr_t hwnd);
+long DM_CALL foobarUnlock(intptr_t hwnd);
 ```
 
 **功能说明**：解锁 Foobar 控件，恢复刷新。
@@ -9039,12 +9040,12 @@ long DM_CALL dm_foobarUnlock(intptr_t hwnd);
 
 ---
 
-### 13.8 dm_foobarUpdate
+### 13.8 foobarUpdate
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarUpdate(intptr_t hwnd);
+long DM_CALL foobarUpdate(intptr_t hwnd);
 ```
 
 **功能说明**：立即更新 Foobar 控件的显示内容。
@@ -9059,12 +9060,12 @@ long DM_CALL dm_foobarUpdate(intptr_t hwnd);
 
 ---
 
-### 13.9 dm_foobarSetFont
+### 13.9 foobarSetFont
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarSetFont(intptr_t hwnd, const char* font_name, long size, long flag);
+long DM_CALL foobarSetFont(intptr_t hwnd, const char* font_name, long size, long flag);
 ```
 
 **功能说明**：设置 Foobar 控件的字体。
@@ -9082,12 +9083,12 @@ long DM_CALL dm_foobarSetFont(intptr_t hwnd, const char* font_name, long size, l
 
 ---
 
-### 13.10 dm_foobarSetSave
+### 13.10 foobarSetSave
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarSetSave(intptr_t hwnd, const char* file, long enable);
+long DM_CALL foobarSetSave(intptr_t hwnd, const char* file, long enable);
 ```
 
 **功能说明**：设置 Foobar 控件内容是否自动保存到文件。
@@ -9104,12 +9105,12 @@ long DM_CALL dm_foobarSetSave(intptr_t hwnd, const char* file, long enable);
 
 ---
 
-### 13.11 dm_foobarSetTrans
+### 13.11 foobarSetTrans
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarSetTrans(intptr_t hwnd, long trans, long color);
+long DM_CALL foobarSetTrans(intptr_t hwnd, long trans, long color);
 ```
 
 **功能说明**：设置 Foobar 控件的透明度和透明色。
@@ -9126,12 +9127,12 @@ long DM_CALL dm_foobarSetTrans(intptr_t hwnd, long trans, long color);
 
 ---
 
-### 13.12 dm_foobarDrawText
+### 13.12 foobarDrawText
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarDrawText(intptr_t hwnd, long x, long y, long w, long h, const char* text, long color, long align);
+long DM_CALL foobarDrawText(intptr_t hwnd, long x, long y, long w, long h, const char* text, long color, long align);
 ```
 
 **功能说明**：在 Foobar 控件上绘制文本。
@@ -9151,12 +9152,12 @@ long DM_CALL dm_foobarDrawText(intptr_t hwnd, long x, long y, long w, long h, co
 
 ---
 
-### 13.13 dm_foobarPrintText
+### 13.13 foobarPrintText
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarPrintText(intptr_t hwnd, const char* text, long color);
+long DM_CALL foobarPrintText(intptr_t hwnd, const char* text, long color);
 ```
 
 **功能说明**：在 Foobar 控件上追加打印文本（自动换行）。
@@ -9173,12 +9174,12 @@ long DM_CALL dm_foobarPrintText(intptr_t hwnd, const char* text, long color);
 
 ---
 
-### 13.14 dm_foobarDrawRect
+### 13.14 foobarDrawRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarDrawRect(intptr_t hwnd, long x1, long y1, long x2, long y2, long color, long style);
+long DM_CALL foobarDrawRect(intptr_t hwnd, long x1, long y1, long x2, long y2, long color, long style);
 ```
 
 **功能说明**：在 Foobar 控件上绘制矩形边框。
@@ -9196,12 +9197,12 @@ long DM_CALL dm_foobarDrawRect(intptr_t hwnd, long x1, long y1, long x2, long y2
 
 ---
 
-### 13.15 dm_foobarDrawLine
+### 13.15 foobarDrawLine
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarDrawLine(intptr_t hwnd, long x1, long y1, long x2, long y2, long color, long style);
+long DM_CALL foobarDrawLine(intptr_t hwnd, long x1, long y1, long x2, long y2, long color, long style);
 ```
 
 **功能说明**：在 Foobar 控件上绘制直线。
@@ -9219,12 +9220,12 @@ long DM_CALL dm_foobarDrawLine(intptr_t hwnd, long x1, long y1, long x2, long y2
 
 ---
 
-### 13.16 dm_foobarFillRect
+### 13.16 foobarFillRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarFillRect(intptr_t hwnd, long x1, long y1, long x2, long y2, long color);
+long DM_CALL foobarFillRect(intptr_t hwnd, long x1, long y1, long x2, long y2, long color);
 ```
 
 **功能说明**：在 Foobar 控件上绘制填充矩形。
@@ -9241,12 +9242,12 @@ long DM_CALL dm_foobarFillRect(intptr_t hwnd, long x1, long y1, long x2, long y2
 
 ---
 
-### 13.17 dm_foobarDrawPic
+### 13.17 foobarDrawPic
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarDrawPic(intptr_t hwnd, long x, long y, const char* pic);
+long DM_CALL foobarDrawPic(intptr_t hwnd, long x, long y, const char* pic);
 ```
 
 **功能说明**：在 Foobar 控件上绘制图片。
@@ -9264,12 +9265,12 @@ long DM_CALL dm_foobarDrawPic(intptr_t hwnd, long x, long y, const char* pic);
 
 ---
 
-### 13.18 dm_foobarClearText
+### 13.18 foobarClearText
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarClearText(intptr_t hwnd);
+long DM_CALL foobarClearText(intptr_t hwnd);
 ```
 
 **功能说明**：清除 Foobar 控件上的所有文本内容。
@@ -9284,12 +9285,12 @@ long DM_CALL dm_foobarClearText(intptr_t hwnd);
 
 ---
 
-### 13.19 dm_foobarTextRect
+### 13.19 foobarTextRect
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarTextRect(intptr_t hwnd, long x, long y, long w, long h);
+long DM_CALL foobarTextRect(intptr_t hwnd, long x, long y, long w, long h);
 ```
 
 **功能说明**：设置 Foobar 控件的文本显示区域。
@@ -9305,12 +9306,12 @@ long DM_CALL dm_foobarTextRect(intptr_t hwnd, long x, long y, long w, long h);
 
 ---
 
-### 13.20 dm_foobarTextLineGap
+### 13.20 foobarTextLineGap
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarTextLineGap(intptr_t hwnd, long line_gap);
+long DM_CALL foobarTextLineGap(intptr_t hwnd, long line_gap);
 ```
 
 **功能说明**：设置 Foobar 控件的文本行间距。
@@ -9326,12 +9327,12 @@ long DM_CALL dm_foobarTextLineGap(intptr_t hwnd, long line_gap);
 
 ---
 
-### 13.21 dm_foobarTextPrintDir
+### 13.21 foobarTextPrintDir
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarTextPrintDir(intptr_t hwnd, long dir);
+long DM_CALL foobarTextPrintDir(intptr_t hwnd, long dir);
 ```
 
 **功能说明**：设置 Foobar 控件的文本打印方向。
@@ -9347,12 +9348,12 @@ long DM_CALL dm_foobarTextPrintDir(intptr_t hwnd, long dir);
 
 ---
 
-### 13.22 dm_foobarStartGif
+### 13.22 foobarStartGif
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarStartGif(intptr_t hwnd, const char* pic, long x, long y);
+long DM_CALL foobarStartGif(intptr_t hwnd, const char* pic, long x, long y);
 ```
 
 **功能说明**：在 Foobar 控件上播放 GIF 动画。
@@ -9370,12 +9371,12 @@ long DM_CALL dm_foobarStartGif(intptr_t hwnd, const char* pic, long x, long y);
 
 ---
 
-### 13.23 dm_foobarStopGif
+### 13.23 foobarStopGif
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_foobarStopGif(intptr_t hwnd);
+long DM_CALL foobarStopGif(intptr_t hwnd);
 ```
 
 **功能说明**：停止 Foobar 控件上的 GIF 动画播放。
@@ -9396,12 +9397,12 @@ long DM_CALL dm_foobarStopGif(intptr_t hwnd);
 
 ---
 
-### 14.1 dm_faqCapture
+### 14.1 faqCapture
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqCapture(long x1, long y1, long x2, long y2, long quality, long delay, long time);
+long DM_CALL faqCapture(long x1, long y1, long x2, long y2, long quality, long delay, long time);
 ```
 
 **功能说明**：截取答题区域图片，用于发送给答题服务器识别。
@@ -9419,12 +9420,12 @@ long DM_CALL dm_faqCapture(long x1, long y1, long x2, long y2, long quality, lon
 
 ---
 
-### 14.2 dm_faqCaptureFromFile
+### 14.2 faqCaptureFromFile
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqCaptureFromFile(const char* file, long quality, long delay, long time);
+long DM_CALL faqCaptureFromFile(const char* file, long quality, long delay, long time);
 ```
 
 **功能说明**：从图片文件加载答题图片。
@@ -9440,28 +9441,28 @@ long DM_CALL dm_faqCaptureFromFile(const char* file, long quality, long delay, l
 
 ---
 
-### 14.3 dm_faqCaptureString
+### 14.3 faqCaptureString
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_faqCaptureString(long x1, long y1, long x2, long y2, long quality, long delay, long time);
+const char* DM_CALL faqCaptureString(long x1, long y1, long x2, long y2, long quality, long delay, long time);
 ```
 
 **功能说明**：截取答题区域并以字符串形式返回图片数据。
 
-**参数列表**：同 `dm_faqCapture`
+**参数列表**：同 `faqCapture`
 
 **返回值**：图片数据字符串。
 
 ---
 
-### 14.4 dm_faqGetSize
+### 14.4 faqGetSize
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqGetSize(long handle);
+long DM_CALL faqGetSize(long handle);
 ```
 
 **功能说明**：获取答题句柄对应的图片数据大小。
@@ -9476,12 +9477,12 @@ long DM_CALL dm_faqGetSize(long handle);
 
 ---
 
-### 14.5 dm_faqPost
+### 14.5 faqPost
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqPost(const char* server, long handle, long request_type, long time_out);
+long DM_CALL faqPost(const char* server, long handle, long request_type, long time_out);
 ```
 
 **功能说明**：将答题图片发送到指定的答题服务器。
@@ -9499,12 +9500,12 @@ long DM_CALL dm_faqPost(const char* server, long handle, long request_type, long
 
 ---
 
-### 14.6 dm_faqSend
+### 14.6 faqSend
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqSend(long handle, long time_out);
+long DM_CALL faqSend(long handle, long time_out);
 ```
 
 **功能说明**：发送答题请求（使用默认服务器）。
@@ -9520,12 +9521,12 @@ long DM_CALL dm_faqSend(long handle, long time_out);
 
 ---
 
-### 14.7 dm_faqFetch
+### 14.7 faqFetch
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqFetch(long time_out);
+long DM_CALL faqFetch(long time_out);
 ```
 
 **功能说明**：从答题服务器获取答案。
@@ -9540,12 +9541,12 @@ long DM_CALL dm_faqFetch(long time_out);
 
 ---
 
-### 14.8 dm_faqCancel
+### 14.8 faqCancel
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqCancel();
+long DM_CALL faqCancel();
 ```
 
 **功能说明**：取消当前答题请求。
@@ -9556,12 +9557,12 @@ long DM_CALL dm_faqCancel();
 
 ---
 
-### 14.9 dm_faqIsPosted
+### 14.9 faqIsPosted
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_faqIsPosted();
+long DM_CALL faqIsPosted();
 ```
 
 **功能说明**：检查答题请求是否已发送。
@@ -9578,12 +9579,12 @@ long DM_CALL dm_faqIsPosted();
 
 ---
 
-### 15.1 dm_excludePos
+### 15.1 excludePos
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_excludePos(const char* all_pos, long type, long x1, long y1, long x2, long y2);
+const char* DM_CALL excludePos(const char* all_pos, long type, long x1, long y1, long x2, long y2);
 ```
 
 **功能说明**：从坐标列表中排除指定区域内的坐标。
@@ -9600,12 +9601,12 @@ const char* DM_CALL dm_excludePos(const char* all_pos, long type, long x1, long 
 
 ---
 
-### 15.2 dm_findNearestPos
+### 15.2 findNearestPos
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_findNearestPos(const char* all_pos, long type, long x, long y);
+const char* DM_CALL findNearestPos(const char* all_pos, long type, long x, long y);
 ```
 
 **功能说明**：从坐标列表中找出距离指定点最近的坐标。
@@ -9623,12 +9624,12 @@ const char* DM_CALL dm_findNearestPos(const char* all_pos, long type, long x, lo
 
 ---
 
-### 15.3 dm_sortPosDistance
+### 15.3 sortPosDistance
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_sortPosDistance(const char* all_pos, long type, long x, long y);
+const char* DM_CALL sortPosDistance(const char* all_pos, long type, long x, long y);
 ```
 
 **功能说明**：对坐标列表按距离指定点的远近进行排序。
@@ -9652,12 +9653,12 @@ const char* DM_CALL dm_sortPosDistance(const char* all_pos, long type, long x, l
 
 ---
 
-### 16.1 dm_dmGuard
+### 16.1 dmGuard
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_dmGuard(long enable, const char* type);
+long DM_CALL dmGuard(long enable, const char* type);
 ```
 
 **功能说明**：启用或禁用防护盾。
@@ -9673,12 +9674,12 @@ long DM_CALL dm_dmGuard(long enable, const char* type);
 
 ---
 
-### 16.2 dm_dmGuardExtract
+### 16.2 dmGuardExtract
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_dmGuardExtract(const char* type, const char* file);
+long DM_CALL dmGuardExtract(const char* type, const char* file);
 ```
 
 **功能说明**：提取防护盾驱动文件到指定路径。
@@ -9694,12 +9695,12 @@ long DM_CALL dm_dmGuardExtract(const char* type, const char* file);
 
 ---
 
-### 16.3 dm_dmGuardLoadCustom
+### 16.3 dmGuardLoadCustom
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_dmGuardLoadCustom(const char* type, const char* data);
+long DM_CALL dmGuardLoadCustom(const char* type, const char* data);
 ```
 
 **功能说明**：加载自定义的防护盾数据。
@@ -9715,12 +9716,12 @@ long DM_CALL dm_dmGuardLoadCustom(const char* type, const char* data);
 
 ---
 
-### 16.4 dm_dmGuardParams
+### 16.4 dmGuardParams
 
 **函数签名**：
 
 ```c
-const char* DM_CALL dm_dmGuardParams(const char* cmd, const char* param);
+const char* DM_CALL dmGuardParams(const char* cmd, const char* param);
 ```
 
 **功能说明**：设置防护盾参数。
@@ -9736,12 +9737,12 @@ const char* DM_CALL dm_dmGuardParams(const char* cmd, const char* param);
 
 ---
 
-### 16.5 dm_unLoadDriver
+### 16.5 unLoadDriver
 
 **函数签名**：
 
 ```c
-long DM_CALL dm_unLoadDriver();
+long DM_CALL unLoadDriver();
 ```
 
 **功能说明**：卸载防护盾驱动。
@@ -9818,7 +9819,7 @@ long DM_CALL dm_unLoadDriver();
 ### Python 调用
 
 ```python
-from dm_hook import DmHook
+from hook import DmHook
 
 # 加载 DLL
 dm = DmHook()
@@ -9906,10 +9907,10 @@ int main() {
     HMODULE hDll = LoadLibraryA("dm_hook.dll");
     if (!hDll) { return 1; }
     
-    auto ver = (DM_VER)GetProcAddress(hDll, "dm_ver");
-    auto getID = (DM_GETID)GetProcAddress(hDll, "dm_getID");
-    auto getSW = (DM_GETSCREENWIDTH)GetProcAddress(hDll, "dm_getScreenWidth");
-    auto getSH = (DM_GETSCREENHEIGHT)GetProcAddress(hDll, "dm_getScreenHeight");
+    auto ver = (DM_VER)GetProcAddress(hDll, "ver");
+    auto getID = (DM_GETID)GetProcAddress(hDll, "getID");
+    auto getSW = (DM_GETSCREENWIDTH)GetProcAddress(hDll, "getScreenWidth");
+    auto getSH = (DM_GETSCREENHEIGHT)GetProcAddress(hDll, "getScreenHeight");
     
     std::cout << "版本: " << ver() << std::endl;
     std::cout << "ID: " << getID() << std::endl;
@@ -9926,22 +9927,22 @@ int main() {
 hModule := DllCall("LoadLibrary", "Str", "dm_hook.dll", "Ptr")
 
 ; 获取版本
-ver := DllCall("dm_hook.dll\dm_ver", "AStr")
+ver := DllCall("dm_hook.dll\ver", "AStr")
 MsgBox, 版本: %ver%
 
 ; 获取屏幕尺寸
-w := DllCall("dm_hook.dll\dm_getScreenWidth")
-h := DllCall("dm_hook.dll\dm_getScreenHeight")
+w := DllCall("dm_hook.dll\getScreenWidth")
+h := DllCall("dm_hook.dll\getScreenHeight")
 MsgBox, 屏幕: %w%x%h%
 
 ; 获取前台窗口
-hwnd := DllCall("dm_hook.dll\dm_getForegroundWindow")
-title := DllCall("dm_hook.dll\dm_getWindowTitle", "Ptr", hwnd, "AStr")
+hwnd := DllCall("dm_hook.dll\getForegroundWindow")
+title := DllCall("dm_hook.dll\getWindowTitle", "Ptr", hwnd, "AStr")
 MsgBox, 前台窗口: %title%
 
 ; 鼠标操作
-DllCall("dm_hook.dll\dm_moveTo", "Int", 500, "Int", 300)
-DllCall("dm_hook.dll\dm_leftClick")
+DllCall("dm_hook.dll\moveTo", "Int", 500, "Int", 300)
+DllCall("dm_hook.dll\leftClick")
 
 ; 释放
 DllCall("FreeLibrary", "Ptr", hModule)
@@ -10036,16 +10037,16 @@ COM 接口的方法名采用 **PascalCase**（首字母大写），与 C 导出�
 
 | C 函数            | COM 方法       |
 | --------------- | ------------ |
-| `dm_ver`        | `Ver`        |
-| `dm_getID`      | `GetID`      |
-| `dm_findWindow` | `FindWindow` |
-| `dm_moveTo`     | `MoveTo`     |
-| `dm_leftClick`  | `LeftClick`  |
-| `dm_capture`    | `Capture`    |
-| `dm_findColor`  | `FindColor`  |
-| `dm_findPic`    | `FindPic`    |
-| `dm_ocr`        | `Ocr`        |
-| `dm_delay`      | `Delay`      |
+| `ver`        | `Ver`        |
+| `getID`      | `GetID`      |
+| `findWindow` | `FindWindow` |
+| `moveTo`     | `MoveTo`     |
+| `leftClick`  | `LeftClick`  |
+| `capture`    | `Capture`    |
+| `findColor`  | `FindColor`  |
+| `findPic`    | `FindPic`    |
+| `ocr`        | `Ocr`        |
+| `delay`      | `Delay`      |
 
 ### 有输出参数的函数
 
@@ -10088,6 +10089,6 @@ COM 接口的方法名采用 **PascalCase**（首字母大写），与 C 导出�
 
 > **文档版本**: 1.4  
 > **最后更新**: 2026-08-13  
-> **项目地址**: <https://github.com/Pkk233/dm_hook>  
+> **项目地址**: <https://github.com/Pkk233/hook>  
 > **总函数数**: 约 417 个（含同类变体，涵盖 16 个模块）  
 > **调用方式**: 支持 `LoadLibrary` 直调 + `COM` 组件注册
