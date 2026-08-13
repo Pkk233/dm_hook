@@ -31,6 +31,493 @@
 
 ---
 
+## 函数列表（按模块）
+
+### 模块 1：基本设置（13 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 1.1 | `dm_reg` | 注册插件（基于机器码） |
+| 1.2 | `dm_regEx` | 注册插件（基于 IP） |
+| 1.3 | `dm_regNoMac` | 注册插件（不绑定机器码） |
+| 1.4 | `dm_regExNoMac` | 注册插件（IP + 不绑定机器码） |
+| 1.5 | `dm_ver` | 获取插件版本号 |
+| 1.6 | `dm_getID` | 获取当前对象 ID |
+| 1.7 | `dm_getDmCount` | 获取进程中的 dm 对象数量 |
+| 1.8 | `dm_getLastError` | 获取最后错误码 |
+| 1.9 | `dm_getPath` | 获取全局路径 |
+| 1.10 | `dm_setPath` | 设置全局路径 |
+| 1.11 | `dm_getBasePath` | 获取 DLL 基础路径 |
+| 1.12 | `dm_setShowErrorMsg` | 设置错误消息框显示 |
+| 1.13 | `dm_enablePicCache` | 启用/禁用图片缓存 |
+
+### 模块 2：窗口操作（40 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 2.1 | `dm_findWindow` | 查找窗口（类名/标题） |
+| 2.2 | `dm_findWindowEx` | 查找子窗口 |
+| 2.3 | `dm_findWindowByProcess` | 按进程名查找窗口 |
+| 2.4 | `dm_findWindowByProcessId` | 按进程 ID 查找窗口 |
+| 2.5 | `dm_findWindowSuper` | 高级窗口查找（支持正则） |
+| 2.6 | `dm_enumWindow` | 枚举窗口 |
+| 2.7 | `dm_enumWindowByProcess` | 枚举进程窗口 |
+| 2.8 | `dm_enumWindowByProcessId` | 按 PID 枚举窗口 |
+| 2.9 | `dm_enumWindowSuper` | 高级窗口枚举 |
+| 2.10 | `dm_enumProcess` | 枚举进程 |
+| 2.11 | `dm_getWindow` | 获取关联窗口 |
+| 2.12 | `dm_getForegroundWindow` | 获取前台窗口 |
+| 2.13 | `dm_getForegroundFocus` | 获取焦点窗口 |
+| 2.14 | `dm_getMousePointWindow` | 获取鼠标下方窗口 |
+| 2.15 | `dm_getPointWindow` | 获取指定坐标处窗口 |
+| 2.16 | `dm_getSpecialWindow` | 获取特殊窗口（桌面/任务栏） |
+| 2.17 | `dm_getWindowClass` | 获取窗口类名 |
+| 2.18 | `dm_getWindowProcessId` | 获取窗口进程 ID |
+| 2.19 | `dm_getWindowProcessPath` | 获取窗口进程路径 |
+| 2.20 | `dm_getWindowThreadId` | 获取窗口线程 ID |
+| 2.21 | `dm_getWindowTitle` | 获取窗口标题 |
+| 2.22 | `dm_getWindowRect` | 获取窗口矩形 |
+| 2.23 | `dm_getClientRect` | 获取客户区矩形 |
+| 2.24 | `dm_getClientSize` | 获取客户区大小 |
+| 2.25 | `dm_getWindowState` | 获取窗口状态 |
+| 2.26 | `dm_getProcessInfo` | 获取进程信息 |
+| 2.27 | `dm_moveWindow` | 移动窗口 |
+| 2.28 | `dm_setWindowSize` | 调整窗口大小 |
+| 2.29 | `dm_setWindowState` | 设置窗口状态 |
+| 2.30 | `dm_setWindowText` | 修改窗口标题 |
+| 2.31 | `dm_setWindowTransparent` | 设置窗口透明度 |
+| 2.32 | `dm_setClientSize` | 设置客户区大小 |
+| 2.33 | `dm_setSendStringDelay` | 设置发送字符串延迟 |
+| 2.34 | `dm_sendPaste` | 发送粘贴命令 |
+| 2.35 | `dm_sendString` | 发送文本字符串 |
+| 2.36 | `dm_sendString2` | 发送文本字符串（备选方式） |
+| 2.37 | `dm_sendStringIme` | 通过 IME 发送字符串 |
+| 2.38 | `dm_sendStringIme2` | 通过 IME 发送字符串（备选） |
+| 2.39 | `dm_clientToScreen` | 客户区坐标转屏幕坐标 |
+| 2.40 | `dm_screenToClient` | 屏幕坐标转客户区坐标 |
+
+### 模块 3：键鼠操作（34 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 3.1 | `dm_keyDown` | 按下键（虚拟键码） |
+| 3.2 | `dm_keyDownChar` | 按下字符键 |
+| 3.3 | `dm_keyPress` | 按键（按下+释放） |
+| 3.4 | `dm_keyPressChar` | 按字符键 |
+| 3.5 | `dm_keyPressStr` | 按字符串序列 |
+| 3.6 | `dm_keyUp` | 释放键 |
+| 3.7 | `dm_keyUpChar` | 释放字符键 |
+| 3.8 | `dm_waitKey` | 等待按键 |
+| 3.9 | `dm_getKeyState` | 获取按键状态 |
+| 3.10 | `dm_leftClick` | 左键单击 |
+| 3.11 | `dm_leftDoubleClick` | 左键双击 |
+| 3.12 | `dm_leftDown` | 左键按下 |
+| 3.13 | `dm_leftUp` | 左键释放 |
+| 3.14 | `dm_rightClick` | 右键单击 |
+| 3.15 | `dm_rightDown` | 右键按下 |
+| 3.16 | `dm_rightUp` | 右键释放 |
+| 3.17 | `dm_middleClick` | 中键单击 |
+| 3.18 | `dm_middleDown` | 中键按下 |
+| 3.19 | `dm_middleUp` | 中键释放 |
+| 3.20 | `dm_moveTo` | 移动鼠标到绝对坐标 |
+| 3.21 | `dm_moveToEx` | 移动鼠标到区域随机点 |
+| 3.22 | `dm_moveR` | 相对移动鼠标 |
+| 3.23 | `dm_wheelDown` | 滚轮向下 |
+| 3.24 | `dm_wheelUp` | 滚轮向上 |
+| 3.25 | `dm_getCursorPos` | 获取鼠标位置 |
+| 3.26 | `dm_getCursorShape` | 获取光标形状 |
+| 3.27 | `dm_getCursorShapeEx` | 获取光标形状详细信息 |
+| 3.28 | `dm_getCursorSpot` | 获取光标热点 |
+| 3.29 | `dm_setMouseDelay` | 设置鼠标延迟 |
+| 3.30 | `dm_setKeypadDelay` | 设置键盘延迟 |
+| 3.31 | `dm_setMouseSpeed` | 设置鼠标速度 |
+| 3.32 | `dm_getMouseSpeed` | 获取鼠标速度 |
+| 3.33 | `dm_enableMouseAccuracy` | 启用/禁用鼠标加速 |
+| 3.34 | `dm_setSimMode` | 设置模拟模式 |
+
+### 模块 4：图色操作（57 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 4.1 | `dm_capture` | 截图保存为 BMP |
+| 4.2 | `dm_captureGif` | 截图保存为 GIF 动画 |
+| 4.3 | `dm_captureJpg` | 截图保存为 JPEG |
+| 4.4 | `dm_capturePng` | 截图保存为 PNG |
+| 4.5 | `dm_capturePre` | 保存上次截图结果 |
+| 4.6 | `dm_getColor` | 获取颜色（RGB） |
+| 4.7 | `dm_getColorBGR` | 获取颜色（BGR） |
+| 4.8 | `dm_getColorHSV` | 获取颜色（HSV） |
+| 4.9 | `dm_getColorNum` | 统计颜色像素数量 |
+| 4.10 | `dm_getAveRGB` | 获取区域平均颜色（RGB） |
+| 4.11 | `dm_getAveHSV` | 获取区域平均颜色（HSV） |
+| 4.12 | `dm_cmpColor` | 比较颜色 |
+| 4.13 | `dm_findColor` | 找色（单点） |
+| 4.14 | `dm_findColorEx` | 找色（返回所有坐标） |
+| 4.15 | `dm_findColorBlock` | 找色块 |
+| 4.16 | `dm_findColorBlockEx` | 找色块（返回所有坐标） |
+| 4.17 | `dm_findColorE` | 找色（返回坐标字符串） |
+| 4.18 | `dm_findMulColor` | 多色查找 |
+| 4.19 | `dm_findMultiColor` | 多点找色 |
+| 4.20 | `dm_findMultiColorEx` | 多点找色（返回所有坐标） |
+| 4.21 | `dm_findMultiColorE` | 多点找色（返回坐标字符串） |
+| 4.22 | `dm_findPic` | 找图 |
+| 4.23 | `dm_findPicE` | 找图（返回坐标字符串） |
+| 4.24 | `dm_findPicEx` | 找图（返回所有坐标） |
+| 4.25 | `dm_findPicExS` | 智能找图（返回所有坐标） |
+| 4.26 | `dm_findPicS` | 智能找图 |
+| 4.27 | `dm_findPicMem` | 内存找图 |
+| 4.28 | `dm_findPicMemE` | 内存找图（返回坐标字符串） |
+| 4.29 | `dm_findPicMemEx` | 内存找图（返回所有坐标） |
+| 4.30 | `dm_findPicSim` | 智能找图（支持透明色） |
+| 4.31 | `dm_findPicSimE` | 智能找图（返回坐标字符串） |
+| 4.32 | `dm_findPicSimEx` | 智能找图（返回所有坐标） |
+| 4.33 | `dm_findPicSimMem` | 智能找图（内存模式） |
+| 4.34 | `dm_findPicSimMemE` | 智能找图内存版（返回坐标字符串） |
+| 4.35 | `dm_findPicSimMemEx` | 智能找图内存版（返回所有坐标） |
+| 4.36 | `dm_findShape` | 找形状 |
+| 4.37 | `dm_findShapeE` | 找形状（返回坐标字符串） |
+| 4.38 | `dm_findShapeEx` | 找形状（返回所有坐标） |
+| 4.39 | `dm_getPicSize` | 获取图片尺寸 |
+| 4.40 | `dm_freePic` | 释放图片缓存 |
+| 4.41 | `dm_loadPic` | 加载图片到内存 |
+| 4.42 | `dm_loadPicByte` | 从内存加载图片 |
+| 4.43 | `dm_appendPicAddr` | 追加内存图片地址 |
+| 4.44 | `dm_matchPicName` | 匹配图片路径 |
+| 4.45 | `dm_imageToBmp` | 转换图片为 BMP 格式 |
+| 4.46 | `dm_setPicPwd` | 设置图片密码 |
+| 4.47 | `dm_setExcludeRegion` | 设置排除区域 |
+| 4.48 | `dm_getScreenData` | 获取屏幕原始数据 |
+| 4.49 | `dm_getScreenDataBmp` | 获取屏幕 BMP 数据 |
+| 4.50 | `dm_enableDisplayDebug` | 启用显示调试 |
+| 4.51 | `dm_enableFindPicMultithread` | 启用多线程找图 |
+| 4.52 | `dm_enableGetColorByCapture` | 通过截图获取颜色 |
+| 4.53 | `dm_setFindPicMultithreadCount` | 设置多线程找图线程数 |
+| 4.54 | `dm_setFindPicMultithreadLimit` | 设置多线程找图限制 |
+| 4.55 | `dm_bgr2RGB` | BGR 转 RGB |
+| 4.56 | `dm_rgb2BGR` | RGB 转 BGR |
+| 4.57 | `dm_isDisplayDead` | 检测画面是否静止 |
+
+### 模块 5：后台设置（28 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 5.1 | `dm_bindWindow` | 绑定窗口 |
+| 5.2 | `dm_bindWindowEx` | 绑定窗口（扩展版） |
+| 5.3 | `dm_unBindWindow` | 解绑窗口 |
+| 5.4 | `dm_getBindWindow` | 获取绑定窗口 |
+| 5.5 | `dm_isBind` | 检查窗口是否已绑定 |
+| 5.6 | `dm_forceUnBindWindow` | 强制解绑窗口 |
+| 5.7 | `dm_setAero` | 设置 Aero 效果 |
+| 5.8 | `dm_lockInput` | 锁定输入 |
+| 5.9 | `dm_lockMouseRect` | 锁定鼠标区域 |
+| 5.10 | `dm_lockDisplay` | 锁定显示 |
+| 5.11 | `dm_enableBind` | 启用绑定模式 |
+| 5.12 | `dm_enableFakeActive` | 启用虚假激活 |
+| 5.13 | `dm_enableIme` | 启用输入法 |
+| 5.14 | `dm_enableKeypadMsg` | 启用键盘消息同步 |
+| 5.15 | `dm_enableKeypadPatch` | 启用键盘补丁 |
+| 5.16 | `dm_enableKeypadSync` | 启用键盘同步 |
+| 5.17 | `dm_enableMouseMsg` | 启用鼠标消息同步 |
+| 5.18 | `dm_enableMouseSync` | 启用鼠标同步 |
+| 5.19 | `dm_enableRealKeypad` | 启用真实键盘 |
+| 5.20 | `dm_enableRealMouse` | 启用真实鼠标 |
+| 5.21 | `dm_enableSpeedDx` | 启用 DX 加速 |
+| 5.22 | `dm_getFps` | 获取帧率 |
+| 5.23 | `dm_setDisplayDelay` | 设置显示延迟 |
+| 5.24 | `dm_setDisplayRefreshDelay` | 设置刷新延迟 |
+| 5.25 | `dm_setInputDm` | 设置 DM 输入模式 |
+| 5.26 | `dm_hackSpeed` | 设置游戏速度 |
+| 5.27 | `dm_downCpu` | 降低 CPU 占用 |
+| 5.28 | `dm_switchBindWindow` | 切换绑定窗口 |
+
+### 模块 6：内存操作（54 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 6.1 | `dm_openProcess` | 打开进程 |
+| 6.2 | `dm_getModuleBaseAddr` | 获取模块基址 |
+| 6.3 | `dm_getModuleSize` | 获取模块大小 |
+| 6.4 | `dm_getRemoteApiAddress` | 获取远程 API 地址 |
+| 6.5 | `dm_readInt` | 读整数 |
+| 6.6 | `dm_readIntAddr` | 读整数（多级指针） |
+| 6.7 | `dm_readFloat` | 读浮点数 |
+| 6.8 | `dm_readFloatAddr` | 读浮点数（多级指针） |
+| 6.9 | `dm_readDouble` | 读双精度浮点数 |
+| 6.10 | `dm_readDoubleAddr` | 读双精度浮点数（多级指针） |
+| 6.11 | `dm_readString` | 读字符串 |
+| 6.12 | `dm_readStringAddr` | 读字符串（多级指针） |
+| 6.13 | `dm_readData` | 读字节数据 |
+| 6.14 | `dm_readDataAddr` | 读字节数据（多级指针） |
+| 6.15 | `dm_readDataToBin` | 读数据到二进制缓冲区 |
+| 6.16 | `dm_readDataAddrToBin` | 读数据到二进制缓冲区（多级指针） |
+| 6.17 | `dm_findInt` | 搜索整数 |
+| 6.18 | `dm_findIntEx` | 高级整数搜索 |
+| 6.19 | `dm_findFloat` | 搜索浮点数 |
+| 6.20 | `dm_findFloatEx` | 高级浮点数搜索 |
+| 6.21 | `dm_findDouble` | 搜索双精度浮点数 |
+| 6.22 | `dm_findDoubleEx` | 高级双精度搜索 |
+| 6.23 | `dm_findString` | 搜索字符串 |
+| 6.24 | `dm_findStringEx` | 高级字符串搜索 |
+| 6.25 | `dm_findData` | 搜索字节数据 |
+| 6.26 | `dm_findDataEx` | 高级字节数据搜索 |
+| 6.27 | `dm_writeInt` | 写整数 |
+| 6.28 | `dm_writeIntAddr` | 写整数（多级指针） |
+| 6.29 | `dm_writeFloat` | 写浮点数 |
+| 6.30 | `dm_writeFloatAddr` | 写浮点数（多级指针） |
+| 6.31 | `dm_writeDouble` | 写双精度浮点数 |
+| 6.32 | `dm_writeDoubleAddr` | 写双精度浮点数（多级指针） |
+| 6.33 | `dm_writeString` | 写字符串 |
+| 6.34 | `dm_writeStringAddr` | 写字符串（多级指针） |
+| 6.35 | `dm_writeData` | 写字节数据 |
+| 6.36 | `dm_writeDataAddr` | 写字节数据（多级指针） |
+| 6.37 | `dm_writeDataFromBin` | 从缓冲区写数据 |
+| 6.38 | `dm_writeDataAddrFromBin` | 从缓冲区写数据（多级指针） |
+| 6.39 | `dm_virtualAllocEx` | 分配虚拟内存 |
+| 6.40 | `dm_virtualFreeEx` | 释放虚拟内存 |
+| 6.41 | `dm_virtualProtectEx` | 修改内存保护属性 |
+| 6.42 | `dm_virtualQueryEx` | 查询虚拟内存信息 |
+| 6.43 | `dm_freeProcessMemory` | 释放进程内存资源 |
+| 6.44 | `dm_getCommandLine` | 获取进程命令行 |
+| 6.45 | `dm_terminateProcess` | 终止进程 |
+| 6.46 | `dm_terminateProcessTree` | 终止进程树 |
+| 6.47 | `dm_setMemoryFindResultToFile` | 设置搜索结果保存到文件 |
+| 6.48 | `dm_setMemoryHwndAsProcessId` | 设置 hwnd 作为进程 ID |
+| 6.49 | `dm_setParam64ToPointer` | 设置 64 位参数为指针 |
+| 6.50 | `dm_int64ToInt32` | 64 位整数转 32 位地址 |
+| 6.51 | `dm_intToData` | 整数转十六进制数据 |
+| 6.52 | `dm_floatToData` | 浮点数转十六进制数据 |
+| 6.53 | `dm_doubleToData` | 双精度转十六进制数据 |
+| 6.54 | `dm_stringToData` | 字符串转十六进制数据 |
+
+### 模块 7：文件操作（26 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 7.1 | `dm_writeFile` | 写文件 |
+| 7.2 | `dm_readFile` | 读文件 |
+| 7.3 | `dm_deleteFile` | 删除文件 |
+| 7.4 | `dm_copyFile` | 复制文件 |
+| 7.5 | `dm_moveFile` | 移动文件 |
+| 7.6 | `dm_createFolder` | 创建文件夹 |
+| 7.7 | `dm_deleteFolder` | 删除文件夹 |
+| 7.8 | `dm_isFileExist` | 判断文件是否存在 |
+| 7.9 | `dm_isFolderExist` | 判断文件夹是否存在 |
+| 7.10 | `dm_getFileLength` | 获取文件大小 |
+| 7.11 | `dm_getRealPath` | 获取绝对路径 |
+| 7.12 | `dm_selectFile` | 文件选择对话框 |
+| 7.13 | `dm_selectDirectory` | 目录选择对话框 |
+| 7.14 | `dm_downloadFile` | 下载文件 |
+| 7.15 | `dm_encodeFile` | 加密文件 |
+| 7.16 | `dm_decodeFile` | 解密文件 |
+| 7.17 | `dm_writeIni` | 写 INI 文件 |
+| 7.18 | `dm_readIni` | 读 INI 文件 |
+| 7.19 | `dm_deleteIni` | 删除 INI 键值 |
+| 7.20 | `dm_enumIniKey` | 枚举 INI 键名 |
+| 7.21 | `dm_enumIniSection` | 枚举 INI 节名 |
+| 7.22 | `dm_writeIniPwd` | 写加密 INI 文件 |
+| 7.23 | `dm_readIniPwd` | 读加密 INI 文件 |
+| 7.24 | `dm_deleteIniPwd` | 删除加密 INI 键值 |
+| 7.25 | `dm_enumIniKeyPwd` | 枚举加密 INI 键名 |
+| 7.26 | `dm_enumIniSectionPwd` | 枚举加密 INI 节名 |
+
+### 模块 8：文字识别（46 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 8.1 | `dm_setDict` | 加载字库文件 |
+| 8.2 | `dm_setDictMem` | 从内存加载字库 |
+| 8.3 | `dm_setDictPwd` | 设置字库密码 |
+| 8.4 | `dm_useDict` | 切换当前字库 |
+| 8.5 | `dm_getDict` | 获取字库信息 |
+| 8.6 | `dm_getDictCount` | 获取字库字体数量 |
+| 8.7 | `dm_getDictInfo` | 获取字库文件信息 |
+| 8.8 | `dm_getNowDict` | 获取当前字库索引 |
+| 8.9 | `dm_addDict` | 添加字体到字库 |
+| 8.10 | `dm_saveDict` | 保存字库到文件 |
+| 8.11 | `dm_clearDict` | 清除字库 |
+| 8.12 | `dm_enableShareDict` | 启用字库共享 |
+| 8.13 | `dm_ocr` | 文字识别 |
+| 8.14 | `dm_ocrEx` | 增强文字识别 |
+| 8.15 | `dm_ocrExOne` | 单行文字识别 |
+| 8.16 | `dm_ocrInFile` | 识别结果保存到文件 |
+| 8.17 | `dm_findStr` | 查找文字 |
+| 8.18 | `dm_findStrE` | 查找文字（返回坐标字符串） |
+| 8.19 | `dm_findStrEx` | 查找文字（返回所有坐标） |
+| 8.20 | `dm_findStrS` | 智能查找文字 |
+| 8.21 | `dm_findStrExS` | 智能查找文字（返回所有坐标） |
+| 8.22 | `dm_findStrFast` | 快速查找文字 |
+| 8.23 | `dm_findStrFastE` | 快速查找文字（返回坐标字符串） |
+| 8.24 | `dm_findStrFastEx` | 快速查找文字（返回所有坐标） |
+| 8.25 | `dm_findStrFastS` | 快速智能查找文字 |
+| 8.26 | `dm_findStrFastExS` | 快速智能查找文字（返回所有坐标） |
+| 8.27 | `dm_findStrWithFont` | 按字体查找文字 |
+| 8.28 | `dm_findStrWithFontE` | 按字体查找文字（返回坐标字符串） |
+| 8.29 | `dm_findStrWithFontEx` | 按字体查找文字（返回所有坐标） |
+| 8.30 | `dm_getWords` | 提取文字 |
+| 8.31 | `dm_getWordsNoDict` | 无字库提取文字 |
+| 8.32 | `dm_fetchWord` | 提取文字样本到字库 |
+| 8.33 | `dm_getResultCount` | 获取结果匹配数量 |
+| 8.34 | `dm_getResultPos` | 获取结果坐标 |
+| 8.35 | `dm_getWordResultCount` | 获取字符数量 |
+| 8.36 | `dm_getWordResultPos` | 获取字符坐标 |
+| 8.37 | `dm_getWordResultStr` | 获取字符识别结果 |
+| 8.38 | `dm_setColGapNoDict` | 设置无字库列间距 |
+| 8.39 | `dm_setRowGapNoDict` | 设置无字库行间距 |
+| 8.40 | `dm_setWordGapNoDict` | 设置无字库字间距 |
+| 8.41 | `dm_setWordLineHeightNoDict` | 设置无字库行高 |
+| 8.42 | `dm_setExactOcr` | 设置精确 OCR 模式 |
+| 8.43 | `dm_setMinColGap` | 设置最小列间距 |
+| 8.44 | `dm_setMinRowGap` | 设置最小行间距 |
+| 8.45 | `dm_setWordGap` | 设置字间距 |
+| 8.46 | `dm_setWordLineHeight` | 设置行高 |
+
+### 模块 9：系统操作（44 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 9.1 | `dm_beep` | 蜂鸣 |
+| 9.2 | `dm_delay` | 延时 |
+| 9.3 | `dm_delays` | 随机延时 |
+| 9.4 | `dm_runApp` | 运行程序 |
+| 9.5 | `dm_stop` | 停止进程 |
+| 9.6 | `dm_play` | 播放音频 |
+| 9.7 | `dm_exitOs` | 关机/重启/注销 |
+| 9.8 | `dm_setScreen` | 设置分辨率 |
+| 9.9 | `dm_getScreenWidth` | 获取屏幕宽度 |
+| 9.10 | `dm_getScreenHeight` | 获取屏幕高度 |
+| 9.11 | `dm_getScreenDepth` | 获取屏幕色深 |
+| 9.12 | `dm_getDPI` | 获取 DPI |
+| 9.13 | `dm_getTime` | 获取时间戳 |
+| 9.14 | `dm_getOsType` | 获取操作系统类型 |
+| 9.15 | `dm_getOsBuildNumber` | 获取系统构建号 |
+| 9.16 | `dm_is64Bit` | 判断是否为 64 位 |
+| 9.17 | `dm_isSurrpotVt` | 判断是否支持虚拟化 |
+| 9.18 | `dm_getSystemInfo` | 获取系统信息 |
+| 9.19 | `dm_getDir` | 获取系统目录 |
+| 9.20 | `dm_getLocale` | 获取区域设置 |
+| 9.21 | `dm_getCpuType` | 获取 CPU 类型 |
+| 9.22 | `dm_getCpuUsage` | 获取 CPU 使用率 |
+| 9.23 | `dm_getMemoryUsage` | 获取内存使用率 |
+| 9.24 | `dm_getDiskSerial` | 获取磁盘序列号 |
+| 9.25 | `dm_getDiskModel` | 获取磁盘型号 |
+| 9.26 | `dm_getDiskReversion` | 获取磁盘固件版本 |
+| 9.27 | `dm_getMachineCode` | 获取机器码 |
+| 9.28 | `dm_getMachineCodeNoMac` | 获取无 MAC 机器码 |
+| 9.29 | `dm_getNetTime` | 获取网络时间 |
+| 9.30 | `dm_getNetTimeByIp` | 按 IP 获取网络时间 |
+| 9.31 | `dm_getNetTimeSafe` | 安全获取网络时间 |
+| 9.32 | `dm_getClipboard` | 获取剪贴板 |
+| 9.33 | `dm_setClipboard` | 设置剪贴板 |
+| 9.34 | `dm_getDisplayInfo` | 获取显示器信息 |
+| 9.35 | `dm_disableCloseDisplayAndSleep` | 禁用关闭显示器和睡眠 |
+| 9.36 | `dm_disablePowerSave` | 禁用节能模式 |
+| 9.37 | `dm_disableScreenSave` | 禁用屏保 |
+| 9.38 | `dm_disableFontSmooth` | 禁用字体平滑 |
+| 9.39 | `dm_enableFontSmooth` | 启用字体平滑 |
+| 9.40 | `dm_checkFontSmooth` | 检查字体平滑状态 |
+| 9.41 | `dm_checkUAC` | 检查 UAC 状态 |
+| 9.42 | `dm_setUAC` | 设置 UAC |
+| 9.43 | `dm_setDisplayAcceler` | 设置显示加速 |
+| 9.44 | `dm_showTaskBarIcon` | 显示/隐藏任务栏图标 |
+
+### 模块 10：杂项（9 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 10.1 | `dm_enterCri` | 进入临界区 |
+| 10.2 | `dm_leaveCri` | 离开临界区 |
+| 10.3 | `dm_initCri` | 初始化临界区 |
+| 10.4 | `dm_releaseRef` | 释放引用计数 |
+| 10.5 | `dm_setExitThread` | 设置线程退出模式 |
+| 10.6 | `dm_executeCmd` | 执行命令行 |
+| 10.7 | `dm_activeInputMethod` | 激活输入法 |
+| 10.8 | `dm_checkInputMethod` | 检查输入法 |
+| 10.9 | `dm_findInputMethod` | 查找输入法 |
+
+### 模块 11：汇编（9 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 11.1 | `dm_asmAdd` | 添加汇编指令 |
+| 11.2 | `dm_asmCall` | 执行汇编代码 |
+| 11.3 | `dm_asmCallEx` | 指定地址执行汇编 |
+| 11.4 | `dm_asmClear` | 清除汇编代码 |
+| 11.5 | `dm_asmSetTimeout` | 设置汇编超时 |
+| 11.6 | `dm_assemble` | 编译汇编为机器码 |
+| 11.7 | `dm_disAssemble` | 反汇编机器码 |
+| 11.8 | `dm_setAsmHwndAsProcessId` | 设置 hwnd 为进程 ID |
+| 11.9 | `dm_setShowAsmErrorMsg` | 显示汇编错误消息 |
+
+### 模块 12：AI 功能（17 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 12.1 | `dm_loadAi` | 加载 AI 模型 |
+| 12.2 | `dm_loadAiMemory` | 从内存加载 AI 模型 |
+| 12.3 | `dm_aiEnableFindPicWindow` | 启用 AI 找图窗口模式 |
+| 12.4 | `dm_aiFindPic` | AI 找图 |
+| 12.5 | `dm_aiFindPicEx` | AI 找图（返回所有坐标） |
+| 12.6 | `dm_aiFindPicMem` | AI 找图（内存模式） |
+| 12.7 | `dm_aiFindPicMemEx` | AI 找图内存版（返回所有坐标） |
+| 12.8 | `dm_aiYoloDetectObjects` | YOLO 目标检测 |
+| 12.9 | `dm_aiYoloDetectObjectsToDataBmp` | YOLO 检测结果绘制到 BMP |
+| 12.10 | `dm_aiYoloDetectObjectsToFile` | YOLO 检测结果保存到文件 |
+| 12.11 | `dm_aiYoloSetModel` | 设置 YOLO 模型 |
+| 12.12 | `dm_aiYoloSetModelMemory` | 从内存加载 YOLO 模型 |
+| 12.13 | `dm_aiYoloFreeModel` | 释放 YOLO 模型 |
+| 12.14 | `dm_aiYoloUseModel` | 切换 YOLO 模型 |
+| 12.15 | `dm_aiYoloSetVersion` | 设置 YOLO 版本 |
+| 12.16 | `dm_aiYoloObjectsToString` | 转换检测结果 |
+| 12.17 | `dm_aiYoloSortsObjects` | 排序检测结果 |
+
+### 模块 13：Foobar 界面控件（23 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 13.1 | `dm_createFoobarRect` | 创建矩形 Foobar |
+| 13.2 | `dm_createFoobarEllipse` | 创建椭圆 Foobar |
+| 13.3 | `dm_createFoobarRoundRect` | 创建圆角矩形 Foobar |
+| 13.4 | `dm_createFoobarCustom` | 创建自定义形状 Foobar |
+| 13.5 | `dm_foobarClose` | 关闭 Foobar |
+| 13.6 | `dm_foobarLock` | 锁定 Foobar |
+| 13.7 | `dm_foobarUnlock` | 解锁 Foobar |
+| 13.8 | `dm_foobarUpdate` | 更新 Foobar |
+| 13.9 | `dm_foobarSetFont` | 设置 Foobar 字体 |
+| 13.10 | `dm_foobarSetSave` | 设置 Foobar 自动保存 |
+| 13.11 | `dm_foobarSetTrans` | 设置 Foobar 透明度 |
+| 13.12 | `dm_foobarDrawText` | 绘制文本 |
+| 13.13 | `dm_foobarPrintText` | 打印文本 |
+| 13.14 | `dm_foobarDrawRect` | 绘制矩形 |
+| 13.15 | `dm_foobarDrawLine` | 绘制直线 |
+| 13.16 | `dm_foobarFillRect` | 填充矩形 |
+| 13.17 | `dm_foobarDrawPic` | 绘制图片 |
+| 13.18 | `dm_foobarClearText` | 清除文本 |
+| 13.19 | `dm_foobarTextRect` | 设置文本区域 |
+| 13.20 | `dm_foobarTextLineGap` | 设置行间距 |
+| 13.21 | `dm_foobarTextPrintDir` | 设置打印方向 |
+| 13.22 | `dm_foobarStartGif` | 播放 GIF |
+| 13.23 | `dm_foobarStopGif` | 停止 GIF |
+
+### 模块 14：答题（9 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 14.1 | `dm_faqCapture` | 截取答题区域 |
+| 14.2 | `dm_faqCaptureFromFile` | 从文件加载答题图片 |
+| 14.3 | `dm_faqCaptureString` | 截取答题区域为字符串 |
+| 14.4 | `dm_faqGetSize` | 获取答题数据大小 |
+| 14.5 | `dm_faqPost` | 发送答题图片到服务器 |
+| 14.6 | `dm_faqSend` | 发送答题请求 |
+| 14.7 | `dm_faqFetch` | 获取答案 |
+| 14.8 | `dm_faqCancel` | 取消答题请求 |
+| 14.9 | `dm_faqIsPosted` | 检查是否已发送 |
+
+### 模块 15：算法（3 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 15.1 | `dm_excludePos` | 排除区域坐标 |
+| 15.2 | `dm_findNearestPos` | 查找最近坐标 |
+| 15.3 | `dm_sortPosDistance` | 按距离排序坐标 |
+
+### 模块 16：防护盾（5 个）
+| # | 函数 | 说明 |
+|---|------|------|
+| 16.1 | `dm_dmGuard` | 启用/禁用防护盾 |
+| 16.2 | `dm_dmGuardExtract` | 提取驱动文件 |
+| 16.3 | `dm_dmGuardLoadCustom` | 加载自定义防护数据 |
+| 16.4 | `dm_dmGuardParams` | 设置防护参数 |
+| 16.5 | `dm_unLoadDriver` | 卸载驱动 |
+
+### 总函数数：约 417 个（含同类变体）
+
+---
+
 ## 模块 1：基本设置
 
 基本设置模块提供插件的注册、版本查询、路径管理和错误处理等基础功能。
