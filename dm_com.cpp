@@ -146,7 +146,7 @@ static HRESULT H_findColor(VARIANT* ret, const VARIANT* args, UINT argCount) {
     long x = 0, y = 0;
     std::string color = GetStringArg(args, 4);
     long r = findColor(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
-                          GetLongArg(args, 3), color.c_str(), GetLongArg(args, 5),
+                          GetLongArg(args, 3), color.c_str(), GetDoubleArg(args, 5),
                           GetLongArg(args, 6), &x, &y);
     if (r == 0) SetResultCoord(ret, x, y);
     else SetResultString(ret, "");
@@ -159,7 +159,7 @@ static HRESULT H_findColorBlock9(VARIANT* ret, const VARIANT* args, UINT argCoun
     long x = 0, y = 0;
     std::string color = GetStringArg(args, 4);
     long r = findColorBlock(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
-                               GetLongArg(args, 3), color.c_str(), GetLongArg(args, 5),
+                               GetLongArg(args, 3), color.c_str(), GetDoubleArg(args, 5),
                                GetLongArg(args, 6), GetLongArg(args, 7), GetLongArg(args, 8), &x, &y);
     if (r == 0) SetResultCoord(ret, x, y);
     else SetResultString(ret, "");
@@ -173,7 +173,7 @@ static HRESULT H_findMultiColor(VARIANT* ret, const VARIANT* args, UINT argCount
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
     long r = findMultiColor(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                                GetLongArg(args, 3), s0.c_str(), s1.c_str(),
-                               GetLongArg(args, 6), GetLongArg(args, 7), &x, &y);
+                               GetDoubleArg(args, 6), GetLongArg(args, 7), &x, &y);
     if (r == 0) SetResultCoord(ret, x, y);
     else SetResultString(ret, "");
     return S_OK;
@@ -186,7 +186,7 @@ static HRESULT H_findPic(VARIANT* ret, const VARIANT* args, UINT argCount) {
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
     long r = findPic(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                         GetLongArg(args, 3), s0.c_str(), s1.c_str(),
-                        GetLongArg(args, 6), GetLongArg(args, 7), &x, &y);
+                        GetDoubleArg(args, 6), GetLongArg(args, 7), &x, &y);
     if (r == 0) SetResultCoord(ret, x, y);
     else SetResultString(ret, "");
     return S_OK;
@@ -199,7 +199,7 @@ static HRESULT H_findStr(VARIANT* ret, const VARIANT* args, UINT argCount) {
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
     long r = findStr(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                         GetLongArg(args, 3), s0.c_str(), s1.c_str(),
-                        GetLongArg(args, 6), &x, &y);
+                        GetDoubleArg(args, 6), &x, &y);
     if (r == 0) SetResultCoord(ret, x, y);
     else SetResultString(ret, "");
     return S_OK;
@@ -212,7 +212,7 @@ static HRESULT H_findStrFast(VARIANT* ret, const VARIANT* args, UINT argCount) {
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
     long r = findStrFast(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                             GetLongArg(args, 3), s0.c_str(), s1.c_str(),
-                            GetLongArg(args, 6), &x, &y);
+                            GetDoubleArg(args, 6), &x, &y);
     if (r == 0) SetResultCoord(ret, x, y);
     else SetResultString(ret, "");
     return S_OK;

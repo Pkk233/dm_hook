@@ -236,7 +236,7 @@ static bool SaveBitmapToFile(Bitmap* bmp, const char* file, const wchar_t* forma
 }
 
 // 颜色相似度比较
-static bool ColorSimilar(COLORREF c1, COLORREF c2, long sim) {
+static bool ColorSimilar(COLORREF c1, COLORREF c2, double sim) {
     if (sim >= 100) return c1 == c2;
     int dr = abs(static_cast<int>(GetRValue(c1)) - static_cast<int>(GetRValue(c2)));
     int dg = abs(static_cast<int>(GetGValue(c1)) - static_cast<int>(GetGValue(c2)));
@@ -994,7 +994,7 @@ DM_API const char* DM_CALL getColorHSV(long x, long y) {
     return DM_SetResult(buf);
 }
 
-DM_API long DM_CALL getColorNum(long x1, long y1, long x2, long y2, const char* color, long sim) {
+DM_API long DM_CALL getColorNum(long x1, long y1, long x2, long y2, const char* color, double sim) {
     if (!color) return 0;
     COLORREF target = ParseColor(color);
     int count = 0;
@@ -1029,13 +1029,13 @@ DM_API const char* DM_CALL getAveHSV(long x1, long y1, long x2, long y2) {
     return DM_SetResult("0,0,0");
 }
 
-DM_API long DM_CALL cmpColor(long x, long y, const char* color, long sim) {
+DM_API long DM_CALL cmpColor(long x, long y, const char* color, double sim) {
     COLORREF target = ParseColor(color);
     COLORREF actual = GetPixelColor(x, y);
     return ColorSimilar(actual, target, sim) ? 1 : 0;
 }
 
-DM_API long DM_CALL findColor(long x1, long y1, long x2, long y2, const char* color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findColor(long x1, long y1, long x2, long y2, const char* color, double sim, long dir, long* intX, long* intY) {
     if (!color) return 0;
     // dir: 0=左上→右下, 1=中心→四周, 2=右上→左下, ...
     COLORREF target = ParseColor(color);
@@ -1054,12 +1054,12 @@ DM_API long DM_CALL findColor(long x1, long y1, long x2, long y2, const char* co
     return 0;
 }
 
-DM_API long DM_CALL findColorEx(long x1, long y1, long x2, long y2, const char* color, long sim, long dir) {
+DM_API long DM_CALL findColorEx(long x1, long y1, long x2, long y2, const char* color, double sim, long dir) {
     long x = 0, y = 0;
     return findColor(x1, y1, x2, y2, color, sim, dir, &x, &y);
 }
 
-DM_API long DM_CALL findColorBlock(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height, long* intX, long* intY) {
+DM_API long DM_CALL findColorBlock(long x1, long y1, long x2, long y2, const char* color, double sim, long count, long width, long height, long* intX, long* intY) {
     // 简化：查找颜色块
     if (!color) return 0;
     COLORREF target = ParseColor(color);
@@ -1082,12 +1082,12 @@ DM_API long DM_CALL findColorBlock(long x1, long y1, long x2, long y2, const cha
     return 0;
 }
 
-DM_API long DM_CALL findColorBlockEx(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height) {
+DM_API long DM_CALL findColorBlockEx(long x1, long y1, long x2, long y2, const char* color, double sim, long count, long width, long height) {
     long x = 0, y = 0;
     return findColorBlock(x1, y1, x2, y2, color, sim, count, width, height, &x, &y);
 }
 
-DM_API long DM_CALL findColorE(long x1, long y1, long x2, long y2, const char* color, long sim, long dir) {
+DM_API long DM_CALL findColorE(long x1, long y1, long x2, long y2, const char* color, double sim, long dir) {
     long x = 0, y = 0;
     long found = findColor(x1, y1, x2, y2, color, sim, dir, &x, &y);
     if (found) {
@@ -1098,7 +1098,7 @@ DM_API long DM_CALL findColorE(long x1, long y1, long x2, long y2, const char* c
     return static_cast<long>(reinterpret_cast<intptr_t>(DM_SetResult("")));
 }
 
-DM_API long DM_CALL findMulColor(long x1, long y1, long x2, long y2, const char* color, long sim) {
+DM_API long DM_CALL findMulColor(long x1, long y1, long x2, long y2, const char* color, double sim) {
     if (!color) return 0;
     // color 格式: "color1|color2|..."
     std::string colorStr(color);
@@ -1120,7 +1120,7 @@ DM_API long DM_CALL findMulColor(long x1, long y1, long x2, long y2, const char*
     return 0;
 }
 
-DM_API long DM_CALL findMultiColor(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findMultiColor(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, double sim, long dir, long* intX, long* intY) {
     // 多色查找：先找 first_color，然后用偏移找 offset_color
     // offset_color 格式: "x1|y1|color1,x2|y2|color2,..."
     if (!first_color) return 0;
@@ -1162,12 +1162,12 @@ DM_API long DM_CALL findMultiColor(long x1, long y1, long x2, long y2, const cha
     return 0;
 }
 
-DM_API long DM_CALL findMultiColorEx(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir) {
+DM_API long DM_CALL findMultiColorEx(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, double sim, long dir) {
     long x = 0, y = 0;
     return findMultiColor(x1, y1, x2, y2, first_color, offset_color, sim, dir, &x, &y);
 }
 
-DM_API long DM_CALL findMultiColorE(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir) {
+DM_API long DM_CALL findMultiColorE(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, double sim, long dir) {
     long x = 0, y = 0;
     long found = findMultiColor(x1, y1, x2, y2, first_color, offset_color, sim, dir, &x, &y);
     if (found) {
@@ -1183,7 +1183,7 @@ DM_API long DM_CALL findMultiColorE(long x1, long y1, long x2, long y2, const ch
 // ============================================================================
 // 原版支持从文件加载图片并匹配，这里简化实现
 
-DM_API long DM_CALL findPic(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findPic(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir, long* intX, long* intY) {
     // ponytail: 简化版本 — 从文件加载图片并与屏幕区域对比
     if (!pic_name) return 0;
     std::wstring wpath = GetFullPath(pic_name);
@@ -1219,7 +1219,7 @@ DM_API long DM_CALL findPic(long x1, long y1, long x2, long y2, const char* pic_
     return 0;
 }
 
-DM_API const char* DM_CALL findPicE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir) {
     long x = 0, y = 0;
     long found = findPic(x1, y1, x2, y2, pic_name, delta_color, sim, dir, &x, &y);
     if (found) {
@@ -1230,55 +1230,55 @@ DM_API const char* DM_CALL findPicE(long x1, long y1, long x2, long y2, const ch
     return DM_SetResult("");
 }
 
-DM_API const char* DM_CALL findPicEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir) {
     return findPicE(x1, y1, x2, y2, pic_name, delta_color, sim, dir);
 }
 
-DM_API const char* DM_CALL findPicExS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicExS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir) {
     return findPicE(x1, y1, x2, y2, pic_name, delta_color, sim, dir);
 }
 
-DM_API long DM_CALL findPicS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findPicS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir, long* intX, long* intY) {
     return findPic(x1, y1, x2, y2, pic_name, delta_color, sim, dir, intX, intY);
 }
 
-DM_API long DM_CALL findPicMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findPicMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, double sim, long dir, long* intX, long* intY) {
     // ponytail: 内存图片查找 — 简化实现
     return 0;
 }
 
 // 其他 findPic 变体都委托给 findPic
-DM_API const char* DM_CALL findPicMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, double sim, long dir) {
     return DM_SetResult("");
 }
-DM_API const char* DM_CALL findPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, double sim, long dir) {
     return DM_SetResult("");
 }
-DM_API long DM_CALL findPicSim(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findPicSim(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir, long* intX, long* intY) {
     return findPic(x1, y1, x2, y2, pic_name, delta_color, sim, dir, intX, intY);
 }
-DM_API const char* DM_CALL findPicSimE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicSimE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir) {
     return findPicE(x1, y1, x2, y2, pic_name, delta_color, sim, dir);
 }
-DM_API const char* DM_CALL findPicSimEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicSimEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, double sim, long dir) {
     return findPicE(x1, y1, x2, y2, pic_name, delta_color, sim, dir);
 }
-DM_API long DM_CALL findPicSimMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findPicSimMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, double sim, long dir, long* intX, long* intY) {
     return 0;
 }
-DM_API const char* DM_CALL findPicSimMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicSimMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, double sim, long dir) {
     return DM_SetResult("");
 }
-DM_API const char* DM_CALL findPicSimMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir) {
+DM_API const char* DM_CALL findPicSimMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, double sim, long dir) {
     return DM_SetResult("");
 }
-DM_API long DM_CALL findShape(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL findShape(long x1, long y1, long x2, long y2, const char* offset_color, double sim, long dir, long* intX, long* intY) {
     return 0;
 }
-DM_API const char* DM_CALL findShapeE(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir) {
+DM_API const char* DM_CALL findShapeE(long x1, long y1, long x2, long y2, const char* offset_color, double sim, long dir) {
     return DM_SetResult("");
 }
-DM_API const char* DM_CALL findShapeEx(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir) {
+DM_API const char* DM_CALL findShapeEx(long x1, long y1, long x2, long y2, const char* offset_color, double sim, long dir) {
     return DM_SetResult("");
 }
 
@@ -2309,76 +2309,76 @@ DM_API long DM_CALL enableShareDict(long enable) {
     return 1;
 }
 
-DM_API const char* DM_CALL ocr(long x1, long y1, long x2, long y2, const char* color_format, long sim) {
+DM_API const char* DM_CALL ocr(long x1, long y1, long x2, long y2, const char* color_format, double sim) {
     // ponytail: 简化 OCR — 返回空字符串
     // 如需完整 OCR，集成 Tesseract
     return DM_SetResult("");
 }
 
-DM_API const char* DM_CALL ocrEx(long x1, long y1, long x2, long y2, const char* color_format, long sim) {
+DM_API const char* DM_CALL ocrEx(long x1, long y1, long x2, long y2, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API const char* DM_CALL ocrExOne(long x1, long y1, long x2, long y2, const char* color_format, long sim) {
+DM_API const char* DM_CALL ocrExOne(long x1, long y1, long x2, long y2, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API long DM_CALL ocrInFile(long x1, long y1, long x2, long y2, const char* color_format, long sim, const char* file) {
+DM_API long DM_CALL ocrInFile(long x1, long y1, long x2, long y2, const char* color_format, double sim, const char* file) {
     return 0;
 }
 
 // 找字函数 — 简化实现
-DM_API long DM_CALL findStr(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY) {
+DM_API long DM_CALL findStr(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim, long* intX, long* intY) {
     if (intX) *intX = 0;
     if (intY) *intY = 0;
     return 0;
 }
 
-DM_API const char* DM_CALL findStrE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim) {
+DM_API const char* DM_CALL findStrE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API const char* DM_CALL findStrEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim) {
+DM_API const char* DM_CALL findStrEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API long DM_CALL findStrS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY) {
+DM_API long DM_CALL findStrS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim, long* intX, long* intY) {
     return findStr(x1, y1, x2, y2, str, color_format, sim, intX, intY);
 }
 
-DM_API const char* DM_CALL findStrExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim) {
+DM_API const char* DM_CALL findStrExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API long DM_CALL findStrFast(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY) {
+DM_API long DM_CALL findStrFast(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim, long* intX, long* intY) {
     return findStr(x1, y1, x2, y2, str, color_format, sim, intX, intY);
 }
 
-DM_API const char* DM_CALL findStrFastE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim) {
+DM_API const char* DM_CALL findStrFastE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API const char* DM_CALL findStrFastEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim) {
+DM_API const char* DM_CALL findStrFastEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API long DM_CALL findStrFastS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY) {
+DM_API long DM_CALL findStrFastS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim, long* intX, long* intY) {
     return findStr(x1, y1, x2, y2, str, color_format, sim, intX, intY);
 }
 
-DM_API const char* DM_CALL findStrFastExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim) {
+DM_API const char* DM_CALL findStrFastExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim) {
     return DM_SetResult("");
 }
 
-DM_API long DM_CALL findStrWithFont(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size, long* intX, long* intY) {
+DM_API long DM_CALL findStrWithFont(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim, const char* font_name, long font_flag, long font_size, long* intX, long* intY) {
     return findStr(x1, y1, x2, y2, str, color_format, sim, intX, intY);
 }
 
-DM_API const char* DM_CALL findStrWithFontE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size) {
+DM_API const char* DM_CALL findStrWithFontE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim, const char* font_name, long font_flag, long font_size) {
     return DM_SetResult("");
 }
 
-DM_API const char* DM_CALL findStrWithFontEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size) {
+DM_API const char* DM_CALL findStrWithFontEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, double sim, const char* font_name, long font_flag, long font_size) {
     return DM_SetResult("");
 }
 
@@ -2985,19 +2985,19 @@ DM_API long DM_CALL aiEnableFindPicWindow(long enable) {
     return 1;
 }
 
-DM_API long DM_CALL aiFindPic(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL aiFindPic(long x1, long y1, long x2, long y2, const char* pic_name, double sim, long dir, long* intX, long* intY) {
     return 0;
 }
 
-DM_API const char* DM_CALL aiFindPicEx(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir) {
+DM_API const char* DM_CALL aiFindPicEx(long x1, long y1, long x2, long y2, const char* pic_name, double sim, long dir) {
     return DM_SetResult("");
 }
 
-DM_API long DM_CALL aiFindPicMem(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir, long* intX, long* intY) {
+DM_API long DM_CALL aiFindPicMem(long x1, long y1, long x2, long y2, const char* pic_info, double sim, long dir, long* intX, long* intY) {
     return 0;
 }
 
-DM_API const char* DM_CALL aiFindPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir) {
+DM_API const char* DM_CALL aiFindPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, double sim, long dir) {
     return DM_SetResult("");
 }
 
