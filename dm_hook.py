@@ -54,132 +54,132 @@ class DmHook:
         dll = self._dll
         
         # 字符串返回类型
-        dll.dm_ver.restype = ctypes.c_char_p
-        dll.dm_getPath.restype = ctypes.c_char_p
-        dll.dm_getBasePath.restype = ctypes.c_char_p
-        dll.dm_getID.restype = ctypes.c_long
-        dll.dm_getLastError.restype = ctypes.c_long
+        dll.ver.restype = ctypes.c_char_p
+        dll.getPath.restype = ctypes.c_char_p
+        dll.getBasePath.restype = ctypes.c_char_p
+        dll.getID.restype = ctypes.c_long
+        dll.getLastError.restype = ctypes.c_long
         
         # 基本设置
-        dll.dm_reg.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-        dll.dm_reg.restype = ctypes.c_long
-        dll.dm_setPath.argtypes = [ctypes.c_char_p]
-        dll.dm_setPath.restype = ctypes.c_long
-        dll.dm_ver.restype = ctypes.c_char_p
+        dll.reg.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+        dll.reg.restype = ctypes.c_long
+        dll.setPath.argtypes = [ctypes.c_char_p]
+        dll.setPath.restype = ctypes.c_long
+        dll.ver.restype = ctypes.c_char_p
         
         # 窗口
-        dll.dm_findWindow.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-        dll.dm_findWindow.restype = ctypes.c_long
-        dll.dm_getForegroundWindow.restype = ctypes.c_long
-        dll.dm_getWindowTitle.argtypes = [ctypes.c_long]
-        dll.dm_getWindowTitle.restype = ctypes.c_char_p
-        dll.dm_getWindowClass.argtypes = [ctypes.c_long]
-        dll.dm_getWindowClass.restype = ctypes.c_char_p
-        dll.dm_getWindowProcessPath.argtypes = [ctypes.c_long]
-        dll.dm_getWindowProcessPath.restype = ctypes.c_char_p
+        dll.findWindow.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+        dll.findWindow.restype = ctypes.c_long
+        dll.getForegroundWindow.restype = ctypes.c_long
+        dll.getWindowTitle.argtypes = [ctypes.c_long]
+        dll.getWindowTitle.restype = ctypes.c_char_p
+        dll.getWindowClass.argtypes = [ctypes.c_long]
+        dll.getWindowClass.restype = ctypes.c_char_p
+        dll.getWindowProcessPath.argtypes = [ctypes.c_long]
+        dll.getWindowProcessPath.restype = ctypes.c_char_p
         
         # 键鼠
-        dll.dm_moveTo.argtypes = [ctypes.c_long, ctypes.c_long]
-        dll.dm_moveTo.restype = ctypes.c_long
-        dll.dm_leftClick.restype = ctypes.c_long
-        dll.dm_keyPress.argtypes = [ctypes.c_long]
-        dll.dm_keyPress.restype = ctypes.c_long
+        dll.moveTo.argtypes = [ctypes.c_long, ctypes.c_long]
+        dll.moveTo.restype = ctypes.c_long
+        dll.leftClick.restype = ctypes.c_long
+        dll.keyPress.argtypes = [ctypes.c_long]
+        dll.keyPress.restype = ctypes.c_long
         
         # 图色
-        dll.dm_getColor.argtypes = [ctypes.c_long, ctypes.c_long]
-        dll.dm_getColor.restype = ctypes.c_char_p
-        dll.dm_capture.argtypes = [ctypes.c_long, ctypes.c_long, ctypes.c_long, ctypes.c_long, ctypes.c_char_p]
-        dll.dm_capture.restype = ctypes.c_long
-        dll.dm_findColor.restype = ctypes.c_long
-        dll.dm_findPic.restype = ctypes.c_long
+        dll.getColor.argtypes = [ctypes.c_long, ctypes.c_long]
+        dll.getColor.restype = ctypes.c_char_p
+        dll.capture.argtypes = [ctypes.c_long, ctypes.c_long, ctypes.c_long, ctypes.c_long, ctypes.c_char_p]
+        dll.capture.restype = ctypes.c_long
+        dll.findColor.restype = ctypes.c_long
+        dll.findPic.restype = ctypes.c_long
         
         # 系统
-        dll.dm_getScreenWidth.restype = ctypes.c_long
-        dll.dm_getScreenHeight.restype = ctypes.c_long
-        dll.dm_delay.argtypes = [ctypes.c_long]
-        dll.dm_delay.restype = ctypes.c_long
-        dll.dm_getTime.restype = ctypes.c_long
-        dll.dm_getOsType.restype = ctypes.c_long
-        dll.dm_getMachineCode.restype = ctypes.c_char_p
-        dll.dm_executeCmd.argtypes = [ctypes.c_char_p, ctypes.c_long]
-        dll.dm_executeCmd.restype = ctypes.c_char_p
+        dll.getScreenWidth.restype = ctypes.c_long
+        dll.getScreenHeight.restype = ctypes.c_long
+        dll.delay.argtypes = [ctypes.c_long]
+        dll.delay.restype = ctypes.c_long
+        dll.getTime.restype = ctypes.c_long
+        dll.getOsType.restype = ctypes.c_long
+        dll.getMachineCode.restype = ctypes.c_char_p
+        dll.executeCmd.argtypes = [ctypes.c_char_p, ctypes.c_long]
+        dll.executeCmd.restype = ctypes.c_char_p
     
     # ---- 基本设置 ----
     def reg(self, reg_code: str, ver_info: str = "") -> int:
-        return self._dll.dm_reg(reg_code.encode(), ver_info.encode())
+        return self._dll.reg(reg_code.encode(), ver_info.encode())
     
     def ver(self) -> str:
-        return self._dll.dm_ver().decode('utf-8', errors='replace')
+        return self._dll.ver().decode('utf-8', errors='replace')
     
     def get_id(self) -> int:
-        return self._dll.dm_getID()
+        return self._dll.getID()
     
     def get_last_error(self) -> int:
-        return self._dll.dm_getLastError()
+        return self._dll.getLastError()
     
     def get_path(self) -> str:
-        return self._dll.dm_getPath().decode('utf-8', errors='replace')
+        return self._dll.getPath().decode('utf-8', errors='replace')
     
     def set_path(self, path: str) -> int:
-        return self._dll.dm_setPath(path.encode())
+        return self._dll.setPath(path.encode())
     
     def get_base_path(self) -> str:
-        return self._dll.dm_getBasePath().decode('utf-8', errors='replace')
+        return self._dll.getBasePath().decode('utf-8', errors='replace')
     
     # ---- 窗口 ----
     def find_window(self, cls: str = "", title: str = "") -> int:
-        return self._dll.dm_findWindow(cls.encode(), title.encode())
+        return self._dll.findWindow(cls.encode(), title.encode())
     
     def get_foreground_window(self) -> int:
-        return self._dll.dm_getForegroundWindow()
+        return self._dll.getForegroundWindow()
     
     def get_window_title(self, hwnd: int) -> str:
-        return self._dll.dm_getWindowTitle(hwnd).decode('utf-8', errors='replace')
+        return self._dll.getWindowTitle(hwnd).decode('utf-8', errors='replace')
     
     def get_window_class(self, hwnd: int) -> str:
-        return self._dll.dm_getWindowClass(hwnd).decode('utf-8', errors='replace')
+        return self._dll.getWindowClass(hwnd).decode('utf-8', errors='replace')
     
     def get_window_process_path(self, hwnd: int) -> str:
-        return self._dll.dm_getWindowProcessPath(hwnd).decode('utf-8', errors='replace')
+        return self._dll.getWindowProcessPath(hwnd).decode('utf-8', errors='replace')
     
     # ---- 键鼠 ----
     def move_to(self, x: int, y: int) -> int:
-        return self._dll.dm_moveTo(x, y)
+        return self._dll.moveTo(x, y)
     
     def left_click(self) -> int:
-        return self._dll.dm_leftClick()
+        return self._dll.leftClick()
     
     def key_press(self, vk: int) -> int:
-        return self._dll.dm_keyPress(vk)
+        return self._dll.keyPress(vk)
     
     # ---- 图色 ----
     def get_color(self, x: int, y: int) -> str:
-        return self._dll.dm_getColor(x, y).decode()
+        return self._dll.getColor(x, y).decode()
     
     def capture(self, x1: int, y1: int, x2: int, y2: int, file: str) -> int:
-        return self._dll.dm_capture(x1, y1, x2, y2, file.encode())
+        return self._dll.capture(x1, y1, x2, y2, file.encode())
     
     # ---- 系统 ----
     def get_screen_width(self) -> int:
-        return self._dll.dm_getScreenWidth()
+        return self._dll.getScreenWidth()
     
     def get_screen_height(self) -> int:
-        return self._dll.dm_getScreenHeight()
+        return self._dll.getScreenHeight()
     
     def delay(self, ms: int):
-        self._dll.dm_delay(ms)
+        self._dll.delay(ms)
     
     def get_time(self) -> int:
-        return self._dll.dm_getTime()
+        return self._dll.getTime()
     
     def get_os_type(self) -> int:
-        return self._dll.dm_getOsType()
+        return self._dll.getOsType()
     
     def get_machine_code(self) -> str:
-        return self._dll.dm_getMachineCode().decode('utf-8', errors='replace')
+        return self._dll.getMachineCode().decode('utf-8', errors='replace')
     
     def execute_cmd(self, cmd: str, timeout: int = 30000) -> str:
-        return self._dll.dm_executeCmd(cmd.encode(), timeout).decode('utf-8', errors='replace')
+        return self._dll.executeCmd(cmd.encode(), timeout).decode('utf-8', errors='replace')
 
 
 # ============================================================================

@@ -1,16 +1,17 @@
 # dm_hook.dll 完整函数使用说明
 
-> **大漠插件 (dm.dll) 开源重新实现** — 接口完全兼容原版大漠插件
-> 采用 C 风格导出（`__stdcall`），支持跨语言调用（C++、Python、AutoHotkey 等）
+> **大漠插件 (dm.dll) 开源重新实现** — 接口完全兼容原版大漠插件  
+> 采用 C 风格导出（`__stdcall`），支持跨语言调用（C++、Python、AutoHotkey 等）  
 > 现已支持 **COM 组件**，可通过 `win32com.client.Dispatch('dm.dmsoft')` 调用
 >
-> **文档版本**: 1.2 | **最后更新**: 2026-08-13
+> **文档版本**: 1.4 | **最后更新**: 2026-08-13
 
 ---
 
 ## 目录（点击模块名展开/折叠，点击 🔗 跳转到模块）
 
 <details>
+
 <summary>模块 1：基本设置（13 个） <a href="#模块-1基本设置">🔗</a></summary>
 
 - <a href="#11-dm_reg">1.1 dm_reg</a> — 注册插件（基于机器码）
@@ -26,9 +27,11 @@
 - <a href="#111-dm_getbasepath">1.11 dm_getBasePath</a> — 获取 DLL 基础路径
 - <a href="#112-dm_setshowerrormsg">1.12 dm_setShowErrorMsg</a> — 设置错误消息框显示
 - <a href="#113-dm_enablepiccache">1.13 dm_enablePicCache</a> — 启用/禁用图片缓存
+
 </details>
 
 <details>
+
 <summary>模块 2：窗口操作（40 个） <a href="#模块-2窗口操作">🔗</a></summary>
 
 - <a href="#21-dm_findwindow">2.1 dm_findWindow</a> — 查找窗口（类名/标题）
@@ -71,9 +74,11 @@
 - <a href="#238-dm_sendstringime2">2.38 dm_sendStringIme2</a> — 通过 IME 发送字符串（备选）
 - <a href="#239-dm_clienttoscreen">2.39 dm_clientToScreen</a> — 客户区坐标转屏幕坐标
 - <a href="#240-dm_screentoclient">2.40 dm_screenToClient</a> — 屏幕坐标转客户区坐标
+
 </details>
 
 <details>
+
 <summary>模块 3：键鼠操作（34 个） <a href="#模块-3键鼠操作">🔗</a></summary>
 
 - <a href="#31-dm_keydown">3.1 dm_keyDown</a> — 按下键（虚拟键码）
@@ -110,9 +115,11 @@
 - <a href="#332-dm_getmousespeed">3.32 dm_getMouseSpeed</a> — 获取鼠标速度
 - <a href="#333-dm_enablemouseaccuracy">3.33 dm_enableMouseAccuracy</a> — 启用/禁用鼠标加速
 - <a href="#334-dm_setsimmode">3.34 dm_setSimMode</a> — 设置模拟模式
+
 </details>
 
 <details>
+
 <summary>模块 4：图色操作（57 个） <a href="#模块-4图色操作">🔗</a></summary>
 
 - <a href="#41-dm_capture">4.1 dm_capture</a> — 截图保存为 BMP
@@ -172,9 +179,11 @@
 - <a href="#455-dm_bgr2rgb">4.55 dm_bgr2RGB</a> — BGR 转 RGB
 - <a href="#456-dm_rgb2bgr">4.56 dm_rgb2BGR</a> — RGB 转 BGR
 - <a href="#457-dm_isdisplaydead">4.57 dm_isDisplayDead</a> — 检测画面是否静止
+
 </details>
 
 <details>
+
 <summary>模块 5：后台设置（28 个） <a href="#模块-5后台设置">🔗</a></summary>
 
 - <a href="#51-dm_bindwindow">5.1 dm_bindWindow</a> — 绑定窗口
@@ -205,9 +214,11 @@
 - <a href="#526-dm_hackspeed">5.26 dm_hackSpeed</a> — 设置游戏速度
 - <a href="#527-dm_downcpu">5.27 dm_downCpu</a> — 降低 CPU 占用
 - <a href="#528-dm_switchbindwindow">5.28 dm_switchBindWindow</a> — 切换绑定窗口
+
 </details>
 
 <details>
+
 <summary>模块 6：内存操作（54 个） <a href="#模块-6内存操作">🔗</a></summary>
 
 - <a href="#61-dm_openprocess">6.1 dm_openProcess</a> — 打开进程
@@ -264,9 +275,11 @@
 - <a href="#652-dm_floattodata">6.52 dm_floatToData</a> — 浮点数转十六进制数据
 - <a href="#653-dm_doubletodata">6.53 dm_doubleToData</a> — 双精度转十六进制数据
 - <a href="#654-dm_stringtodata">6.54 dm_stringToData</a> — 字符串转十六进制数据
+
 </details>
 
 <details>
+
 <summary>模块 7：文件操作（26 个） <a href="#模块-7文件操作">🔗</a></summary>
 
 - <a href="#71-dm_writefile">7.1 dm_writeFile</a> — 写文件
@@ -295,9 +308,11 @@
 - <a href="#724-dm_deleteinipwd">7.24 dm_deleteIniPwd</a> — 删除加密 INI 键值
 - <a href="#725-dm_enuminikeypwd">7.25 dm_enumIniKeyPwd</a> — 枚举加密 INI 键名
 - <a href="#726-dm_enuminisectionpwd">7.26 dm_enumIniSectionPwd</a> — 枚举加密 INI 节名
+
 </details>
 
 <details>
+
 <summary>模块 8：文字识别（46 个） <a href="#模块-8文字识别">🔗</a></summary>
 
 - <a href="#81-dm_setdict">8.1 dm_setDict</a> — 加载字库文件
@@ -346,9 +361,11 @@
 - <a href="#844-dm_setminrowgap">8.44 dm_setMinRowGap</a> — 设置最小行间距
 - <a href="#845-dm_setwordgap">8.45 dm_setWordGap</a> — 设置字间距
 - <a href="#846-dm_setwordlineheight">8.46 dm_setWordLineHeight</a> — 设置行高
+
 </details>
 
 <details>
+
 <summary>模块 9：系统操作（44 个） <a href="#模块-9系统操作">🔗</a></summary>
 
 - <a href="#91-dm_beep">9.1 dm_beep</a> — 蜂鸣
@@ -395,9 +412,11 @@
 - <a href="#942-dm_setuac">9.42 dm_setUAC</a> — 设置 UAC
 - <a href="#943-dm_setdisplayaccel">9.43 dm_setDisplayAcceler</a> — 设置显示加速
 - <a href="#944-dm_showtaskbaricon">9.44 dm_showTaskBarIcon</a> — 显示/隐藏任务栏图标
+
 </details>
 
 <details>
+
 <summary>模块 10：杂项（9 个） <a href="#模块-10杂项">🔗</a></summary>
 
 - <a href="#101-dm_entercri">10.1 dm_enterCri</a> — 进入临界区
@@ -409,9 +428,11 @@
 - <a href="#107-dm_activeinputmethod">10.7 dm_activeInputMethod</a> — 激活输入法
 - <a href="#108-dm_checkinputmethod">10.8 dm_checkInputMethod</a> — 检查输入法
 - <a href="#109-dm_findinputmethod">10.9 dm_findInputMethod</a> — 查找输入法
+
 </details>
 
 <details>
+
 <summary>模块 11：汇编（9 个） <a href="#模块-11汇编">🔗</a></summary>
 
 - <a href="#111-dm_asmadd">11.1 dm_asmAdd</a> — 添加汇编指令
@@ -423,9 +444,11 @@
 - <a href="#117-dm_disassemble">11.7 dm_disAssemble</a> — 反汇编机器码
 - <a href="#118-dm_setasmhwndasprocessid">11.8 dm_setAsmHwndAsProcessId</a> — 设置 hwnd 为进程 ID
 - <a href="#119-dm_setshowasmerrormsg">11.9 dm_setShowAsmErrorMsg</a> — 显示汇编错误消息
+
 </details>
 
 <details>
+
 <summary>模块 12：AI 功能（17 个） <a href="#模块-12ai-功能">🔗</a></summary>
 
 - <a href="#121-dm_loadai">12.1 dm_loadAi</a> — 加载 AI 模型
@@ -445,9 +468,11 @@
 - <a href="#1215-dm_aiyolosetversion">12.15 dm_aiYoloSetVersion</a> — 设置 YOLO 版本
 - <a href="#1216-dm_aiyoloobjectstostring">12.16 dm_aiYoloObjectsToString</a> — 转换检测结果
 - <a href="#1217-dm_aiyolosortsobjects">12.17 dm_aiYoloSortsObjects</a> — 排序检测结果
+
 </details>
 
 <details>
+
 <summary>模块 13：Foobar 界面控件（23 个） <a href="#模块-13foobar-界面控件">🔗</a></summary>
 
 - <a href="#131-dm_createfoobarrect">13.1 dm_createFoobarRect</a> — 创建矩形 Foobar
@@ -473,9 +498,11 @@
 - <a href="#1321-dm_foobartextprintdir">13.21 dm_foobarTextPrintDir</a> — 设置打印方向
 - <a href="#1322-dm_foobarstartgif">13.22 dm_foobarStartGif</a> — 播放 GIF
 - <a href="#1323-dm_foobarstopgif">13.23 dm_foobarStopGif</a> — 停止 GIF
+
 </details>
 
 <details>
+
 <summary>模块 14：答题（9 个） <a href="#模块-14答题">🔗</a></summary>
 
 - <a href="#141-dm_faqcapture">14.1 dm_faqCapture</a> — 截取答题区域
@@ -487,17 +514,21 @@
 - <a href="#147-dm_faqfetch">14.7 dm_faqFetch</a> — 获取答案
 - <a href="#148-dm_faqcancel">14.8 dm_faqCancel</a> — 取消答题请求
 - <a href="#149-dm_faqisposted">14.9 dm_faqIsPosted</a> — 检查是否已发送
+
 </details>
 
 <details>
+
 <summary>模块 15：算法（3 个） <a href="#模块-15算法">🔗</a></summary>
 
 - <a href="#151-dm_excludepos">15.1 dm_excludePos</a> — 排除区域坐标
 - <a href="#152-dm_findnearestpos">15.2 dm_findNearestPos</a> — 查找最近坐标
 - <a href="#153-dm_sortposdistance">15.3 dm_sortPosDistance</a> — 按距离排序坐标
+
 </details>
 
 <details>
+
 <summary>模块 16：防护盾（5 个） <a href="#模块-16防护盾">🔗</a></summary>
 
 - <a href="#161-dm_dmguard">16.1 dm_dmGuard</a> — 启用/禁用防护盾
@@ -505,6 +536,7 @@
 - <a href="#163-dm_dmguardloadcustom">16.3 dm_dmGuardLoadCustom</a> — 加载自定义防护数据
 - <a href="#164-dm_dmguardparams">16.4 dm_dmGuardParams</a> — 设置防护参数
 - <a href="#165-dm_unloaddriver">16.5 dm_unLoadDriver</a> — 卸载驱动
+
 </details>
 
 ---
@@ -518,6 +550,7 @@
 ### 1.1 dm_reg
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_reg(const char* reg_code, const char* ver_info);
 ```
@@ -526,17 +559,17 @@ long DM_CALL dm_reg(const char* reg_code, const char* ver_info);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| reg_code | const char* | 是 | 注册码字符串 |
+| 参数       | 类型          | 必填      | 说明               |
+| -------- | ----------- | ------- | ---------------- |
+| reg_code | const char* | 是       | 注册码字符串           |
 | ver_info | const char* | 否（可传空串） | 版本信息，如 `"1.0.0"` |
 
 **返回值**：
 
-| 返回值 | 含义 |
-|--------|------|
-| 0 | 注册成功 |
-| -1 | 需要注册（DMERR_NEED_REG） |
+| 返回值 | 含义                   |
+| --- | -------------------- |
+| 0   | 注册成功                 |
+| -1  | 需要注册（DMERR_NEED_REG） |
 
 **异常情况**：无 C++ 异常，通过返回值指示错误。
 
@@ -562,6 +595,7 @@ dm_reg("my_reg_code_12345", "1.0.0");
 ### 1.2 dm_regEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_regEx(const char* reg_code, const char* ver_info, const char* ip);
 ```
@@ -570,11 +604,11 @@ long DM_CALL dm_regEx(const char* reg_code, const char* ver_info, const char* ip
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| reg_code | const char* | 是 | 注册码 |
-| ver_info | const char* | 否 | 版本信息 |
-| ip | const char* | 是 | IP 地址字符串 |
+| 参数       | 类型          | 必填 | 说明       |
+| -------- | ----------- | -- | -------- |
+| reg_code | const char* | 是  | 注册码      |
+| ver_info | const char* | 否  | 版本信息     |
+| ip       | const char* | 是  | IP 地址字符串 |
 
 **返回值**：0=成功，非0=失败（见错误码表）。
 
@@ -590,6 +624,7 @@ ret = dm.reg_ex("reg_code", "1.0.0", "192.168.1.100")
 ### 1.3 dm_regNoMac
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_regNoMac(const char* reg_code, const char* ver_info);
 ```
@@ -605,6 +640,7 @@ long DM_CALL dm_regNoMac(const char* reg_code, const char* ver_info);
 ### 1.4 dm_regExNoMac
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_regExNoMac(const char* reg_code, const char* ver_info, const char* ip);
 ```
@@ -620,6 +656,7 @@ long DM_CALL dm_regExNoMac(const char* reg_code, const char* ver_info, const cha
 ### 1.5 dm_ver
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_ver();
 ```
@@ -631,6 +668,8 @@ const char* DM_CALL dm_ver();
 **返回值**：C 风格字符串指针，指向版本信息，如 `"1.0.0.1"`。
 
 **异常情况**：无。
+
+
 
 **调用示例**：
 
@@ -657,6 +696,7 @@ MsgBox, 版本: %ver%
 ### 1.6 dm_getID
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getID();
 ```
@@ -682,6 +722,7 @@ print(f"当前对象 ID: {obj_id}")
 ### 1.7 dm_getDmCount
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getDmCount();
 ```
@@ -699,6 +740,7 @@ long DM_CALL dm_getDmCount();
 ### 1.8 dm_getLastError
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getLastError();
 ```
@@ -726,6 +768,7 @@ if ret == 0:
 ### 1.9 dm_getPath
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getPath();
 ```
@@ -751,6 +794,7 @@ print(f"当前全局路径: {path}")
 ### 1.10 dm_setPath
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setPath(const char* path);
 ```
@@ -759,9 +803,9 @@ long DM_CALL dm_setPath(const char* path);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| path | const char* | 是 | 要设置的路径字符串，支持绝对路径和相对路径 |
+| 参数   | 类型          | 必填 | 说明                    |
+| ---- | ----------- | -- | --------------------- |
+| path | const char* | 是  | 要设置的路径字符串，支持绝对路径和相对路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -781,6 +825,7 @@ dm.set_path(".\\resources")
 ### 1.11 dm_getBasePath
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getBasePath();
 ```
@@ -798,6 +843,7 @@ const char* DM_CALL dm_getBasePath();
 ### 1.12 dm_setShowErrorMsg
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setShowErrorMsg(long show);
 ```
@@ -806,9 +852,9 @@ long DM_CALL dm_setShowErrorMsg(long show);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| show | long | 是 | 0=隐藏错误消息框，1=显示错误消息框 |
+| 参数   | 类型   | 必填 | 说明                  |
+| ---- | ---- | -- | ------------------- |
+| show | long | 是  | 0=隐藏错误消息框，1=显示错误消息框 |
 
 **返回值**：0=成功。
 
@@ -826,6 +872,7 @@ dm.set_show_error_msg(0)  # 发布时关闭错误弹窗
 ### 1.13 dm_enablePicCache
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enablePicCache(long enable);
 ```
@@ -834,9 +881,9 @@ long DM_CALL dm_enablePicCache(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用缓存，1=启用缓存 |
+| 参数     | 类型   | 必填 | 说明            |
+| ------ | ---- | -- | ------------- |
+| enable | long | 是  | 0=禁用缓存，1=启用缓存 |
 
 **返回值**：0=成功。
 
@@ -858,6 +905,7 @@ dm.enable_pic_cache(1)  # 启用图片缓存提升性能
 ### 2.1 dm_findWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findWindow(const char* cls, const char* title);
 ```
@@ -866,10 +914,10 @@ long DM_CALL dm_findWindow(const char* cls, const char* title);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| cls | const char* | 否（可传空串） | 窗口类名，如 `"Notepad"`、`"#32770"`（对话框） |
-| title | const char* | 否（可传空串） | 窗口标题，如 `"计算器"` |
+| 参数    | 类型          | 必填      | 说明                                 |
+| ----- | ----------- | ------- | ---------------------------------- |
+| cls   | const char* | 否（可传空串） | 窗口类名，如 `"Notepad"`、`"#32770"`（对话框） |
+| title | const char* | 否（可传空串） | 窗口标题，如 `"计算器"`                     |
 
 **返回值**：找到的窗口句柄（HWND），0 表示未找到。
 
@@ -896,6 +944,7 @@ hwnd = dm.find_window("Chrome_WidgetWin_1", "GitHub")
 ### 2.2 dm_findWindowEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findWindowEx(intptr_t parent, long cls, const char* title);
 ```
@@ -904,11 +953,11 @@ long DM_CALL dm_findWindowEx(intptr_t parent, long cls, const char* title);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| parent | intptr_t | 是 | 父窗口句柄，0 表示从桌面窗口开始查找 |
-| cls | long | 否（传 ""） | 子窗口类名 |
-| title | const char* | 否 | 子窗口标题 |
+| 参数     | 类型          | 必填      | 说明                  |
+| ------ | ----------- | ------- | ------------------- |
+| parent | intptr_t    | 是       | 父窗口句柄，0 表示从桌面窗口开始查找 |
+| cls    | long        | 否（传 ""） | 子窗口类名               |
+| title  | const char* | 否       | 子窗口标题               |
 
 **返回值**：子窗口句柄，0=未找到。
 
@@ -928,6 +977,7 @@ if hwnd:
 ### 2.3 dm_findWindowByProcess
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findWindowByProcess(const char* process_name, const char* cls, const char* title);
 ```
@@ -936,11 +986,11 @@ long DM_CALL dm_findWindowByProcess(const char* process_name, const char* cls, c
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| process_name | const char* | 是 | 进程名称，如 `"notepad.exe"`、`"chrome.exe"` |
-| cls | const char* | 否 | 窗口类名 |
-| title | const char* | 否 | 窗口标题 |
+| 参数           | 类型          | 必填 | 说明                                    |
+| ------------ | ----------- | -- | ------------------------------------- |
+| process_name | const char* | 是  | 进程名称，如 `"notepad.exe"`、`"chrome.exe"` |
+| cls          | const char* | 否  | 窗口类名                                  |
+| title        | const char* | 否  | 窗口标题                                  |
 
 **返回值**：窗口句柄，0=未找到。
 
@@ -957,6 +1007,7 @@ print(f"记事本窗口: {hwnd}")
 ### 2.4 dm_findWindowByProcessId
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findWindowByProcessId(long process_id, const char* cls, const char* title);
 ```
@@ -965,11 +1016,11 @@ long DM_CALL dm_findWindowByProcessId(long process_id, const char* cls, const ch
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| process_id | long | 是 | 进程 ID |
-| cls | const char* | 否 | 窗口类名 |
-| title | const char* | 否 | 窗口标题 |
+| 参数         | 类型          | 必填 | 说明    |
+| ---------- | ----------- | -- | ----- |
+| process_id | long        | 是  | 进程 ID |
+| cls        | const char* | 否  | 窗口类名  |
+| title      | const char* | 否  | 窗口标题  |
 
 **返回值**：窗口句柄，0=未找到。
 
@@ -978,6 +1029,7 @@ long DM_CALL dm_findWindowByProcessId(long process_id, const char* cls, const ch
 ### 2.5 dm_findWindowSuper
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findWindowSuper(const char* cls, const char* title, long flag);
 ```
@@ -986,21 +1038,21 @@ long DM_CALL dm_findWindowSuper(const char* cls, const char* title, long flag);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| cls | const char* | 否 | 窗口类名 |
-| title | const char* | 否 | 窗口标题 |
-| flag | long | 是 | 匹配模式（见下表） |
+| 参数    | 类型          | 必填 | 说明        |
+| ----- | ----------- | -- | --------- |
+| cls   | const char* | 否  | 窗口类名      |
+| title | const char* | 否  | 窗口标题      |
+| flag  | long        | 是  | 匹配模式（见下表） |
 
 **flag 取值**：
 
-| 值 | 说明 |
-|----|------|
-| 0 | 标题完全匹配 |
+| 值 | 说明         |
+| - | ---------- |
+| 0 | 标题完全匹配     |
 | 1 | 标题模糊匹配（包含） |
-| 2 | 类名匹配 |
-| 4 | 标题正则匹配 |
-| 8 | 类名正则匹配 |
+| 2 | 类名匹配       |
+| 4 | 标题正则匹配     |
+| 8 | 类名正则匹配     |
 
 **返回值**：窗口句柄，0=未找到。
 
@@ -1017,6 +1069,7 @@ hwnd = dm.find_window_super("", ".*记事本.*", 4)
 ### 2.6 dm_enumWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enumWindow(intptr_t parent, const char* title, long filter);
 ```
@@ -1025,11 +1078,11 @@ long DM_CALL dm_enumWindow(intptr_t parent, const char* title, long filter);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| parent | intptr_t | 是 | 父窗口句柄，0 表示枚举桌面所有顶层窗口 |
-| title | const char* | 否 | 标题过滤 |
-| filter | long | 是 | 过滤方式，1=匹配标题，2=排除标题，其他值=不过滤 |
+| 参数     | 类型          | 必填 | 说明                         |
+| ------ | ----------- | -- | -------------------------- |
+| parent | intptr_t    | 是  | 父窗口句柄，0 表示枚举桌面所有顶层窗口       |
+| title  | const char* | 否  | 标题过滤                       |
+| filter | long        | 是  | 过滤方式，1=匹配标题，2=排除标题，其他值=不过滤 |
 
 **返回值**：窗口句柄列表，以 `"|"` 分隔的字符串。如 `"123456|789012|345678"`。
 
@@ -1046,6 +1099,7 @@ print(f"所有窗口句柄: {hwnds}")
 ### 2.7 dm_enumWindowByProcess
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enumWindowByProcess(const char* process_name, const char* title, long filter);
 ```
@@ -1054,11 +1108,11 @@ long DM_CALL dm_enumWindowByProcess(const char* process_name, const char* title,
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| process_name | const char* | 是 | 进程名称 |
-| title | const char* | 否 | 标题过滤 |
-| filter | long | 是 | 过滤方式（同 dm_enumWindow） |
+| 参数           | 类型          | 必填 | 说明                    |
+| ------------ | ----------- | -- | --------------------- |
+| process_name | const char* | 是  | 进程名称                  |
+| title        | const char* | 否  | 标题过滤                  |
+| filter       | long        | 是  | 过滤方式（同 dm_enumWindow） |
 
 **返回值**：窗口句柄列表，以 `"|"` 分隔。
 
@@ -1067,6 +1121,7 @@ long DM_CALL dm_enumWindowByProcess(const char* process_name, const char* title,
 ### 2.8 dm_enumWindowByProcessId
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enumWindowByProcessId(long pid, const char* title, long filter);
 ```
@@ -1075,11 +1130,11 @@ long DM_CALL dm_enumWindowByProcessId(long pid, const char* title, long filter);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pid | long | 是 | 进程 ID |
-| title | const char* | 否 | 标题过滤 |
-| filter | long | 是 | 过滤方式 |
+| 参数     | 类型          | 必填 | 说明    |
+| ------ | ----------- | -- | ----- |
+| pid    | long        | 是  | 进程 ID |
+| title  | const char* | 否  | 标题过滤  |
+| filter | long        | 是  | 过滤方式  |
 
 **返回值**：窗口句柄列表，以 `"|"` 分隔。
 
@@ -1088,6 +1143,7 @@ long DM_CALL dm_enumWindowByProcessId(long pid, const char* title, long filter);
 ### 2.9 dm_enumWindowSuper
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enumWindowSuper(const char* spec1, long flag1, const char* spec2, long flag2, long filter);
 ```
@@ -1096,13 +1152,13 @@ long DM_CALL dm_enumWindowSuper(const char* spec1, long flag1, const char* spec2
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| spec1 | const char* | 是 | 第一个匹配条件（类名或标题） |
-| flag1 | long | 是 | 第一个条件的匹配模式 |
-| spec2 | const char* | 是 | 第二个匹配条件 |
-| flag2 | long | 是 | 第二个条件的匹配模式 |
-| filter | long | 是 | 返回格式过滤 |
+| 参数     | 类型          | 必填 | 说明             |
+| ------ | ----------- | -- | -------------- |
+| spec1  | const char* | 是  | 第一个匹配条件（类名或标题） |
+| flag1  | long        | 是  | 第一个条件的匹配模式     |
+| spec2  | const char* | 是  | 第二个匹配条件        |
+| flag2  | long        | 是  | 第二个条件的匹配模式     |
+| filter | long        | 是  | 返回格式过滤         |
 
 **flag 取值**：同 `dm_findWindowSuper` 的 flag。
 
@@ -1113,6 +1169,7 @@ long DM_CALL dm_enumWindowSuper(const char* spec1, long flag1, const char* spec2
 ### 2.10 dm_enumProcess
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enumProcess(const char* name);
 ```
@@ -1121,9 +1178,9 @@ long DM_CALL dm_enumProcess(const char* name);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| name | const char* | 是 | 进程名称，支持通配符 `*`，如 `"*.exe"` 表示所有进程 |
+| 参数   | 类型          | 必填 | 说明                                |
+| ---- | ----------- | -- | --------------------------------- |
+| name | const char* | 是  | 进程名称，支持通配符 `*`，如 `"*.exe"` 表示所有进程 |
 
 **返回值**：进程 ID 列表，以 `","` 分隔的字符串。
 
@@ -1140,6 +1197,7 @@ print(f"记事本进程 PID: {pids}")
 ### 2.11 dm_getWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getWindow(intptr_t hwnd, long flag);
 ```
@@ -1148,19 +1206,19 @@ long DM_CALL dm_getWindow(intptr_t hwnd, long flag);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 源窗口句柄 |
-| flag | long | 是 | 关系类型（见下表） |
+| 参数   | 类型       | 必填 | 说明        |
+| ---- | -------- | -- | --------- |
+| hwnd | intptr_t | 是  | 源窗口句柄     |
+| flag | long     | 是  | 关系类型（见下表） |
 
 **flag 取值**：
 
-| 值 | 说明 |
-|----|------|
-| 0 | 获取父窗口 |
-| 1 | 获取第一个子窗口 |
-| 2 | 获取上一个兄弟窗口 |
-| 3 | 获取下一个兄弟窗口 |
+| 值 | 说明               |
+| - | ---------------- |
+| 0 | 获取父窗口            |
+| 1 | 获取第一个子窗口         |
+| 2 | 获取上一个兄弟窗口        |
+| 3 | 获取下一个兄弟窗口        |
 | 4 | 获取窗口所属的顶层窗口（所有者） |
 
 **返回值**：目标窗口句柄，0=未找到。
@@ -1170,6 +1228,7 @@ long DM_CALL dm_getWindow(intptr_t hwnd, long flag);
 ### 2.12 dm_getForegroundWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getForegroundWindow();
 ```
@@ -1194,6 +1253,7 @@ print(f"当前前台窗口: {title}")
 ### 2.13 dm_getForegroundFocus
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getForegroundFocus();
 ```
@@ -1209,6 +1269,7 @@ long DM_CALL dm_getForegroundFocus();
 ### 2.14 dm_getMousePointWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getMousePointWindow();
 ```
@@ -1232,6 +1293,7 @@ print(f"鼠标下方窗口: {dm.get_window_title(hwnd)}")
 ### 2.15 dm_getPointWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getPointWindow(long x, long y);
 ```
@@ -1240,10 +1302,10 @@ long DM_CALL dm_getPointWindow(long x, long y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long | 是 | 屏幕 X 坐标 |
-| y | long | 是 | 屏幕 Y 坐标 |
+| 参数 | 类型   | 必填 | 说明      |
+| -- | ---- | -- | ------- |
+| x  | long | 是  | 屏幕 X 坐标 |
+| y  | long | 是  | 屏幕 Y 坐标 |
 
 **返回值**：该坐标点下的窗口句柄，0=未找到。
 
@@ -1252,6 +1314,7 @@ long DM_CALL dm_getPointWindow(long x, long y);
 ### 2.16 dm_getSpecialWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getSpecialWindow(long flag);
 ```
@@ -1260,16 +1323,16 @@ long DM_CALL dm_getSpecialWindow(long flag);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| flag | long | 是 | 特殊窗口类型（见下表） |
+| 参数   | 类型   | 必填 | 说明          |
+| ---- | ---- | -- | ----------- |
+| flag | long | 是  | 特殊窗口类型（见下表） |
 
 **flag 取值**：
 
-| 值 | 说明 |
-|----|------|
-| 0 | 桌面窗口 |
-| 1 | 任务栏窗口 |
+| 值 | 说明     |
+| - | ------ |
+| 0 | 桌面窗口   |
+| 1 | 任务栏窗口  |
 | 2 | 开始菜单按钮 |
 
 **返回值**：特殊窗口句柄，0=获取失败。
@@ -1279,6 +1342,7 @@ long DM_CALL dm_getSpecialWindow(long flag);
 ### 2.17 dm_getWindowClass
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getWindowClass(intptr_t hwnd);
 ```
@@ -1287,9 +1351,9 @@ const char* DM_CALL dm_getWindowClass(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：窗口类名字符串。
 
@@ -1309,6 +1373,7 @@ print(f"窗口类名: {cls}")
 ### 2.18 dm_getWindowProcessId
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getWindowProcessId(intptr_t hwnd);
 ```
@@ -1317,9 +1382,9 @@ long DM_CALL dm_getWindowProcessId(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：进程 ID，0=获取失败。
 
@@ -1337,6 +1402,7 @@ print(f"进程 PID: {pid}")
 ### 2.19 dm_getWindowProcessPath
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getWindowProcessPath(intptr_t hwnd);
 ```
@@ -1345,9 +1411,9 @@ const char* DM_CALL dm_getWindowProcessPath(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：进程完整路径字符串。
 
@@ -1367,6 +1433,7 @@ print(f"进程路径: {path}")
 ### 2.20 dm_getWindowThreadId
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getWindowThreadId(intptr_t hwnd);
 ```
@@ -1375,9 +1442,9 @@ long DM_CALL dm_getWindowThreadId(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：线程 ID，0=获取失败。
 
@@ -1386,6 +1453,7 @@ long DM_CALL dm_getWindowThreadId(intptr_t hwnd);
 ### 2.21 dm_getWindowTitle
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getWindowTitle(intptr_t hwnd);
 ```
@@ -1394,9 +1462,9 @@ const char* DM_CALL dm_getWindowTitle(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：窗口标题字符串。
 
@@ -1416,6 +1484,7 @@ print(f"窗口标题: {title}")
 ### 2.22 dm_getWindowRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getWindowRect(intptr_t hwnd, long* x1, long* y1, long* x2, long* y2);
 ```
@@ -1424,13 +1493,13 @@ long DM_CALL dm_getWindowRect(intptr_t hwnd, long* x1, long* y1, long* x2, long*
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| x1 | long* | 输出 | 左上角 X 坐标 |
-| y1 | long* | 输出 | 左上角 Y 坐标 |
-| x2 | long* | 输出 | 右下角 X 坐标 |
-| y2 | long* | 输出 | 右下角 Y 坐标 |
+| 参数   | 类型       | 必填 | 说明       |
+| ---- | -------- | -- | -------- |
+| hwnd | intptr_t | 是  | 窗口句柄     |
+| x1   | long*    | 输出 | 左上角 X 坐标 |
+| y1   | long*    | 输出 | 左上角 Y 坐标 |
+| x2   | long*    | 输出 | 右下角 X 坐标 |
+| y2   | long*    | 输出 | 右下角 Y 坐标 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1452,6 +1521,7 @@ if ret == 0:
 ### 2.23 dm_getClientRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getClientRect(intptr_t hwnd, long* x1, long* y1, long* x2, long* y2);
 ```
@@ -1475,6 +1545,7 @@ dm.get_client_rect(hwnd, x1, y1, x2, y2)
 ### 2.24 dm_getClientSize
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getClientSize(intptr_t hwnd, long* width, long* height);
 ```
@@ -1483,11 +1554,11 @@ long DM_CALL dm_getClientSize(intptr_t hwnd, long* width, long* height);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| width | long* | 输出 | 客户区宽度（像素） |
-| height | long* | 输出 | 客户区高度（像素） |
+| 参数     | 类型       | 必填 | 说明        |
+| ------ | -------- | -- | --------- |
+| hwnd   | intptr_t | 是  | 窗口句柄      |
+| width  | long*    | 输出 | 客户区宽度（像素） |
+| height | long*    | 输出 | 客户区高度（像素） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1496,6 +1567,7 @@ long DM_CALL dm_getClientSize(intptr_t hwnd, long* width, long* height);
 ### 2.25 dm_getWindowState
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getWindowState(intptr_t hwnd, long flag);
 ```
@@ -1504,19 +1576,19 @@ long DM_CALL dm_getWindowState(intptr_t hwnd, long flag);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| flag | long | 是 | 查询类型（见下表） |
+| 参数   | 类型       | 必填 | 说明        |
+| ---- | -------- | -- | --------- |
+| hwnd | intptr_t | 是  | 窗口句柄      |
+| flag | long     | 是  | 查询类型（见下表） |
 
 **flag 取值**：
 
-| 值 | 说明 |
-|----|------|
-| 0 | 是否可见 |
+| 值 | 说明    |
+| - | ----- |
+| 0 | 是否可见  |
 | 1 | 是否最小化 |
 | 2 | 是否最大化 |
-| 3 | 是否激活 |
+| 3 | 是否激活  |
 
 **返回值**：0=否，1=是。
 
@@ -1525,6 +1597,7 @@ long DM_CALL dm_getWindowState(intptr_t hwnd, long flag);
 ### 2.26 dm_getProcessInfo
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getProcessInfo(long pid, const char* type);
 ```
@@ -1533,10 +1606,10 @@ long DM_CALL dm_getProcessInfo(long pid, const char* type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pid | long | 是 | 进程 ID |
-| type | const char* | 是 | 信息类型，如 `"time"`（创建时间） |
+| 参数   | 类型          | 必填 | 说明                    |
+| ---- | ----------- | -- | --------------------- |
+| pid  | long        | 是  | 进程 ID                 |
+| type | const char* | 是  | 信息类型，如 `"time"`（创建时间） |
 
 **返回值**：信息值，具体含义取决于 type 参数。
 
@@ -1545,6 +1618,7 @@ long DM_CALL dm_getProcessInfo(long pid, const char* type);
 ### 2.27 dm_moveWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_moveWindow(intptr_t hwnd, long x, long y);
 ```
@@ -1553,11 +1627,11 @@ long DM_CALL dm_moveWindow(intptr_t hwnd, long x, long y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| x | long | 是 | 目标 X 坐标 |
-| y | long | 是 | 目标 Y 坐标 |
+| 参数   | 类型       | 必填 | 说明      |
+| ---- | -------- | -- | ------- |
+| hwnd | intptr_t | 是  | 窗口句柄    |
+| x    | long     | 是  | 目标 X 坐标 |
+| y    | long     | 是  | 目标 Y 坐标 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1573,6 +1647,7 @@ dm.move_window(hwnd, 100, 100)  # 将窗口移动到 (100, 100)
 ### 2.28 dm_setWindowSize
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWindowSize(intptr_t hwnd, long width, long height);
 ```
@@ -1581,11 +1656,11 @@ long DM_CALL dm_setWindowSize(intptr_t hwnd, long width, long height);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| width | long | 是 | 新的窗口宽度（像素） |
-| height | long | 是 | 新的窗口高度（像素） |
+| 参数     | 类型       | 必填 | 说明         |
+| ------ | -------- | -- | ---------- |
+| hwnd   | intptr_t | 是  | 窗口句柄       |
+| width  | long     | 是  | 新的窗口宽度（像素） |
+| height | long     | 是  | 新的窗口高度（像素） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1601,6 +1676,7 @@ dm.set_window_size(hwnd, 1024, 768)  # 调整为 1024x768
 ### 2.29 dm_setWindowState
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWindowState(intptr_t hwnd, long flag);
 ```
@@ -1609,19 +1685,19 @@ long DM_CALL dm_setWindowState(intptr_t hwnd, long flag);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| flag | long | 是 | 状态值（见下表） |
+| 参数   | 类型       | 必填 | 说明       |
+| ---- | -------- | -- | -------- |
+| hwnd | intptr_t | 是  | 窗口句柄     |
+| flag | long     | 是  | 状态值（见下表） |
 
 **flag 取值**：
 
-| 值 | 说明 |
-|----|------|
-| 0 | 关闭窗口 |
-| 1 | 激活窗口（置前并聚焦） |
-| 2 | 最小化 |
-| 3 | 最大化 |
+| 值 | 说明             |
+| - | -------------- |
+| 0 | 关闭窗口           |
+| 1 | 激活窗口（置前并聚焦）    |
+| 2 | 最小化            |
+| 3 | 最大化            |
 | 4 | 还原（从最小化/最大化恢复） |
 
 **返回值**：0=成功，非0=失败。
@@ -1641,6 +1717,7 @@ dm.set_window_state(hwnd, 4)  # 还原
 ### 2.30 dm_setWindowText
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWindowText(intptr_t hwnd, const char* title);
 ```
@@ -1649,10 +1726,10 @@ long DM_CALL dm_setWindowText(intptr_t hwnd, const char* title);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| title | const char* | 是 | 新的标题文本 |
+| 参数    | 类型          | 必填 | 说明     |
+| ----- | ----------- | -- | ------ |
+| hwnd  | intptr_t    | 是  | 窗口句柄   |
+| title | const char* | 是  | 新的标题文本 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1661,6 +1738,7 @@ long DM_CALL dm_setWindowText(intptr_t hwnd, const char* title);
 ### 2.31 dm_setWindowTransparent
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWindowTransparent(intptr_t hwnd, long trans);
 ```
@@ -1669,10 +1747,10 @@ long DM_CALL dm_setWindowTransparent(intptr_t hwnd, long trans);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| trans | long | 是 | 透明度值，0=完全透明，255=完全不透明 |
+| 参数    | 类型       | 必填 | 说明                    |
+| ----- | -------- | -- | --------------------- |
+| hwnd  | intptr_t | 是  | 窗口句柄                  |
+| trans | long     | 是  | 透明度值，0=完全透明，255=完全不透明 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1681,6 +1759,7 @@ long DM_CALL dm_setWindowTransparent(intptr_t hwnd, long trans);
 ### 2.32 dm_setClientSize
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setClientSize(intptr_t hwnd, long width, long height);
 ```
@@ -1689,11 +1768,11 @@ long DM_CALL dm_setClientSize(intptr_t hwnd, long width, long height);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| width | long | 是 | 目标客户区宽度 |
-| height | long | 是 | 目标客户区高度 |
+| 参数     | 类型       | 必填 | 说明      |
+| ------ | -------- | -- | ------- |
+| hwnd   | intptr_t | 是  | 窗口句柄    |
+| width  | long     | 是  | 目标客户区宽度 |
+| height | long     | 是  | 目标客户区高度 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1702,6 +1781,7 @@ long DM_CALL dm_setClientSize(intptr_t hwnd, long width, long height);
 ### 2.33 dm_setSendStringDelay
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setSendStringDelay(long delay);
 ```
@@ -1710,9 +1790,9 @@ long DM_CALL dm_setSendStringDelay(long delay);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| delay | long | 是 | 延迟时间（毫秒） |
+| 参数    | 类型   | 必填 | 说明       |
+| ----- | ---- | -- | -------- |
+| delay | long | 是  | 延迟时间（毫秒） |
 
 **返回值**：0=成功。
 
@@ -1721,6 +1801,7 @@ long DM_CALL dm_setSendStringDelay(long delay);
 ### 2.34 dm_sendPaste
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_sendPaste(intptr_t hwnd);
 ```
@@ -1729,9 +1810,9 @@ long DM_CALL dm_sendPaste(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 目标窗口句柄 |
+| 参数   | 类型       | 必填 | 说明     |
+| ---- | -------- | -- | ------ |
+| hwnd | intptr_t | 是  | 目标窗口句柄 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1740,6 +1821,7 @@ long DM_CALL dm_sendPaste(intptr_t hwnd);
 ### 2.35 dm_sendString
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_sendString(intptr_t hwnd, const char* str);
 ```
@@ -1748,10 +1830,10 @@ long DM_CALL dm_sendString(intptr_t hwnd, const char* str);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 目标窗口句柄 |
-| str | const char* | 是 | 要发送的文本内容 |
+| 参数   | 类型          | 必填 | 说明       |
+| ---- | ----------- | -- | -------- |
+| hwnd | intptr_t    | 是  | 目标窗口句柄   |
+| str  | const char* | 是  | 要发送的文本内容 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1767,6 +1849,7 @@ dm.send_string(hwnd, "Hello, World!")
 ### 2.36 dm_sendString2
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_sendString2(intptr_t hwnd, const char* str);
 ```
@@ -1782,6 +1865,7 @@ long DM_CALL dm_sendString2(intptr_t hwnd, const char* str);
 ### 2.37 dm_sendStringIme
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_sendStringIme(intptr_t hwnd, const char* str);
 ```
@@ -1797,6 +1881,7 @@ long DM_CALL dm_sendStringIme(intptr_t hwnd, const char* str);
 ### 2.38 dm_sendStringIme2
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_sendStringIme2(intptr_t hwnd, const char* str);
 ```
@@ -1812,6 +1897,7 @@ long DM_CALL dm_sendStringIme2(intptr_t hwnd, const char* str);
 ### 2.39 dm_clientToScreen
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_clientToScreen(intptr_t hwnd, long* x, long* y);
 ```
@@ -1820,11 +1906,11 @@ long DM_CALL dm_clientToScreen(intptr_t hwnd, long* x, long* y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| x | long* | 输入/输出 | 输入时为客户区 X，输出时为屏幕 X |
-| y | long* | 输入/输出 | 输入时为客户区 Y，输出时为屏幕 Y |
+| 参数   | 类型       | 必填    | 说明                 |
+| ---- | -------- | ----- | ------------------ |
+| hwnd | intptr_t | 是     | 窗口句柄               |
+| x    | long*    | 输入/输出 | 输入时为客户区 X，输出时为屏幕 X |
+| y    | long*    | 输入/输出 | 输入时为客户区 Y，输出时为屏幕 Y |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1833,6 +1919,7 @@ long DM_CALL dm_clientToScreen(intptr_t hwnd, long* x, long* y);
 ### 2.40 dm_screenToClient
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_screenToClient(intptr_t hwnd, long* x, long* y);
 ```
@@ -1854,6 +1941,7 @@ long DM_CALL dm_screenToClient(intptr_t hwnd, long* x, long* y);
 ### 3.1 dm_keyDown
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_keyDown(long vk_code);
 ```
@@ -1862,9 +1950,9 @@ long DM_CALL dm_keyDown(long vk_code);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| vk_code | long | 是 | 虚拟键码（Virtual Key Code），如 0x0D=回车 |
+| 参数      | 类型   | 必填 | 说明                               |
+| ------- | ---- | -- | -------------------------------- |
+| vk_code | long | 是  | 虚拟键码（Virtual Key Code），如 0x0D=回车 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1883,6 +1971,7 @@ dm.key_up(0x11)    # 松开 Ctrl
 ### 3.2 dm_keyDownChar
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_keyDownChar(const char* key_str);
 ```
@@ -1891,9 +1980,9 @@ long DM_CALL dm_keyDownChar(const char* key_str);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| key_str | const char* | 是 | 字符，如 `"a"`、`"1"`、`"+"` |
+| 参数      | 类型          | 必填 | 说明                     |
+| ------- | ----------- | -- | ---------------------- |
+| key_str | const char* | 是  | 字符，如 `"a"`、`"1"`、`"+"` |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1902,6 +1991,7 @@ long DM_CALL dm_keyDownChar(const char* key_str);
 ### 3.3 dm_keyPress
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_keyPress(long vk_code);
 ```
@@ -1910,9 +2000,9 @@ long DM_CALL dm_keyPress(long vk_code);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| vk_code | long | 是 | 虚拟键码 |
+| 参数      | 类型   | 必填 | 说明   |
+| ------- | ---- | -- | ---- |
+| vk_code | long | 是  | 虚拟键码 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1931,6 +2021,7 @@ dm.key_press(ord('A')) # 按 A 键
 ### 3.4 dm_keyPressChar
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_keyPressChar(const char* key_str);
 ```
@@ -1939,9 +2030,9 @@ long DM_CALL dm_keyPressChar(const char* key_str);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| key_str | const char* | 是 | 字符，如 `"A"`、`"b"`、`"@"` |
+| 参数      | 类型          | 必填 | 说明                     |
+| ------- | ----------- | -- | ---------------------- |
+| key_str | const char* | 是  | 字符，如 `"A"`、`"b"`、`"@"` |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1950,6 +2041,7 @@ long DM_CALL dm_keyPressChar(const char* key_str);
 ### 3.5 dm_keyPressStr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_keyPressStr(const char* key_str, long delay);
 ```
@@ -1958,10 +2050,10 @@ long DM_CALL dm_keyPressStr(const char* key_str, long delay);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| key_str | const char* | 是 | 要输入的文本字符串 |
-| delay | long | 是 | 每个字符之间的延迟（毫秒） |
+| 参数      | 类型          | 必填 | 说明            |
+| ------- | ----------- | -- | ------------- |
+| key_str | const char* | 是  | 要输入的文本字符串     |
+| delay   | long        | 是  | 每个字符之间的延迟（毫秒） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1977,6 +2069,7 @@ dm.key_press_str("Hello World!", 50)  # 每个字符间隔 50ms
 ### 3.6 dm_keyUp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_keyUp(long vk_code);
 ```
@@ -1985,9 +2078,9 @@ long DM_CALL dm_keyUp(long vk_code);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| vk_code | long | 是 | 虚拟键码 |
+| 参数      | 类型   | 必填 | 说明   |
+| ------- | ---- | -- | ---- |
+| vk_code | long | 是  | 虚拟键码 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -1996,6 +2089,9 @@ long DM_CALL dm_keyUp(long vk_code);
 ### 3.7 dm_keyUpChar
 
 **函数签名**：
+
+
+
 ```c
 long DM_CALL dm_keyUpChar(const char* key_str);
 ```
@@ -2004,9 +2100,9 @@ long DM_CALL dm_keyUpChar(const char* key_str);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| key_str | const char* | 是 | 字符 |
+| 参数      | 类型          | 必填 | 说明 |
+| ------- | ----------- | -- | -- |
+| key_str | const char* | 是  | 字符 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2015,6 +2111,7 @@ long DM_CALL dm_keyUpChar(const char* key_str);
 ### 3.8 dm_waitKey
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_waitKey(long vk_code, long time_out);
 ```
@@ -2023,10 +2120,10 @@ long DM_CALL dm_waitKey(long vk_code, long time_out);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| vk_code | long | 是 | 要等待的虚拟键码，0 表示等待任意键 |
-| time_out | long | 是 | 超时时间（毫秒），0 表示无限等待 |
+| 参数       | 类型   | 必填 | 说明                 |
+| -------- | ---- | -- | ------------------ |
+| vk_code  | long | 是  | 要等待的虚拟键码，0 表示等待任意键 |
+| time_out | long | 是  | 超时时间（毫秒），0 表示无限等待  |
 
 **返回值**：按下的虚拟键码，超时返回 0。
 
@@ -2035,6 +2132,7 @@ long DM_CALL dm_waitKey(long vk_code, long time_out);
 ### 3.9 dm_getKeyState
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getKeyState(long vk_code);
 ```
@@ -2043,9 +2141,9 @@ long DM_CALL dm_getKeyState(long vk_code);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| vk_code | long | 是 | 虚拟键码 |
+| 参数      | 类型   | 必填 | 说明   |
+| ------- | ---- | -- | ---- |
+| vk_code | long | 是  | 虚拟键码 |
 
 **返回值**：0=未按下，1=已按下。
 
@@ -2054,6 +2152,7 @@ long DM_CALL dm_getKeyState(long vk_code);
 ### 3.10 dm_leftClick
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_leftClick();
 ```
@@ -2077,6 +2176,7 @@ dm.left_click()        # 左键单击
 ### 3.11 dm_leftDoubleClick
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_leftDoubleClick();
 ```
@@ -2092,6 +2192,7 @@ long DM_CALL dm_leftDoubleClick();
 ### 3.12 dm_leftDown
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_leftDown();
 ```
@@ -2107,6 +2208,7 @@ long DM_CALL dm_leftDown();
 ### 3.13 dm_leftUp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_leftUp();
 ```
@@ -2122,6 +2224,7 @@ long DM_CALL dm_leftUp();
 ### 3.14 dm_rightClick
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_rightClick();
 ```
@@ -2137,6 +2240,7 @@ long DM_CALL dm_rightClick();
 ### 3.15 dm_rightDown
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_rightDown();
 ```
@@ -2152,6 +2256,7 @@ long DM_CALL dm_rightDown();
 ### 3.16 dm_rightUp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_rightUp();
 ```
@@ -2167,6 +2272,7 @@ long DM_CALL dm_rightUp();
 ### 3.17 dm_middleClick
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_middleClick();
 ```
@@ -2182,6 +2288,7 @@ long DM_CALL dm_middleClick();
 ### 3.18 dm_middleDown
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_middleDown();
 ```
@@ -2197,6 +2304,7 @@ long DM_CALL dm_middleDown();
 ### 3.19 dm_middleUp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_middleUp();
 ```
@@ -2212,6 +2320,7 @@ long DM_CALL dm_middleUp();
 ### 3.20 dm_moveTo
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_moveTo(long x, long y);
 ```
@@ -2220,10 +2329,10 @@ long DM_CALL dm_moveTo(long x, long y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long | 是 | 目标 X 坐标（屏幕像素） |
-| y | long | 是 | 目标 Y 坐标（屏幕像素） |
+| 参数 | 类型   | 必填 | 说明            |
+| -- | ---- | -- | ------------- |
+| x  | long | 是  | 目标 X 坐标（屏幕像素） |
+| y  | long | 是  | 目标 Y 坐标（屏幕像素） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2244,6 +2353,7 @@ dm.left_click()
 ### 3.21 dm_moveToEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_moveToEx(long x, long y, long w, long h);
 ```
@@ -2252,12 +2362,12 @@ long DM_CALL dm_moveToEx(long x, long y, long w, long h);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long | 是 | 区域左上角 X 坐标 |
-| y | long | 是 | 区域左上角 Y 坐标 |
-| w | long | 是 | 区域宽度 |
-| h | long | 是 | 区域高度 |
+| 参数 | 类型   | 必填 | 说明         |
+| -- | ---- | -- | ---------- |
+| x  | long | 是  | 区域左上角 X 坐标 |
+| y  | long | 是  | 区域左上角 Y 坐标 |
+| w  | long | 是  | 区域宽度       |
+| h  | long | 是  | 区域高度       |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2275,6 +2385,7 @@ dm.left_click()
 ### 3.22 dm_moveR
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_moveR(long rx, long ry);
 ```
@@ -2283,10 +2394,10 @@ long DM_CALL dm_moveR(long rx, long ry);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| rx | long | 是 | X 方向偏移量（正数向右，负数向左） |
-| ry | long | 是 | Y 方向偏移量（正数向下，负数向上） |
+| 参数 | 类型   | 必填 | 说明                 |
+| -- | ---- | -- | ------------------ |
+| rx | long | 是  | X 方向偏移量（正数向右，负数向左） |
+| ry | long | 是  | Y 方向偏移量（正数向下，负数向上） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2303,6 +2414,7 @@ dm.move_r(50, -30)  # 向右 50 像素，向上 30 像素
 ### 3.23 dm_wheelDown
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_wheelDown(long repeat);
 ```
@@ -2311,9 +2423,9 @@ long DM_CALL dm_wheelDown(long repeat);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| repeat | long | 是 | 滚动次数 |
+| 参数     | 类型   | 必填 | 说明   |
+| ------ | ---- | -- | ---- |
+| repeat | long | 是  | 滚动次数 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2322,6 +2434,7 @@ long DM_CALL dm_wheelDown(long repeat);
 ### 3.24 dm_wheelUp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_wheelUp(long repeat);
 ```
@@ -2330,9 +2443,9 @@ long DM_CALL dm_wheelUp(long repeat);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| repeat | long | 是 | 滚动次数 |
+| 参数     | 类型   | 必填 | 说明   |
+| ------ | ---- | -- | ---- |
+| repeat | long | 是  | 滚动次数 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2341,6 +2454,7 @@ long DM_CALL dm_wheelUp(long repeat);
 ### 3.25 dm_getCursorPos
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getCursorPos(long* x, long* y);
 ```
@@ -2349,10 +2463,10 @@ long DM_CALL dm_getCursorPos(long* x, long* y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long* | 输出 | 当前鼠标 X 坐标 |
-| y | long* | 输出 | 当前鼠标 Y 坐标 |
+| 参数 | 类型    | 必填 | 说明        |
+| -- | ----- | -- | --------- |
+| x  | long* | 输出 | 当前鼠标 X 坐标 |
+| y  | long* | 输出 | 当前鼠标 Y 坐标 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2370,6 +2484,7 @@ print(f"鼠标位置: ({x.value}, {y.value})")
 ### 3.26 dm_getCursorShape
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getCursorShape();
 ```
@@ -2385,6 +2500,7 @@ long DM_CALL dm_getCursorShape();
 ### 3.27 dm_getCursorShapeEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getCursorShapeEx(long type);
 ```
@@ -2393,9 +2509,9 @@ const char* DM_CALL dm_getCursorShapeEx(long type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | long | 是 | 0=返回光标形状索引，1=返回光标详细数据 |
+| 参数   | 类型   | 必填 | 说明                    |
+| ---- | ---- | -- | --------------------- |
+| type | long | 是  | 0=返回光标形状索引，1=返回光标详细数据 |
 
 **返回值**：光标形状信息字符串。
 
@@ -2404,6 +2520,7 @@ const char* DM_CALL dm_getCursorShapeEx(long type);
 ### 3.28 dm_getCursorSpot
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getCursorSpot();
 ```
@@ -2419,6 +2536,7 @@ long DM_CALL dm_getCursorSpot();
 ### 3.29 dm_setMouseDelay
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setMouseDelay(long type, long delay);
 ```
@@ -2427,10 +2545,10 @@ long DM_CALL dm_setMouseDelay(long type, long delay);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | long | 是 | 延迟类型：0=普通延迟，1=Windows 延迟 |
-| delay | long | 是 | 延迟时间（毫秒） |
+| 参数    | 类型   | 必填 | 说明                       |
+| ----- | ---- | -- | ------------------------ |
+| type  | long | 是  | 延迟类型：0=普通延迟，1=Windows 延迟 |
+| delay | long | 是  | 延迟时间（毫秒）                 |
 
 **返回值**：0=成功。
 
@@ -2439,6 +2557,7 @@ long DM_CALL dm_setMouseDelay(long type, long delay);
 ### 3.30 dm_setKeypadDelay
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setKeypadDelay(long type, long delay);
 ```
@@ -2454,6 +2573,7 @@ long DM_CALL dm_setKeypadDelay(long type, long delay);
 ### 3.31 dm_setMouseSpeed
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setMouseSpeed(long speed);
 ```
@@ -2462,9 +2582,9 @@ long DM_CALL dm_setMouseSpeed(long speed);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| speed | long | 是 | 速度值（1-20），值越大移动越快 |
+| 参数    | 类型   | 必填 | 说明                |
+| ----- | ---- | -- | ----------------- |
+| speed | long | 是  | 速度值（1-20），值越大移动越快 |
 
 **返回值**：0=成功。
 
@@ -2473,6 +2593,7 @@ long DM_CALL dm_setMouseSpeed(long speed);
 ### 3.32 dm_getMouseSpeed
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getMouseSpeed();
 ```
@@ -2488,6 +2609,7 @@ long DM_CALL dm_getMouseSpeed();
 ### 3.33 dm_enableMouseAccuracy
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableMouseAccuracy(long enable);
 ```
@@ -2496,9 +2618,9 @@ long DM_CALL dm_enableMouseAccuracy(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用鼠标加速，1=启用鼠标加速 |
+| 参数     | 类型   | 必填 | 说明                |
+| ------ | ---- | -- | ----------------- |
+| enable | long | 是  | 0=禁用鼠标加速，1=启用鼠标加速 |
 
 **返回值**：0=成功。
 
@@ -2507,6 +2629,7 @@ long DM_CALL dm_enableMouseAccuracy(long enable);
 ### 3.34 dm_setSimMode
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setSimMode(long mode);
 ```
@@ -2515,9 +2638,9 @@ long DM_CALL dm_setSimMode(long mode);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| mode | long | 是 | 0=普通模拟（前台），1=硬件模拟（驱动级，需管理员权限） |
+| 参数   | 类型   | 必填 | 说明                            |
+| ---- | ---- | -- | ----------------------------- |
+| mode | long | 是  | 0=普通模拟（前台），1=硬件模拟（驱动级，需管理员权限） |
 
 **返回值**：0=成功。
 
@@ -2532,6 +2655,7 @@ long DM_CALL dm_setSimMode(long mode);
 ### 4.1 dm_capture
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_capture(long x1, long y1, long x2, long y2, const char* file);
 ```
@@ -2540,13 +2664,13 @@ long DM_CALL dm_capture(long x1, long y1, long x2, long y2, const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 截图区域左上角 X 坐标 |
-| y1 | long | 是 | 截图区域左上角 Y 坐标 |
-| x2 | long | 是 | 截图区域右下角 X 坐标 |
-| y2 | long | 是 | 截图区域右下角 Y 坐标 |
-| file | const char* | 是 | 保存路径，需包含 `.bmp` 扩展名 |
+| 参数   | 类型          | 必填 | 说明                  |
+| ---- | ----------- | -- | ------------------- |
+| x1   | long        | 是  | 截图区域左上角 X 坐标        |
+| y1   | long        | 是  | 截图区域左上角 Y 坐标        |
+| x2   | long        | 是  | 截图区域右下角 X 坐标        |
+| y2   | long        | 是  | 截图区域右下角 Y 坐标        |
+| file | const char* | 是  | 保存路径，需包含 `.bmp` 扩展名 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2568,6 +2692,7 @@ dm.capture(100, 100, 500, 400, "region.bmp")
 ### 4.2 dm_captureGif
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_captureGif(long x1, long y1, long x2, long y2, const char* file, long delay, long time);
 ```
@@ -2576,15 +2701,15 @@ long DM_CALL dm_captureGif(long x1, long y1, long x2, long y2, const char* file,
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 区域左上角 X |
-| y1 | long | 是 | 区域左上角 Y |
-| x2 | long | 是 | 区域右下角 X |
-| y2 | long | 是 | 区域右下角 Y |
-| file | const char* | 是 | 保存路径，需包含 `.gif` 扩展名 |
-| delay | long | 是 | 帧间隔（毫秒） |
-| time | long | 是 | 总录制时长（毫秒），0 表示只截取一帧 |
+| 参数    | 类型          | 必填 | 说明                  |
+| ----- | ----------- | -- | ------------------- |
+| x1    | long        | 是  | 区域左上角 X             |
+| y1    | long        | 是  | 区域左上角 Y             |
+| x2    | long        | 是  | 区域右下角 X             |
+| y2    | long        | 是  | 区域右下角 Y             |
+| file  | const char* | 是  | 保存路径，需包含 `.gif` 扩展名 |
+| delay | long        | 是  | 帧间隔（毫秒）             |
+| time  | long        | 是  | 总录制时长（毫秒），0 表示只截取一帧 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2601,6 +2726,7 @@ dm.capture_gif(0, 0, 800, 600, "animation.gif", 100, 5000)
 ### 4.3 dm_captureJpg
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_captureJpg(long x1, long y1, long x2, long y2, const char* file, long quality);
 ```
@@ -2609,14 +2735,14 @@ long DM_CALL dm_captureJpg(long x1, long y1, long x2, long y2, const char* file,
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 区域左上角 X |
-| y1 | long | 是 | 区域左上角 Y |
-| x2 | long | 是 | 区域右下角 X |
-| y2 | long | 是 | 区域右下角 Y |
-| file | const char* | 是 | 保存路径，需包含 `.jpg` 或 `.jpeg` 扩展名 |
-| quality | long | 是 | 压缩质量（0-100），值越高画质越好、文件越大 |
+| 参数      | 类型          | 必填 | 说明                            |
+| ------- | ----------- | -- | ----------------------------- |
+| x1      | long        | 是  | 区域左上角 X                       |
+| y1      | long        | 是  | 区域左上角 Y                       |
+| x2      | long        | 是  | 区域右下角 X                       |
+| y2      | long        | 是  | 区域右下角 Y                       |
+| file    | const char* | 是  | 保存路径，需包含 `.jpg` 或 `.jpeg` 扩展名 |
+| quality | long        | 是  | 压缩质量（0-100），值越高画质越好、文件越大      |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2632,6 +2758,7 @@ dm.capture_jpg(0, 0, 1920, 1080, "screenshot.jpg", 85)  # 85% 质量
 ### 4.4 dm_capturePng
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_capturePng(long x1, long y1, long x2, long y2, const char* file);
 ```
@@ -2640,13 +2767,13 @@ long DM_CALL dm_capturePng(long x1, long y1, long x2, long y2, const char* file)
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 区域左上角 X |
-| y1 | long | 是 | 区域左上角 Y |
-| x2 | long | 是 | 区域右下角 X |
-| y2 | long | 是 | 区域右下角 Y |
-| file | const char* | 是 | 保存路径，需包含 `.png` 扩展名 |
+| 参数   | 类型          | 必填 | 说明                  |
+| ---- | ----------- | -- | ------------------- |
+| x1   | long        | 是  | 区域左上角 X             |
+| y1   | long        | 是  | 区域左上角 Y             |
+| x2   | long        | 是  | 区域右下角 X             |
+| y2   | long        | 是  | 区域右下角 Y             |
+| file | const char* | 是  | 保存路径，需包含 `.png` 扩展名 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2662,6 +2789,7 @@ dm.capture_png(100, 100, 500, 400, "region.png")
 ### 4.5 dm_capturePre
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_capturePre(const char* file);
 ```
@@ -2670,9 +2798,9 @@ long DM_CALL dm_capturePre(const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 保存路径 |
+| 参数   | 类型          | 必填 | 说明   |
+| ---- | ----------- | -- | ---- |
+| file | const char* | 是  | 保存路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -2681,6 +2809,7 @@ long DM_CALL dm_capturePre(const char* file);
 ### 4.6 dm_getColor
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getColor(long x, long y);
 ```
@@ -2689,10 +2818,10 @@ const char* DM_CALL dm_getColor(long x, long y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long | 是 | X 坐标 |
-| y | long | 是 | Y 坐标 |
+| 参数 | 类型   | 必填 | 说明   |
+| -- | ---- | -- | ---- |
+| x  | long | 是  | X 坐标 |
+| y  | long | 是  | Y 坐标 |
 
 **返回值**：颜色字符串，格式为 `"RRGGBB"`，如 `"FF0000"` 表示红色。
 
@@ -2717,6 +2846,7 @@ print(f"R={r} G={g} B={b}")
 ### 4.7 dm_getColorBGR
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getColorBGR(long x, long y);
 ```
@@ -2725,10 +2855,10 @@ const char* DM_CALL dm_getColorBGR(long x, long y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long | 是 | X 坐标 |
-| y | long | 是 | Y 坐标 |
+| 参数 | 类型   | 必填 | 说明   |
+| -- | ---- | -- | ---- |
+| x  | long | 是  | X 坐标 |
+| y  | long | 是  | Y 坐标 |
 
 **返回值**：BGR 格式颜色字符串，如 `"0000FF"` 表示红色（BGR 下蓝色在低位）。
 
@@ -2737,6 +2867,7 @@ const char* DM_CALL dm_getColorBGR(long x, long y);
 ### 4.8 dm_getColorHSV
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getColorHSV(long x, long y);
 ```
@@ -2745,10 +2876,10 @@ const char* DM_CALL dm_getColorHSV(long x, long y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long | 是 | X 坐标 |
-| y | long | 是 | Y 坐标 |
+| 参数 | 类型   | 必填 | 说明   |
+| -- | ---- | -- | ---- |
+| x  | long | 是  | X 坐标 |
+| y  | long | 是  | Y 坐标 |
 
 **返回值**：HSV 格式字符串，格式为 `"H.S.V"`，如 `"0.100.50"`。
 
@@ -2757,6 +2888,7 @@ const char* DM_CALL dm_getColorHSV(long x, long y);
 ### 4.9 dm_getColorNum
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getColorNum(long x1, long y1, long x2, long y2, const char* color, long sim);
 ```
@@ -2765,14 +2897,14 @@ long DM_CALL dm_getColorNum(long x1, long y1, long x2, long y2, const char* colo
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 区域左上角 X |
-| y1 | long | 是 | 区域左上角 Y |
-| x2 | long | 是 | 区域右下角 X |
-| y2 | long | 是 | 区域右下角 Y |
-| color | const char* | 是 | 目标颜色，格式 `"RRGGBB-偏色"` |
-| sim | long | 是 | 相似度，0.0-1.0 |
+| 参数    | 类型          | 必填 | 说明                    |
+| ----- | ----------- | -- | --------------------- |
+| x1    | long        | 是  | 区域左上角 X               |
+| y1    | long        | 是  | 区域左上角 Y               |
+| x2    | long        | 是  | 区域右下角 X               |
+| y2    | long        | 是  | 区域右下角 Y               |
+| color | const char* | 是  | 目标颜色，格式 `"RRGGBB-偏色"` |
+| sim   | long        | 是  | 相似度，0.0-1.0           |
 
 **返回值**：匹配的像素数量。
 
@@ -2790,6 +2922,7 @@ print(f"红色像素数量: {count}")
 ### 4.10 dm_getAveRGB
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getAveRGB(long x1, long y1, long x2, long y2);
 ```
@@ -2798,12 +2931,12 @@ const char* DM_CALL dm_getAveRGB(long x1, long y1, long x2, long y2);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 区域左上角 X |
-| y1 | long | 是 | 区域左上角 Y |
-| x2 | long | 是 | 区域右下角 X |
-| y2 | long | 是 | 区域右下角 Y |
+| 参数 | 类型   | 必填 | 说明      |
+| -- | ---- | -- | ------- |
+| x1 | long | 是  | 区域左上角 X |
+| y1 | long | 是  | 区域左上角 Y |
+| x2 | long | 是  | 区域右下角 X |
+| y2 | long | 是  | 区域右下角 Y |
 
 **返回值**：平均颜色 RGB 字符串，格式 `"RRGGBB"`。
 
@@ -2812,6 +2945,7 @@ const char* DM_CALL dm_getAveRGB(long x1, long y1, long x2, long y2);
 ### 4.11 dm_getAveHSV
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getAveHSV(long x1, long y1, long x2, long y2);
 ```
@@ -2827,6 +2961,7 @@ const char* DM_CALL dm_getAveHSV(long x1, long y1, long x2, long y2);
 ### 4.12 dm_cmpColor
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_cmpColor(long x, long y, const char* color, long sim);
 ```
@@ -2835,12 +2970,12 @@ long DM_CALL dm_cmpColor(long x, long y, const char* color, long sim);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x | long | 是 | X 坐标 |
-| y | long | 是 | Y 坐标 |
-| color | const char* | 是 | 目标颜色，格式 `"RRGGBB"` 或 `"RRGGBB-偏色"` |
-| sim | long | 是 | 相似度（0.0-1.0），如 0.9 表示 90% 相似 |
+| 参数    | 类型          | 必填 | 说明                                 |
+| ----- | ----------- | -- | ---------------------------------- |
+| x     | long        | 是  | X 坐标                               |
+| y     | long        | 是  | Y 坐标                               |
+| color | const char* | 是  | 目标颜色，格式 `"RRGGBB"` 或 `"RRGGBB-偏色"` |
+| sim   | long        | 是  | 相似度（0.0-1.0），如 0.9 表示 90% 相似       |
 
 **返回值**：0=颜色匹配，1=颜色不匹配。
 
@@ -2862,6 +2997,7 @@ if dm.cmp_color(500, 300, "FF0000-202020", 0.8) == 0:
 ### 4.13 dm_findColor
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findColor(long x1, long y1, long x2, long y2, const char* color, long sim, long dir, long* intX, long* intY);
 ```
@@ -2870,28 +3006,28 @@ long DM_CALL dm_findColor(long x1, long y1, long x2, long y2, const char* color,
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 查找区域左上角 X |
-| y1 | long | 是 | 查找区域左上角 Y |
-| x2 | long | 是 | 查找区域右下角 X |
-| y2 | long | 是 | 查找区域右下角 Y |
-| color | const char* | 是 | 目标颜色，格式 `"RRGGBB-偏色"` |
-| sim | long | 是 | 相似度（0.0-1.0） |
-| dir | long | 是 | 查找方向（见下表） |
-| intX | long* | 输出 | 找到的 X 坐标 |
-| intY | long* | 输出 | 找到的 Y 坐标 |
+| 参数    | 类型          | 必填 | 说明                    |
+| ----- | ----------- | -- | --------------------- |
+| x1    | long        | 是  | 查找区域左上角 X             |
+| y1    | long        | 是  | 查找区域左上角 Y             |
+| x2    | long        | 是  | 查找区域右下角 X             |
+| y2    | long        | 是  | 查找区域右下角 Y             |
+| color | const char* | 是  | 目标颜色，格式 `"RRGGBB-偏色"` |
+| sim   | long        | 是  | 相似度（0.0-1.0）          |
+| dir   | long        | 是  | 查找方向（见下表）             |
+| intX  | long*       | 输出 | 找到的 X 坐标              |
+| intY  | long*       | 输出 | 找到的 Y 坐标              |
 
 **dir 查找方向**：
 
-| 值 | 说明 |
-|----|------|
+| 值 | 说明        |
+| - | --------- |
 | 0 | 从左到右，从上到下 |
 | 1 | 从左到右，从下到上 |
 | 2 | 从右到左，从上到下 |
 | 3 | 从右到左，从下到上 |
-| 4 | 从中心向外 |
-| 5 | 从左上角开始 |
+| 4 | 从中心向外     |
+| 5 | 从左上角开始    |
 
 **返回值**：0=找到颜色，1=未找到。
 
@@ -2915,6 +3051,7 @@ else:
 ### 4.14 dm_findColorEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findColorEx(long x1, long y1, long x2, long y2, const char* color, long sim, long dir);
 ```
@@ -2923,15 +3060,15 @@ const char* DM_CALL dm_findColorEx(long x1, long y1, long x2, long y2, const cha
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 查找区域左上角 X |
-| y1 | long | 是 | 查找区域左上角 Y |
-| x2 | long | 是 | 查找区域右下角 X |
-| y2 | long | 是 | 查找区域右下角 Y |
-| color | const char* | 是 | 目标颜色 |
-| sim | long | 是 | 相似度 |
-| dir | long | 是 | 查找方向 |
+| 参数    | 类型          | 必填 | 说明        |
+| ----- | ----------- | -- | --------- |
+| x1    | long        | 是  | 查找区域左上角 X |
+| y1    | long        | 是  | 查找区域左上角 Y |
+| x2    | long        | 是  | 查找区域右下角 X |
+| y2    | long        | 是  | 查找区域右下角 Y |
+| color | const char* | 是  | 目标颜色      |
+| sim   | long        | 是  | 相似度       |
+| dir   | long        | 是  | 查找方向      |
 
 **返回值**：坐标字符串，格式 `"x1|y1,x2|y2,..."`，未找到时返回空字符串 `""`。
 
@@ -2954,6 +3091,7 @@ if result:
 ### 4.15 dm_findColorBlock
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findColorBlock(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height, long* intX, long* intY);
 ```
@@ -2962,19 +3100,19 @@ long DM_CALL dm_findColorBlock(long x1, long y1, long x2, long y2, const char* c
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 查找区域左上角 X |
-| y1 | long | 是 | 查找区域左上角 Y |
-| x2 | long | 是 | 查找区域右下角 X |
-| y2 | long | 是 | 查找区域右下角 Y |
-| color | const char* | 是 | 目标颜色 |
-| sim | long | 是 | 相似度 |
-| count | long | 是 | 色块中至少需要的像素数量 |
-| width | long | 是 | 色块的最大宽度 |
-| height | long | 是 | 色块的最大高度 |
-| intX | long* | 输出 | 找到的 X 坐标 |
-| intY | long* | 输出 | 找到的 Y 坐标 |
+| 参数     | 类型          | 必填 | 说明           |
+| ------ | ----------- | -- | ------------ |
+| x1     | long        | 是  | 查找区域左上角 X    |
+| y1     | long        | 是  | 查找区域左上角 Y    |
+| x2     | long        | 是  | 查找区域右下角 X    |
+| y2     | long        | 是  | 查找区域右下角 Y    |
+| color  | const char* | 是  | 目标颜色         |
+| sim    | long        | 是  | 相似度          |
+| count  | long        | 是  | 色块中至少需要的像素数量 |
+| width  | long        | 是  | 色块的最大宽度      |
+| height | long        | 是  | 色块的最大高度      |
+| intX   | long*       | 输出 | 找到的 X 坐标     |
+| intY   | long*       | 输出 | 找到的 Y 坐标     |
 
 **返回值**：0=找到，1=未找到。
 
@@ -2983,6 +3121,7 @@ long DM_CALL dm_findColorBlock(long x1, long y1, long x2, long y2, const char* c
 ### 4.16 dm_findColorBlockEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findColorBlockEx(long x1, long y1, long x2, long y2, const char* color, long sim, long count, long width, long height);
 ```
@@ -2998,6 +3137,7 @@ const char* DM_CALL dm_findColorBlockEx(long x1, long y1, long x2, long y2, cons
 ### 4.17 dm_findColorE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findColorE(long x1, long y1, long x2, long y2, const char* color, long sim, long dir);
 ```
@@ -3013,6 +3153,7 @@ const char* DM_CALL dm_findColorE(long x1, long y1, long x2, long y2, const char
 ### 4.18 dm_findMulColor
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findMulColor(long x1, long y1, long x2, long y2, const char* color, long sim);
 ```
@@ -3021,14 +3162,14 @@ long DM_CALL dm_findMulColor(long x1, long y1, long x2, long y2, const char* col
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 区域左上角 X |
-| y1 | long | 是 | 区域左上角 Y |
-| x2 | long | 是 | 区域右下角 X |
-| y2 | long | 是 | 区域右下角 Y |
-| color | const char* | 是 | 多颜色，用 `|` 分隔，如 `"FF0000|00FF00|0000FF"` |
-| sim | long | 是 | 相似度 |
+| 参数    | 类型          | 必填 | 说明       |               |        |           |
+| ----- | ----------- | -- | -------- | ------------- | ------ | --------- |
+| x1    | long        | 是  | 区域左上角 X  |               |        |           |
+| y1    | long        | 是  | 区域左上角 Y  |               |        |           |
+| x2    | long        | 是  | 区域右下角 X  |               |        |           |
+| y2    | long        | 是  | 区域右下角 Y  |               |        |           |
+| color | const char* | 是  | 多颜色，用 \` | `分隔，如`"FF0000 | 00FF00 | 0000FF"\` |
+| sim   | long        | 是  | 相似度      |               |        |           |
 
 **返回值**：0=找到任意一种颜色，1=全未找到。
 
@@ -3047,6 +3188,7 @@ if ret == 0:
 ### 4.19 dm_findMultiColor
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findMultiColor(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir, long* intX, long* intY);
 ```
@@ -3055,18 +3197,18 @@ long DM_CALL dm_findMultiColor(long x1, long y1, long x2, long y2, const char* f
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 查找区域左上角 X |
-| y1 | long | 是 | 查找区域左上角 Y |
-| x2 | long | 是 | 查找区域右下角 X |
-| y2 | long | 是 | 查找区域右下角 Y |
-| first_color | const char* | 是 | 主色，格式 `"RRGGBB-偏色"` |
-| offset_color | const char* | 是 | 偏移颜色描述，格式 `"x1\|y1\|RRGGBB-偏色,x2\|y2\|RRGGBB-偏色,..."` |
-| sim | long | 是 | 相似度 |
-| dir | long | 是 | 查找方向 |
-| intX | long* | 输出 | 找到的 X 坐标 |
-| intY | long* | 输出 | 找到的 Y 坐标 |
+| 参数           | 类型          | 必填 | 说明                                                    |
+| ------------ | ----------- | -- | ----------------------------------------------------- |
+| x1           | long        | 是  | 查找区域左上角 X                                             |
+| y1           | long        | 是  | 查找区域左上角 Y                                             |
+| x2           | long        | 是  | 查找区域右下角 X                                             |
+| y2           | long        | 是  | 查找区域右下角 Y                                             |
+| first_color  | const char* | 是  | 主色，格式 `"RRGGBB-偏色"`                                   |
+| offset_color | const char* | 是  | 偏移颜色描述，格式 `"x1\|y1\|RRGGBB-偏色,x2\|y2\|RRGGBB-偏色,..."` |
+| sim          | long        | 是  | 相似度                                                   |
+| dir          | long        | 是  | 查找方向                                                  |
+| intX         | long*       | 输出 | 找到的 X 坐标                                              |
+| intY         | long*       | 输出 | 找到的 Y 坐标                                              |
 
 **返回值**：0=找到，1=未找到。
 
@@ -3091,6 +3233,7 @@ if ret == 0:
 ### 4.20 dm_findMultiColorEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findMultiColorEx(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir);
 ```
@@ -3106,6 +3249,7 @@ const char* DM_CALL dm_findMultiColorEx(long x1, long y1, long x2, long y2, cons
 ### 4.21 dm_findMultiColorE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findMultiColorE(long x1, long y1, long x2, long y2, const char* first_color, const char* offset_color, long sim, long dir);
 ```
@@ -3121,6 +3265,7 @@ const char* DM_CALL dm_findMultiColorE(long x1, long y1, long x2, long y2, const
 ### 4.22 dm_findPic
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findPic(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
@@ -3129,18 +3274,18 @@ long DM_CALL dm_findPic(long x1, long y1, long x2, long y2, const char* pic_name
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 查找区域左上角 X |
-| y1 | long | 是 | 查找区域左上角 Y |
-| x2 | long | 是 | 查找区域右下角 X |
-| y2 | long | 是 | 查找区域右下角 Y |
-| pic_name | const char* | 是 | 图片文件名，多个图片用 `|` 分隔（逐一查找，找到即返回） |
-| delta_color | const char* | 是 | 偏色值，如 `"202020-000000"`，格式 `"偏色-偏色模式"` |
-| sim | long | 是 | 相似度（0.0-1.0） |
-| dir | long | 是 | 查找方向 |
-| intX | long* | 输出 | 找到的 X 坐标 |
-| intY | long* | 输出 | 找到的 Y 坐标 |
+| 参数          | 类型          | 必填 | 说明                                     |                   |
+| ----------- | ----------- | -- | -------------------------------------- | ----------------- |
+| x1          | long        | 是  | 查找区域左上角 X                              |                   |
+| y1          | long        | 是  | 查找区域左上角 Y                              |                   |
+| x2          | long        | 是  | 查找区域右下角 X                              |                   |
+| y2          | long        | 是  | 查找区域右下角 Y                              |                   |
+| pic_name    | const char* | 是  | 图片文件名，多个图片用 \`                         | \` 分隔（逐一查找，找到即返回） |
+| delta_color | const char* | 是  | 偏色值，如 `"202020-000000"`，格式 `"偏色-偏色模式"` |                   |
+| sim         | long        | 是  | 相似度（0.0-1.0）                           |                   |
+| dir         | long        | 是  | 查找方向                                   |                   |
+| intX        | long*       | 输出 | 找到的 X 坐标                               |                   |
+| intY        | long*       | 输出 | 找到的 Y 坐标                               |                   |
 
 **返回值**：0=找到图片，1=未找到。
 
@@ -3167,6 +3312,7 @@ ret = dm.find_pic(0, 0, 1920, 1080, "btn_start.bmp|btn_ok.bmp|btn_confirm.bmp", 
 ### 4.23 dm_findPicE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
@@ -3182,6 +3328,7 @@ const char* DM_CALL dm_findPicE(long x1, long y1, long x2, long y2, const char* 
 ### 4.24 dm_findPicEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
@@ -3210,6 +3357,7 @@ if results:
 ### 4.25 dm_findPicExS
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicExS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
@@ -3225,6 +3373,7 @@ const char* DM_CALL dm_findPicExS(long x1, long y1, long x2, long y2, const char
 ### 4.26 dm_findPicS
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findPicS(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
@@ -3240,6 +3389,7 @@ long DM_CALL dm_findPicS(long x1, long y1, long x2, long y2, const char* pic_nam
 ### 4.27 dm_findPicMem
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findPicMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
@@ -3248,14 +3398,14 @@ long DM_CALL dm_findPicMem(long x1, long y1, long x2, long y2, const char* pic_i
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 查找区域 |
-| pic_info | const char* | 是 | 图片信息（内存图片的描述字符串） |
-| delta_color | const char* | 是 | 偏色值 |
-| sim | long | 是 | 相似度 |
-| dir | long | 是 | 查找方向 |
-| intX/intY | long* | 输出 | 坐标 |
+| 参数          | 类型          | 必填 | 说明               |
+| ----------- | ----------- | -- | ---------------- |
+| x1-y2       | long        | 是  | 查找区域             |
+| pic_info    | const char* | 是  | 图片信息（内存图片的描述字符串） |
+| delta_color | const char* | 是  | 偏色值              |
+| sim         | long        | 是  | 相似度              |
+| dir         | long        | 是  | 查找方向             |
+| intX/intY   | long*       | 输出 | 坐标               |
 
 **返回值**：0=找到，1=未找到。
 
@@ -3264,6 +3414,7 @@ long DM_CALL dm_findPicMem(long x1, long y1, long x2, long y2, const char* pic_i
 ### 4.28 dm_findPicMemE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
@@ -3279,6 +3430,7 @@ const char* DM_CALL dm_findPicMemE(long x1, long y1, long x2, long y2, const cha
 ### 4.29 dm_findPicMemEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
@@ -3294,6 +3446,7 @@ const char* DM_CALL dm_findPicMemEx(long x1, long y1, long x2, long y2, const ch
 ### 4.30 dm_findPicSim
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findPicSim(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
@@ -3309,6 +3462,7 @@ long DM_CALL dm_findPicSim(long x1, long y1, long x2, long y2, const char* pic_n
 ### 4.31 dm_findPicSimE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicSimE(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
@@ -3324,6 +3478,7 @@ const char* DM_CALL dm_findPicSimE(long x1, long y1, long x2, long y2, const cha
 ### 4.32 dm_findPicSimEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicSimEx(long x1, long y1, long x2, long y2, const char* pic_name, const char* delta_color, long sim, long dir);
 ```
@@ -3339,6 +3494,7 @@ const char* DM_CALL dm_findPicSimEx(long x1, long y1, long x2, long y2, const ch
 ### 4.33 dm_findPicSimMem
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findPicSimMem(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir, long* intX, long* intY);
 ```
@@ -3354,6 +3510,7 @@ long DM_CALL dm_findPicSimMem(long x1, long y1, long x2, long y2, const char* pi
 ### 4.34 dm_findPicSimMemE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicSimMemE(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
@@ -3369,6 +3526,7 @@ const char* DM_CALL dm_findPicSimMemE(long x1, long y1, long x2, long y2, const 
 ### 4.35 dm_findPicSimMemEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findPicSimMemEx(long x1, long y1, long x2, long y2, const char* pic_info, const char* delta_color, long sim, long dir);
 ```
@@ -3384,6 +3542,7 @@ const char* DM_CALL dm_findPicSimMemEx(long x1, long y1, long x2, long y2, const
 ### 4.36 dm_findShape
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findShape(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir, long* intX, long* intY);
 ```
@@ -3392,13 +3551,13 @@ long DM_CALL dm_findShape(long x1, long y1, long x2, long y2, const char* offset
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 查找区域 |
-| offset_color | const char* | 是 | 形状描述（偏移颜色），格式同多点找色的偏移颜色 |
-| sim | long | 是 | 相似度 |
-| dir | long | 是 | 查找方向 |
-| intX/intY | long* | 输出 | 坐标 |
+| 参数           | 类型          | 必填 | 说明                      |
+| ------------ | ----------- | -- | ----------------------- |
+| x1-y2        | long        | 是  | 查找区域                    |
+| offset_color | const char* | 是  | 形状描述（偏移颜色），格式同多点找色的偏移颜色 |
+| sim          | long        | 是  | 相似度                     |
+| dir          | long        | 是  | 查找方向                    |
+| intX/intY    | long*       | 输出 | 坐标                      |
 
 **返回值**：0=找到，1=未找到。
 
@@ -3407,6 +3566,7 @@ long DM_CALL dm_findShape(long x1, long y1, long x2, long y2, const char* offset
 ### 4.37 dm_findShapeE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findShapeE(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir);
 ```
@@ -3422,6 +3582,7 @@ const char* DM_CALL dm_findShapeE(long x1, long y1, long x2, long y2, const char
 ### 4.38 dm_findShapeEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findShapeEx(long x1, long y1, long x2, long y2, const char* offset_color, long sim, long dir);
 ```
@@ -3437,6 +3598,7 @@ const char* DM_CALL dm_findShapeEx(long x1, long y1, long x2, long y2, const cha
 ### 4.39 dm_getPicSize
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getPicSize(const char* pic_name);
 ```
@@ -3445,9 +3607,9 @@ const char* DM_CALL dm_getPicSize(const char* pic_name);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pic_name | const char* | 是 | 图片文件名 |
+| 参数       | 类型          | 必填 | 说明    |
+| -------- | ----------- | -- | ----- |
+| pic_name | const char* | 是  | 图片文件名 |
 
 **返回值**：尺寸字符串，格式 `"width|height"`。
 
@@ -3466,6 +3628,7 @@ if size:
 ### 4.40 dm_freePic
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_freePic(const char* pic_name);
 ```
@@ -3474,9 +3637,9 @@ long DM_CALL dm_freePic(const char* pic_name);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pic_name | const char* | 是 | 图片文件名，`"*"` 表示释放所有图片 |
+| 参数       | 类型          | 必填 | 说明                   |
+| -------- | ----------- | -- | -------------------- |
+| pic_name | const char* | 是  | 图片文件名，`"*"` 表示释放所有图片 |
 
 **返回值**：0=成功。
 
@@ -3485,6 +3648,7 @@ long DM_CALL dm_freePic(const char* pic_name);
 ### 4.41 dm_loadPic
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_loadPic(const char* pic_name);
 ```
@@ -3493,9 +3657,9 @@ long DM_CALL dm_loadPic(const char* pic_name);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pic_name | const char* | 是 | 图片文件名 |
+| 参数       | 类型          | 必填 | 说明    |
+| -------- | ----------- | -- | ----- |
+| pic_name | const char* | 是  | 图片文件名 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -3514,6 +3678,7 @@ dm.find_pic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0, x, y)
 ### 4.42 dm_loadPicByte
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_loadPicByte(const char* pic_name, long data, long size);
 ```
@@ -3522,11 +3687,11 @@ long DM_CALL dm_loadPicByte(const char* pic_name, long data, long size);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pic_name | const char* | 是 | 图片名称标识 |
-| data | long | 是 | 图片数据内存地址 |
-| size | long | 是 | 数据大小（字节） |
+| 参数       | 类型          | 必填 | 说明       |
+| -------- | ----------- | -- | -------- |
+| pic_name | const char* | 是  | 图片名称标识   |
+| data     | long        | 是  | 图片数据内存地址 |
+| size     | long        | 是  | 数据大小（字节） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -3535,6 +3700,7 @@ long DM_CALL dm_loadPicByte(const char* pic_name, long data, long size);
 ### 4.43 dm_appendPicAddr
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_appendPicAddr(const char* pic_info, long addr, long size);
 ```
@@ -3543,11 +3709,11 @@ const char* DM_CALL dm_appendPicAddr(const char* pic_info, long addr, long size)
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pic_info | const char* | 是 | 现有图片信息字符串 |
-| addr | long | 是 | 图片数据内存地址 |
-| size | long | 是 | 数据大小 |
+| 参数       | 类型          | 必填 | 说明        |
+| -------- | ----------- | -- | --------- |
+| pic_info | const char* | 是  | 现有图片信息字符串 |
+| addr     | long        | 是  | 图片数据内存地址  |
+| size     | long        | 是  | 数据大小      |
 
 **返回值**：更新后的图片信息字符串。
 
@@ -3556,6 +3722,7 @@ const char* DM_CALL dm_appendPicAddr(const char* pic_info, long addr, long size)
 ### 4.44 dm_matchPicName
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_matchPicName(const char* pic_name);
 ```
@@ -3564,9 +3731,9 @@ const char* DM_CALL dm_matchPicName(const char* pic_name);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pic_name | const char* | 是 | 图片名称（支持通配符 `*` 和 `?`） |
+| 参数       | 类型          | 必填 | 说明                    |
+| -------- | ----------- | -- | --------------------- |
+| pic_name | const char* | 是  | 图片名称（支持通配符 `*` 和 `?`） |
 
 **返回值**：匹配到的完整文件路径字符串。
 
@@ -3575,6 +3742,7 @@ const char* DM_CALL dm_matchPicName(const char* pic_name);
 ### 4.45 dm_imageToBmp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_imageToBmp(const char* pic_name, const char* bmp_name);
 ```
@@ -3583,10 +3751,10 @@ long DM_CALL dm_imageToBmp(const char* pic_name, const char* bmp_name);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pic_name | const char* | 是 | 源图片文件（支持 PNG、JPG 等格式） |
-| bmp_name | const char* | 是 | 输出 BMP 文件路径 |
+| 参数       | 类型          | 必填 | 说明                    |
+| -------- | ----------- | -- | --------------------- |
+| pic_name | const char* | 是  | 源图片文件（支持 PNG、JPG 等格式） |
+| bmp_name | const char* | 是  | 输出 BMP 文件路径           |
 
 **返回值**：0=成功，非0=失败。
 
@@ -3595,6 +3763,7 @@ long DM_CALL dm_imageToBmp(const char* pic_name, const char* bmp_name);
 ### 4.46 dm_setPicPwd
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setPicPwd(const char* pwd);
 ```
@@ -3603,9 +3772,9 @@ long DM_CALL dm_setPicPwd(const char* pwd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pwd | const char* | 是 | 密码字符串 |
+| 参数  | 类型          | 必填 | 说明    |
+| --- | ----------- | -- | ----- |
+| pwd | const char* | 是  | 密码字符串 |
 
 **返回值**：0=成功。
 
@@ -3614,6 +3783,7 @@ long DM_CALL dm_setPicPwd(const char* pwd);
 ### 4.47 dm_setExcludeRegion
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setExcludeRegion(long mode, const char* info);
 ```
@@ -3622,10 +3792,10 @@ long DM_CALL dm_setExcludeRegion(long mode, const char* info);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| mode | long | 是 | 0=排除模式，1=仅保留模式 |
-| info | const char* | 是 | 区域描述字符串 |
+| 参数   | 类型          | 必填 | 说明             |
+| ---- | ----------- | -- | -------------- |
+| mode | long        | 是  | 0=排除模式，1=仅保留模式 |
+| info | const char* | 是  | 区域描述字符串        |
 
 **返回值**：0=成功。
 
@@ -3634,6 +3804,7 @@ long DM_CALL dm_setExcludeRegion(long mode, const char* info);
 ### 4.48 dm_getScreenData
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getScreenData(long x1, long y1, long x2, long y2);
 ```
@@ -3642,12 +3813,12 @@ long DM_CALL dm_getScreenData(long x1, long y1, long x2, long y2);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 区域左上角 X |
-| y1 | long | 是 | 区域左上角 Y |
-| x2 | long | 是 | 区域右下角 X |
-| y2 | long | 是 | 区域右下角 Y |
+| 参数 | 类型   | 必填 | 说明      |
+| -- | ---- | -- | ------- |
+| x1 | long | 是  | 区域左上角 X |
+| y1 | long | 是  | 区域左上角 Y |
+| x2 | long | 是  | 区域右下角 X |
+| y2 | long | 是  | 区域右下角 Y |
 
 **返回值**：图像数据内存地址（低32位），0=失败。需配合 `dm_getScreenDataBmp` 使用。
 
@@ -3656,6 +3827,7 @@ long DM_CALL dm_getScreenData(long x1, long y1, long x2, long y2);
 ### 4.49 dm_getScreenDataBmp
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getScreenDataBmp(long x1, long y1, long x2, long y2, long* size);
 ```
@@ -3664,10 +3836,10 @@ const char* DM_CALL dm_getScreenDataBmp(long x1, long y1, long x2, long y2, long
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 区域坐标 |
-| size | long* | 输出 | 数据大小（字节） |
+| 参数    | 类型    | 必填 | 说明       |
+| ----- | ----- | -- | -------- |
+| x1-y2 | long  | 是  | 区域坐标     |
+| size  | long* | 输出 | 数据大小（字节） |
 
 **返回值**：BMP 图像数据内存地址指针。
 
@@ -3676,6 +3848,7 @@ const char* DM_CALL dm_getScreenDataBmp(long x1, long y1, long x2, long y2, long
 ### 4.50 dm_enableDisplayDebug
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableDisplayDebug(long enable_debug);
 ```
@@ -3684,9 +3857,9 @@ long DM_CALL dm_enableDisplayDebug(long enable_debug);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable_debug | long | 是 | 0=禁用，1=启用 |
+| 参数           | 类型   | 必填 | 说明        |
+| ------------ | ---- | -- | --------- |
+| enable_debug | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -3695,6 +3868,7 @@ long DM_CALL dm_enableDisplayDebug(long enable_debug);
 ### 4.51 dm_enableFindPicMultithread
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableFindPicMultithread(long enable);
 ```
@@ -3703,9 +3877,9 @@ long DM_CALL dm_enableFindPicMultithread(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -3714,6 +3888,7 @@ long DM_CALL dm_enableFindPicMultithread(long enable);
 ### 4.52 dm_enableGetColorByCapture
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableGetColorByCapture(long enable);
 ```
@@ -3722,9 +3897,9 @@ long DM_CALL dm_enableGetColorByCapture(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=直接获取，1=通过截图获取 |
+| 参数     | 类型   | 必填 | 说明              |
+| ------ | ---- | -- | --------------- |
+| enable | long | 是  | 0=直接获取，1=通过截图获取 |
 
 **返回值**：0=成功。
 
@@ -3733,6 +3908,7 @@ long DM_CALL dm_enableGetColorByCapture(long enable);
 ### 4.53 dm_setFindPicMultithreadCount
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setFindPicMultithreadCount(long count);
 ```
@@ -3741,9 +3917,9 @@ long DM_CALL dm_setFindPicMultithreadCount(long count);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| count | long | 是 | 线程数（0=使用默认值） |
+| 参数    | 类型   | 必填 | 说明           |
+| ----- | ---- | -- | ------------ |
+| count | long | 是  | 线程数（0=使用默认值） |
 
 **返回值**：0=成功。
 
@@ -3752,6 +3928,7 @@ long DM_CALL dm_setFindPicMultithreadCount(long count);
 ### 4.54 dm_setFindPicMultithreadLimit
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setFindPicMultithreadLimit(long limit);
 ```
@@ -3760,9 +3937,9 @@ long DM_CALL dm_setFindPicMultithreadLimit(long limit);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| limit | long | 是 | 限制值（像素数） |
+| 参数    | 类型   | 必填 | 说明       |
+| ----- | ---- | -- | -------- |
+| limit | long | 是  | 限制值（像素数） |
 
 **返回值**：0=成功。
 
@@ -3771,6 +3948,7 @@ long DM_CALL dm_setFindPicMultithreadLimit(long limit);
 ### 4.55 dm_bgr2RGB
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_bgr2RGB(const char* bgr_color);
 ```
@@ -3779,9 +3957,9 @@ long DM_CALL dm_bgr2RGB(const char* bgr_color);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| bgr_color | const char* | 是 | BGR 颜色字符串，如 `"0000FF"` |
+| 参数        | 类型          | 必填 | 说明                     |
+| --------- | ----------- | -- | ---------------------- |
+| bgr_color | const char* | 是  | BGR 颜色字符串，如 `"0000FF"` |
 
 **返回值**：RGB 颜色值（整数），如 `0xFF0000`。
 
@@ -3790,6 +3968,7 @@ long DM_CALL dm_bgr2RGB(const char* bgr_color);
 ### 4.56 dm_rgb2BGR
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_rgb2BGR(const char* rgb_color);
 ```
@@ -3798,9 +3977,9 @@ const char* DM_CALL dm_rgb2BGR(const char* rgb_color);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| rgb_color | const char* | 是 | RGB 颜色字符串，如 `"FF0000"` |
+| 参数        | 类型          | 必填 | 说明                     |
+| --------- | ----------- | -- | ---------------------- |
+| rgb_color | const char* | 是  | RGB 颜色字符串，如 `"FF0000"` |
 
 **返回值**：BGR 格式颜色字符串，如 `"0000FF"`。
 
@@ -3809,6 +3988,7 @@ const char* DM_CALL dm_rgb2BGR(const char* rgb_color);
 ### 4.57 dm_isDisplayDead
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_isDisplayDead(long x1, long y1, long x2, long y2, long time);
 ```
@@ -3817,10 +3997,10 @@ long DM_CALL dm_isDisplayDead(long x1, long y1, long x2, long y2, long time);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 检测区域 |
-| time | long | 是 | 检测时长（毫秒） |
+| 参数    | 类型   | 必填 | 说明       |
+| ----- | ---- | -- | -------- |
+| x1-y2 | long | 是  | 检测区域     |
+| time  | long | 是  | 检测时长（毫秒） |
 
 **返回值**：0=画面有变化（未静止），1=画面静止。
 
@@ -3844,6 +4024,7 @@ if dm.is_display_dead(0, 0, 800, 600, 3000) == 1:
 ### 5.1 dm_bindWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_bindWindow(intptr_t hwnd, const char* display, const char* mouse, const char* keypad, long mode);
 ```
@@ -3852,25 +4033,25 @@ long DM_CALL dm_bindWindow(intptr_t hwnd, const char* display, const char* mouse
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 要绑定的窗口句柄 |
-| display | const char* | 是 | 显示模式（后台截图方式） |
-| mouse | const char* | 是 | 鼠标模式（后台鼠标操作方式） |
-| keypad | const char* | 是 | 键盘模式（后台键盘操作方式） |
-| mode | long | 是 | 绑定模式，0=普通，1=增强 |
+| 参数      | 类型          | 必填 | 说明             |
+| ------- | ----------- | -- | -------------- |
+| hwnd    | intptr_t    | 是  | 要绑定的窗口句柄       |
+| display | const char* | 是  | 显示模式（后台截图方式）   |
+| mouse   | const char* | 是  | 鼠标模式（后台鼠标操作方式） |
+| keypad  | const char* | 是  | 键盘模式（后台键盘操作方式） |
+| mode    | long        | 是  | 绑定模式，0=普通，1=增强 |
 
 **显示/鼠标/键盘模式取值**：
 
-| 值 | 说明 |
-|----|------|
-| `"normal"` | 普通模式（前台） |
-| `"dx"` | DirectX 模式（适用于大多数游戏） |
-| `"dx2"` | DirectX 2 模式 |
-| `"dx3"` | DirectX 3 模式 |
-| `"gdi"` | GDI 模式 |
-| `"gdi2"` | GDI 2 模式 |
-| `"opengl"` | OpenGL 模式 |
+| 值          | 说明                   |
+| ---------- | -------------------- |
+| `"normal"` | 普通模式（前台）             |
+| `"dx"`     | DirectX 模式（适用于大多数游戏） |
+| `"dx2"`    | DirectX 2 模式         |
+| `"dx3"`    | DirectX 3 模式         |
+| `"gdi"`    | GDI 模式               |
+| `"gdi2"`   | GDI 2 模式             |
+| `"opengl"` | OpenGL 模式            |
 
 **返回值**：0=绑定成功，非0=绑定失败（见错误码表）。
 
@@ -3902,6 +4083,7 @@ else:
 ### 5.2 dm_bindWindowEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_bindWindowEx(intptr_t hwnd, const char* display, const char* mouse, const char* keypad, const char* pub, long mode);
 ```
@@ -3910,14 +4092,14 @@ long DM_CALL dm_bindWindowEx(intptr_t hwnd, const char* display, const char* mou
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| display | const char* | 是 | 显示模式 |
-| mouse | const char* | 是 | 鼠标模式 |
-| keypad | const char* | 是 | 键盘模式 |
-| pub | const char* | 否 | 公共模式（附加设置），如 `"dx"` |
-| mode | long | 是 | 绑定模式 |
+| 参数      | 类型          | 必填 | 说明                  |
+| ------- | ----------- | -- | ------------------- |
+| hwnd    | intptr_t    | 是  | 窗口句柄                |
+| display | const char* | 是  | 显示模式                |
+| mouse   | const char* | 是  | 鼠标模式                |
+| keypad  | const char* | 是  | 键盘模式                |
+| pub     | const char* | 否  | 公共模式（附加设置），如 `"dx"` |
+| mode    | long        | 是  | 绑定模式                |
 
 **返回值**：0=成功，非0=失败。
 
@@ -3926,6 +4108,7 @@ long DM_CALL dm_bindWindowEx(intptr_t hwnd, const char* display, const char* mou
 ### 5.3 dm_unBindWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_unBindWindow();
 ```
@@ -3941,6 +4124,7 @@ long DM_CALL dm_unBindWindow();
 ### 5.4 dm_getBindWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getBindWindow();
 ```
@@ -3956,6 +4140,7 @@ long DM_CALL dm_getBindWindow();
 ### 5.5 dm_isBind
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_isBind(intptr_t hwnd);
 ```
@@ -3964,9 +4149,9 @@ long DM_CALL dm_isBind(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：0=未绑定，1=已绑定。
 
@@ -3975,6 +4160,7 @@ long DM_CALL dm_isBind(intptr_t hwnd);
 ### 5.6 dm_forceUnBindWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_forceUnBindWindow();
 ```
@@ -3990,6 +4176,7 @@ long DM_CALL dm_forceUnBindWindow();
 ### 5.7 dm_setAero
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setAero(long enable);
 ```
@@ -3998,9 +4185,9 @@ long DM_CALL dm_setAero(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4009,6 +4196,7 @@ long DM_CALL dm_setAero(long enable);
 ### 5.8 dm_lockInput
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_lockInput(long enable);
 ```
@@ -4017,9 +4205,9 @@ long DM_CALL dm_lockInput(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=解锁，1=锁定 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=解锁，1=锁定 |
 
 **返回值**：0=成功。
 
@@ -4028,6 +4216,7 @@ long DM_CALL dm_lockInput(long enable);
 ### 5.9 dm_lockMouseRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_lockMouseRect(long x1, long y1, long x2, long y2);
 ```
@@ -4036,9 +4225,9 @@ long DM_CALL dm_lockMouseRect(long x1, long y1, long x2, long y2);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 锁定区域坐标 |
+| 参数    | 类型   | 必填 | 说明     |
+| ----- | ---- | -- | ------ |
+| x1-y2 | long | 是  | 锁定区域坐标 |
 
 **返回值**：0=成功。
 
@@ -4047,6 +4236,7 @@ long DM_CALL dm_lockMouseRect(long x1, long y1, long x2, long y2);
 ### 5.10 dm_lockDisplay
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_lockDisplay(long enable);
 ```
@@ -4055,9 +4245,9 @@ long DM_CALL dm_lockDisplay(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=解锁，1=锁定 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=解锁，1=锁定 |
 
 **返回值**：0=成功。
 
@@ -4066,6 +4256,7 @@ long DM_CALL dm_lockDisplay(long enable);
 ### 5.11 dm_enableBind
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableBind(long enable);
 ```
@@ -4074,9 +4265,9 @@ long DM_CALL dm_enableBind(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4085,6 +4276,7 @@ long DM_CALL dm_enableBind(long enable);
 ### 5.12 dm_enableFakeActive
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableFakeActive(long enable);
 ```
@@ -4093,9 +4285,9 @@ long DM_CALL dm_enableFakeActive(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4104,6 +4296,7 @@ long DM_CALL dm_enableFakeActive(long enable);
 ### 5.13 dm_enableIme
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableIme(long enable);
 ```
@@ -4112,9 +4305,9 @@ long DM_CALL dm_enableIme(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4123,6 +4316,7 @@ long DM_CALL dm_enableIme(long enable);
 ### 5.14 dm_enableKeypadMsg
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableKeypadMsg(long enable);
 ```
@@ -4131,9 +4325,9 @@ long DM_CALL dm_enableKeypadMsg(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4142,6 +4336,7 @@ long DM_CALL dm_enableKeypadMsg(long enable);
 ### 5.15 dm_enableKeypadPatch
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableKeypadPatch(long enable);
 ```
@@ -4150,9 +4345,9 @@ long DM_CALL dm_enableKeypadPatch(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4161,6 +4356,7 @@ long DM_CALL dm_enableKeypadPatch(long enable);
 ### 5.16 dm_enableKeypadSync
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableKeypadSync(long enable);
 ```
@@ -4169,9 +4365,9 @@ long DM_CALL dm_enableKeypadSync(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4180,6 +4376,7 @@ long DM_CALL dm_enableKeypadSync(long enable);
 ### 5.17 dm_enableMouseMsg
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableMouseMsg(long enable);
 ```
@@ -4188,9 +4385,9 @@ long DM_CALL dm_enableMouseMsg(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4199,6 +4396,7 @@ long DM_CALL dm_enableMouseMsg(long enable);
 ### 5.18 dm_enableMouseSync
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableMouseSync(long enable, long time_out);
 ```
@@ -4207,10 +4405,10 @@ long DM_CALL dm_enableMouseSync(long enable, long time_out);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
-| time_out | long | 是 | 同步超时时间（毫秒） |
+| 参数       | 类型   | 必填 | 说明         |
+| -------- | ---- | -- | ---------- |
+| enable   | long | 是  | 0=禁用，1=启用  |
+| time_out | long | 是  | 同步超时时间（毫秒） |
 
 **返回值**：0=成功。
 
@@ -4219,6 +4417,7 @@ long DM_CALL dm_enableMouseSync(long enable, long time_out);
 ### 5.19 dm_enableRealKeypad
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableRealKeypad(long enable);
 ```
@@ -4227,9 +4426,9 @@ long DM_CALL dm_enableRealKeypad(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4238,6 +4437,7 @@ long DM_CALL dm_enableRealKeypad(long enable);
 ### 5.20 dm_enableRealMouse
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableRealMouse(long enable, long mousedelay, long mousestep);
 ```
@@ -4246,11 +4446,11 @@ long DM_CALL dm_enableRealMouse(long enable, long mousedelay, long mousestep);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
-| mousedelay | long | 是 | 鼠标操作延迟（毫秒） |
-| mousestep | long | 是 | 鼠标移动步长（像素） |
+| 参数         | 类型   | 必填 | 说明         |
+| ---------- | ---- | -- | ---------- |
+| enable     | long | 是  | 0=禁用，1=启用  |
+| mousedelay | long | 是  | 鼠标操作延迟（毫秒） |
+| mousestep  | long | 是  | 鼠标移动步长（像素） |
 
 **返回值**：0=成功。
 
@@ -4259,6 +4459,7 @@ long DM_CALL dm_enableRealMouse(long enable, long mousedelay, long mousestep);
 ### 5.21 dm_enableSpeedDx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableSpeedDx(long enable);
 ```
@@ -4267,9 +4468,9 @@ long DM_CALL dm_enableSpeedDx(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4278,6 +4479,7 @@ long DM_CALL dm_enableSpeedDx(long enable);
 ### 5.22 dm_getFps
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getFps();
 ```
@@ -4293,6 +4495,7 @@ long DM_CALL dm_getFps();
 ### 5.23 dm_setDisplayDelay
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setDisplayDelay(long delay);
 ```
@@ -4301,9 +4504,9 @@ long DM_CALL dm_setDisplayDelay(long delay);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| delay | long | 是 | 延迟时间（毫秒） |
+| 参数    | 类型   | 必填 | 说明       |
+| ----- | ---- | -- | -------- |
+| delay | long | 是  | 延迟时间（毫秒） |
 
 **返回值**：0=成功。
 
@@ -4312,6 +4515,7 @@ long DM_CALL dm_setDisplayDelay(long delay);
 ### 5.24 dm_setDisplayRefreshDelay
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setDisplayRefreshDelay(long delay);
 ```
@@ -4320,9 +4524,9 @@ long DM_CALL dm_setDisplayRefreshDelay(long delay);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| delay | long | 是 | 刷新延迟（毫秒） |
+| 参数    | 类型   | 必填 | 说明       |
+| ----- | ---- | -- | -------- |
+| delay | long | 是  | 刷新延迟（毫秒） |
 
 **返回值**：0=成功。
 
@@ -4331,6 +4535,7 @@ long DM_CALL dm_setDisplayRefreshDelay(long delay);
 ### 5.25 dm_setInputDm
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setInputDm(long enable);
 ```
@@ -4339,9 +4544,9 @@ long DM_CALL dm_setInputDm(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -4350,6 +4555,7 @@ long DM_CALL dm_setInputDm(long enable);
 ### 5.26 dm_hackSpeed
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_hackSpeed(long rate);
 ```
@@ -4358,9 +4564,9 @@ long DM_CALL dm_hackSpeed(long rate);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| rate | long | 是 | 速度倍率，100=正常速度，200=2倍速，50=半速 |
+| 参数   | 类型   | 必填 | 说明                          |
+| ---- | ---- | -- | --------------------------- |
+| rate | long | 是  | 速度倍率，100=正常速度，200=2倍速，50=半速 |
 
 **返回值**：0=成功。
 
@@ -4369,6 +4575,7 @@ long DM_CALL dm_hackSpeed(long rate);
 ### 5.27 dm_downCpu
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_downCpu(long enable, long rate);
 ```
@@ -4377,10 +4584,10 @@ long DM_CALL dm_downCpu(long enable, long rate);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=关闭，1=开启 |
-| rate | long | 是 | CPU 降低率（1-100） |
+| 参数     | 类型   | 必填 | 说明             |
+| ------ | ---- | -- | -------------- |
+| enable | long | 是  | 0=关闭，1=开启      |
+| rate   | long | 是  | CPU 降低率（1-100） |
 
 **返回值**：0=成功。
 
@@ -4389,6 +4596,7 @@ long DM_CALL dm_downCpu(long enable, long rate);
 ### 5.28 dm_switchBindWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_switchBindWindow(intptr_t hwnd);
 ```
@@ -4397,9 +4605,9 @@ long DM_CALL dm_switchBindWindow(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 新的窗口句柄 |
+| 参数   | 类型       | 必填 | 说明     |
+| ---- | -------- | -- | ------ |
+| hwnd | intptr_t | 是  | 新的窗口句柄 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -4414,6 +4622,7 @@ long DM_CALL dm_switchBindWindow(intptr_t hwnd);
 ### 6.1 dm_openProcess
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_openProcess(long pid);
 ```
@@ -4422,9 +4631,9 @@ long DM_CALL dm_openProcess(long pid);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pid | long | 是 | 进程 ID |
+| 参数  | 类型   | 必填 | 说明    |
+| --- | ---- | -- | ----- |
+| pid | long | 是  | 进程 ID |
 
 **返回值**：0=成功，非0=失败。
 
@@ -4448,6 +4657,7 @@ else:
 ### 6.2 dm_getModuleBaseAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getModuleBaseAddr(intptr_t hwnd, const char* module);
 ```
@@ -4456,10 +4666,10 @@ long DM_CALL dm_getModuleBaseAddr(intptr_t hwnd, const char* module);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 目标进程的窗口句柄 |
-| module | const char* | 是 | 模块名称，如 `"dm_hook.dll"`、`"kernel32.dll"` |
+| 参数     | 类型          | 必填 | 说明                                      |
+| ------ | ----------- | -- | --------------------------------------- |
+| hwnd   | intptr_t    | 是  | 目标进程的窗口句柄                               |
+| module | const char* | 是  | 模块名称，如 `"dm_hook.dll"`、`"kernel32.dll"` |
 
 **返回值**：模块基址（内存地址），0=获取失败。
 
@@ -4479,6 +4689,7 @@ dll_base = dm.get_module_base_addr(hwnd, "user32.dll")
 ### 6.3 dm_getModuleSize
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getModuleSize(intptr_t hwnd, const char* module);
 ```
@@ -4487,10 +4698,10 @@ long DM_CALL dm_getModuleSize(intptr_t hwnd, const char* module);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| module | const char* | 是 | 模块名称 |
+| 参数     | 类型          | 必填 | 说明   |
+| ------ | ----------- | -- | ---- |
+| hwnd   | intptr_t    | 是  | 窗口句柄 |
+| module | const char* | 是  | 模块名称 |
 
 **返回值**：模块大小（字节），0=获取失败。
 
@@ -4499,6 +4710,7 @@ long DM_CALL dm_getModuleSize(intptr_t hwnd, const char* module);
 ### 6.4 dm_getRemoteApiAddress
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getRemoteApiAddress(intptr_t hwnd, const char* module, const char* api);
 ```
@@ -4507,11 +4719,11 @@ long DM_CALL dm_getRemoteApiAddress(intptr_t hwnd, const char* module, const cha
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| module | const char* | 是 | 模块名称，如 `"kernel32.dll"` |
-| api | const char* | 是 | API 函数名，如 `"MessageBoxA"` |
+| 参数     | 类型          | 必填 | 说明                        |
+| ------ | ----------- | -- | ------------------------- |
+| hwnd   | intptr_t    | 是  | 窗口句柄                      |
+| module | const char* | 是  | 模块名称，如 `"kernel32.dll"`   |
+| api    | const char* | 是  | API 函数名，如 `"MessageBoxA"` |
 
 **返回值**：函数地址，0=获取失败。
 
@@ -4520,6 +4732,7 @@ long DM_CALL dm_getRemoteApiAddress(intptr_t hwnd, const char* module, const cha
 ### 6.5 dm_readInt
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readInt(intptr_t hwnd, long addr, long* ret);
 ```
@@ -4528,11 +4741,11 @@ long DM_CALL dm_readInt(intptr_t hwnd, long addr, long* ret);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| ret | long* | 输出 | 读取到的整数值 |
+| 参数   | 类型       | 必填 | 说明      |
+| ---- | -------- | -- | ------- |
+| hwnd | intptr_t | 是  | 窗口句柄    |
+| addr | long     | 是  | 内存地址    |
+| ret  | long*    | 输出 | 读取到的整数值 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -4553,6 +4766,7 @@ if ret == 0:
 ### 6.6 dm_readIntAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readIntAddr(intptr_t hwnd, long addr, long type, long* ret);
 ```
@@ -4561,12 +4775,12 @@ long DM_CALL dm_readIntAddr(intptr_t hwnd, long addr, long type, long* ret);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| type | long | 是 | 数据类型：0=字节，1=字(2字节)，2=整数(4字节) |
-| ret | long* | 输出 | 读取的值 |
+| 参数   | 类型       | 必填 | 说明                           |
+| ---- | -------- | -- | ---------------------------- |
+| hwnd | intptr_t | 是  | 窗口句柄                         |
+| addr | long     | 是  | 内存地址                         |
+| type | long     | 是  | 数据类型：0=字节，1=字(2字节)，2=整数(4字节) |
+| ret  | long*    | 输出 | 读取的值                         |
 
 **返回值**：0=成功，非0=失败。
 
@@ -4575,6 +4789,7 @@ long DM_CALL dm_readIntAddr(intptr_t hwnd, long addr, long type, long* ret);
 ### 6.7 dm_readFloat
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readFloat(intptr_t hwnd, long addr, float* ret);
 ```
@@ -4583,11 +4798,11 @@ long DM_CALL dm_readFloat(intptr_t hwnd, long addr, float* ret);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| ret | float* | 输出 | 读取到的浮点数值 |
+| 参数   | 类型       | 必填 | 说明       |
+| ---- | -------- | -- | -------- |
+| hwnd | intptr_t | 是  | 窗口句柄     |
+| addr | long     | 是  | 内存地址     |
+| ret  | float*   | 输出 | 读取到的浮点数值 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -4596,6 +4811,7 @@ long DM_CALL dm_readFloat(intptr_t hwnd, long addr, float* ret);
 ### 6.8 dm_readFloatAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readFloatAddr(intptr_t hwnd, long addr, float* ret);
 ```
@@ -4611,6 +4827,7 @@ long DM_CALL dm_readFloatAddr(intptr_t hwnd, long addr, float* ret);
 ### 6.9 dm_readDouble
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readDouble(intptr_t hwnd, long addr, double* ret);
 ```
@@ -4619,11 +4836,11 @@ long DM_CALL dm_readDouble(intptr_t hwnd, long addr, double* ret);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| ret | double* | 输出 | 读取到的双精度浮点数值 |
+| 参数   | 类型       | 必填 | 说明          |
+| ---- | -------- | -- | ----------- |
+| hwnd | intptr_t | 是  | 窗口句柄        |
+| addr | long     | 是  | 内存地址        |
+| ret  | double*  | 输出 | 读取到的双精度浮点数值 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -4632,6 +4849,7 @@ long DM_CALL dm_readDouble(intptr_t hwnd, long addr, double* ret);
 ### 6.10 dm_readDoubleAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readDoubleAddr(intptr_t hwnd, long addr, double* ret);
 ```
@@ -4647,6 +4865,7 @@ long DM_CALL dm_readDoubleAddr(intptr_t hwnd, long addr, double* ret);
 ### 6.11 dm_readString
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_readString(intptr_t hwnd, long addr, long type, long len);
 ```
@@ -4655,12 +4874,12 @@ const char* DM_CALL dm_readString(intptr_t hwnd, long addr, long type, long len)
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| type | long | 是 | 字符串类型：0=ASCII，1=Unicode（UTF-16） |
-| len | long | 是 | 读取的最大长度（字节数） |
+| 参数   | 类型       | 必填 | 说明                              |
+| ---- | -------- | -- | ------------------------------- |
+| hwnd | intptr_t | 是  | 窗口句柄                            |
+| addr | long     | 是  | 内存地址                            |
+| type | long     | 是  | 字符串类型：0=ASCII，1=Unicode（UTF-16） |
+| len  | long     | 是  | 读取的最大长度（字节数）                    |
 
 **返回值**：读取到的字符串内容。
 
@@ -4681,6 +4900,7 @@ w_name = dm.read_string(hwnd, 0x00A1B2C3, 1, 128)
 ### 6.12 dm_readStringAddr
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_readStringAddr(intptr_t hwnd, long addr, long type, long len);
 ```
@@ -4696,6 +4916,7 @@ const char* DM_CALL dm_readStringAddr(intptr_t hwnd, long addr, long type, long 
 ### 6.13 dm_readData
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_readData(intptr_t hwnd, long addr, long len);
 ```
@@ -4704,11 +4925,11 @@ const char* DM_CALL dm_readData(intptr_t hwnd, long addr, long len);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| len | long | 是 | 读取的字节数 |
+| 参数   | 类型       | 必填 | 说明     |
+| ---- | -------- | -- | ------ |
+| hwnd | intptr_t | 是  | 窗口句柄   |
+| addr | long     | 是  | 内存地址   |
+| len  | long     | 是  | 读取的字节数 |
 
 **返回值**：十六进制编码的数据字符串，如 `"FF00AABB"`。
 
@@ -4717,6 +4938,7 @@ const char* DM_CALL dm_readData(intptr_t hwnd, long addr, long len);
 ### 6.14 dm_readDataAddr
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_readDataAddr(intptr_t hwnd, long addr, long len);
 ```
@@ -4732,6 +4954,7 @@ const char* DM_CALL dm_readDataAddr(intptr_t hwnd, long addr, long len);
 ### 6.15 dm_readDataToBin
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readDataToBin(intptr_t hwnd, long addr, long len);
 ```
@@ -4740,11 +4963,11 @@ long DM_CALL dm_readDataToBin(intptr_t hwnd, long addr, long len);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| len | long | 是 | 读取的字节数 |
+| 参数   | 类型       | 必填 | 说明     |
+| ---- | -------- | -- | ------ |
+| hwnd | intptr_t | 是  | 窗口句柄   |
+| addr | long     | 是  | 内存地址   |
+| len  | long     | 是  | 读取的字节数 |
 
 **返回值**：二进制数据的内存地址（低32位），0=失败。
 
@@ -4753,6 +4976,7 @@ long DM_CALL dm_readDataToBin(intptr_t hwnd, long addr, long len);
 ### 6.16 dm_readDataAddrToBin
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_readDataAddrToBin(intptr_t hwnd, long addr, long len);
 ```
@@ -4768,6 +4992,7 @@ long DM_CALL dm_readDataAddrToBin(intptr_t hwnd, long addr, long len);
 ### 6.17 dm_findInt
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findInt(intptr_t hwnd, const char* addr_range, long int_value_min, long int_value_max);
 ```
@@ -4776,12 +5001,12 @@ const char* DM_CALL dm_findInt(intptr_t hwnd, const char* addr_range, long int_v
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr_range | const char* | 是 | 搜索范围，格式 `"起始地址-结束地址"`，如 `"00400000-004FFFFF"` |
-| int_value_min | long | 是 | 最小值（包含） |
-| int_value_max | long | 是 | 最大值（包含） |
+| 参数            | 类型          | 必填 | 说明                                            |
+| ------------- | ----------- | -- | --------------------------------------------- |
+| hwnd          | intptr_t    | 是  | 窗口句柄                                          |
+| addr_range    | const char* | 是  | 搜索范围，格式 `"起始地址-结束地址"`，如 `"00400000-004FFFFF"` |
+| int_value_min | long        | 是  | 最小值（包含）                                       |
+| int_value_max | long        | 是  | 最大值（包含）                                       |
 
 **返回值**：匹配的地址字符串，格式 `"地址1,地址2,..."`。
 
@@ -4800,6 +5025,7 @@ if result:
 ### 6.18 dm_findIntEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findIntEx(intptr_t hwnd, const char* addr_range, long int_value_min, long int_value_max, long step, long multi_thread, long mode);
 ```
@@ -4808,15 +5034,15 @@ const char* DM_CALL dm_findIntEx(intptr_t hwnd, const char* addr_range, long int
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr_range | const char* | 是 | 搜索范围 |
-| int_value_min | long | 是 | 最小值 |
-| int_value_max | long | 是 | 最大值 |
-| step | long | 是 | 搜索步进（字节），通常为 4 |
-| multi_thread | long | 是 | 0=单线程，1=多线程 |
-| mode | long | 是 | 搜索模式：0=精确搜索，1=模糊搜索 |
+| 参数            | 类型          | 必填 | 说明                 |
+| ------------- | ----------- | -- | ------------------ |
+| hwnd          | intptr_t    | 是  | 窗口句柄               |
+| addr_range    | const char* | 是  | 搜索范围               |
+| int_value_min | long        | 是  | 最小值                |
+| int_value_max | long        | 是  | 最大值                |
+| step          | long        | 是  | 搜索步进（字节），通常为 4     |
+| multi_thread  | long        | 是  | 0=单线程，1=多线程        |
+| mode          | long        | 是  | 搜索模式：0=精确搜索，1=模糊搜索 |
 
 **返回值**：匹配的地址字符串。
 
@@ -4825,6 +5051,7 @@ const char* DM_CALL dm_findIntEx(intptr_t hwnd, const char* addr_range, long int
 ### 6.19 dm_findFloat
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findFloat(intptr_t hwnd, const char* addr_range, float float_value_min, float float_value_max);
 ```
@@ -4833,12 +5060,12 @@ const char* DM_CALL dm_findFloat(intptr_t hwnd, const char* addr_range, float fl
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr_range | const char* | 是 | 搜索范围 |
-| float_value_min | float | 是 | 浮点数最小值 |
-| float_value_max | float | 是 | 浮点数最大值 |
+| 参数              | 类型          | 必填 | 说明     |
+| --------------- | ----------- | -- | ------ |
+| hwnd            | intptr_t    | 是  | 窗口句柄   |
+| addr_range      | const char* | 是  | 搜索范围   |
+| float_value_min | float       | 是  | 浮点数最小值 |
+| float_value_max | float       | 是  | 浮点数最大值 |
 
 **返回值**：匹配的地址字符串。
 
@@ -4847,6 +5074,7 @@ const char* DM_CALL dm_findFloat(intptr_t hwnd, const char* addr_range, float fl
 ### 6.20 dm_findFloatEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findFloatEx(intptr_t hwnd, const char* addr_range, float float_value_min, float float_value_max, long step, long multi_thread, long mode);
 ```
@@ -4862,6 +5090,7 @@ const char* DM_CALL dm_findFloatEx(intptr_t hwnd, const char* addr_range, float 
 ### 6.21 dm_findDouble
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findDouble(intptr_t hwnd, const char* addr_range, double double_value_min, double double_value_max);
 ```
@@ -4870,12 +5099,12 @@ const char* DM_CALL dm_findDouble(intptr_t hwnd, const char* addr_range, double 
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr_range | const char* | 是 | 搜索范围 |
-| double_value_min | double | 是 | 最小值 |
-| double_value_max | double | 是 | 最大值 |
+| 参数               | 类型          | 必填 | 说明   |
+| ---------------- | ----------- | -- | ---- |
+| hwnd             | intptr_t    | 是  | 窗口句柄 |
+| addr_range       | const char* | 是  | 搜索范围 |
+| double_value_min | double      | 是  | 最小值  |
+| double_value_max | double      | 是  | 最大值  |
 
 **返回值**：匹配的地址字符串。
 
@@ -4884,6 +5113,7 @@ const char* DM_CALL dm_findDouble(intptr_t hwnd, const char* addr_range, double 
 ### 6.22 dm_findDoubleEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findDoubleEx(intptr_t hwnd, const char* addr_range, double double_value_min, double double_value_max, long step, long multi_thread, long mode);
 ```
@@ -4899,6 +5129,7 @@ const char* DM_CALL dm_findDoubleEx(intptr_t hwnd, const char* addr_range, doubl
 ### 6.23 dm_findString
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findString(intptr_t hwnd, const char* addr_range, const char* string_value, long type);
 ```
@@ -4907,12 +5138,12 @@ const char* DM_CALL dm_findString(intptr_t hwnd, const char* addr_range, const c
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr_range | const char* | 是 | 搜索范围 |
-| string_value | const char* | 是 | 要搜索的字符串内容 |
-| type | long | 是 | 0=ASCII，1=Unicode |
+| 参数           | 类型          | 必填 | 说明                |
+| ------------ | ----------- | -- | ----------------- |
+| hwnd         | intptr_t    | 是  | 窗口句柄              |
+| addr_range   | const char* | 是  | 搜索范围              |
+| string_value | const char* | 是  | 要搜索的字符串内容         |
+| type         | long        | 是  | 0=ASCII，1=Unicode |
 
 **返回值**：匹配的地址字符串。
 
@@ -4921,6 +5152,7 @@ const char* DM_CALL dm_findString(intptr_t hwnd, const char* addr_range, const c
 ### 6.24 dm_findStringEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStringEx(intptr_t hwnd, const char* addr_range, const char* string_value, long type, long step, long multi_thread, long mode);
 ```
@@ -4936,6 +5168,7 @@ const char* DM_CALL dm_findStringEx(intptr_t hwnd, const char* addr_range, const
 ### 6.25 dm_findData
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findData(intptr_t hwnd, const char* addr_range, const char* data);
 ```
@@ -4944,11 +5177,11 @@ const char* DM_CALL dm_findData(intptr_t hwnd, const char* addr_range, const cha
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr_range | const char* | 是 | 搜索范围 |
-| data | const char* | 是 | 十六进制字节数据，如 `"FF00AABB"` |
+| 参数         | 类型          | 必填 | 说明                      |
+| ---------- | ----------- | -- | ----------------------- |
+| hwnd       | intptr_t    | 是  | 窗口句柄                    |
+| addr_range | const char* | 是  | 搜索范围                    |
+| data       | const char* | 是  | 十六进制字节数据，如 `"FF00AABB"` |
 
 **返回值**：匹配的地址字符串。
 
@@ -4957,6 +5190,7 @@ const char* DM_CALL dm_findData(intptr_t hwnd, const char* addr_range, const cha
 ### 6.26 dm_findDataEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findDataEx(intptr_t hwnd, const char* addr_range, const char* data, long step, long multi_thread, long mode);
 ```
@@ -4965,14 +5199,14 @@ const char* DM_CALL dm_findDataEx(intptr_t hwnd, const char* addr_range, const c
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr_range | const char* | 是 | 搜索范围 |
-| data | const char* | 是 | 十六进制数据 |
-| step | long | 是 | 步进 |
-| multi_thread | long | 是 | 多线程 |
-| mode | long | 是 | 搜索模式 |
+| 参数           | 类型          | 必填 | 说明     |
+| ------------ | ----------- | -- | ------ |
+| hwnd         | intptr_t    | 是  | 窗口句柄   |
+| addr_range   | const char* | 是  | 搜索范围   |
+| data         | const char* | 是  | 十六进制数据 |
+| step         | long        | 是  | 步进     |
+| multi_thread | long        | 是  | 多线程    |
+| mode         | long        | 是  | 搜索模式   |
 
 **返回值**：匹配的地址字符串。
 
@@ -4981,6 +5215,7 @@ const char* DM_CALL dm_findDataEx(intptr_t hwnd, const char* addr_range, const c
 ### 6.27 dm_writeInt
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeInt(intptr_t hwnd, long addr, long type, long v);
 ```
@@ -4989,12 +5224,12 @@ long DM_CALL dm_writeInt(intptr_t hwnd, long addr, long type, long v);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| type | long | 是 | 写入类型：0=字节，1=字(2字节)，2=整数(4字节) |
-| v | long | 是 | 要写入的值 |
+| 参数   | 类型       | 必填 | 说明                           |
+| ---- | -------- | -- | ---------------------------- |
+| hwnd | intptr_t | 是  | 窗口句柄                         |
+| addr | long     | 是  | 内存地址                         |
+| type | long     | 是  | 写入类型：0=字节，1=字(2字节)，2=整数(4字节) |
+| v    | long     | 是  | 要写入的值                        |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5014,6 +5249,7 @@ if ret == 0:
 ### 6.28 dm_writeIntAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeIntAddr(intptr_t hwnd, long addr, long type, long v);
 ```
@@ -5029,6 +5265,7 @@ long DM_CALL dm_writeIntAddr(intptr_t hwnd, long addr, long type, long v);
 ### 6.29 dm_writeFloat
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeFloat(intptr_t hwnd, long addr, float v);
 ```
@@ -5037,11 +5274,11 @@ long DM_CALL dm_writeFloat(intptr_t hwnd, long addr, float v);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| v | float | 是 | 要写入的浮点数值 |
+| 参数   | 类型       | 必填 | 说明       |
+| ---- | -------- | -- | -------- |
+| hwnd | intptr_t | 是  | 窗口句柄     |
+| addr | long     | 是  | 内存地址     |
+| v    | float    | 是  | 要写入的浮点数值 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5050,6 +5287,7 @@ long DM_CALL dm_writeFloat(intptr_t hwnd, long addr, float v);
 ### 6.30 dm_writeFloatAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeFloatAddr(intptr_t hwnd, long addr, float v);
 ```
@@ -5065,6 +5303,7 @@ long DM_CALL dm_writeFloatAddr(intptr_t hwnd, long addr, float v);
 ### 6.31 dm_writeDouble
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeDouble(intptr_t hwnd, long addr, double v);
 ```
@@ -5073,11 +5312,11 @@ long DM_CALL dm_writeDouble(intptr_t hwnd, long addr, double v);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| v | double | 是 | 要写入的双精度浮点数值 |
+| 参数   | 类型       | 必填 | 说明          |
+| ---- | -------- | -- | ----------- |
+| hwnd | intptr_t | 是  | 窗口句柄        |
+| addr | long     | 是  | 内存地址        |
+| v    | double   | 是  | 要写入的双精度浮点数值 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5086,6 +5325,7 @@ long DM_CALL dm_writeDouble(intptr_t hwnd, long addr, double v);
 ### 6.32 dm_writeDoubleAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeDoubleAddr(intptr_t hwnd, long addr, double v);
 ```
@@ -5101,6 +5341,7 @@ long DM_CALL dm_writeDoubleAddr(intptr_t hwnd, long addr, double v);
 ### 6.33 dm_writeString
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeString(intptr_t hwnd, long addr, long type, const char* v);
 ```
@@ -5109,12 +5350,12 @@ long DM_CALL dm_writeString(intptr_t hwnd, long addr, long type, const char* v);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| type | long | 是 | 0=ASCII，1=Unicode |
-| v | const char* | 是 | 要写入的字符串 |
+| 参数   | 类型          | 必填 | 说明                |
+| ---- | ----------- | -- | ----------------- |
+| hwnd | intptr_t    | 是  | 窗口句柄              |
+| addr | long        | 是  | 内存地址              |
+| type | long        | 是  | 0=ASCII，1=Unicode |
+| v    | const char* | 是  | 要写入的字符串           |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5123,6 +5364,7 @@ long DM_CALL dm_writeString(intptr_t hwnd, long addr, long type, const char* v);
 ### 6.34 dm_writeStringAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeStringAddr(intptr_t hwnd, long addr, long type, const char* v);
 ```
@@ -5138,6 +5380,7 @@ long DM_CALL dm_writeStringAddr(intptr_t hwnd, long addr, long type, const char*
 ### 6.35 dm_writeData
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeData(intptr_t hwnd, long addr, const char* data);
 ```
@@ -5146,11 +5389,11 @@ long DM_CALL dm_writeData(intptr_t hwnd, long addr, const char* data);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| data | const char* | 是 | 十六进制数据字符串，如 `"FF00AABB"` |
+| 参数   | 类型          | 必填 | 说明                       |
+| ---- | ----------- | -- | ------------------------ |
+| hwnd | intptr_t    | 是  | 窗口句柄                     |
+| addr | long        | 是  | 内存地址                     |
+| data | const char* | 是  | 十六进制数据字符串，如 `"FF00AABB"` |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5159,6 +5402,7 @@ long DM_CALL dm_writeData(intptr_t hwnd, long addr, const char* data);
 ### 6.36 dm_writeDataAddr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeDataAddr(intptr_t hwnd, long addr, const char* data);
 ```
@@ -5174,6 +5418,7 @@ long DM_CALL dm_writeDataAddr(intptr_t hwnd, long addr, const char* data);
 ### 6.37 dm_writeDataFromBin
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeDataFromBin(intptr_t hwnd, long addr, long data, long len);
 ```
@@ -5182,12 +5427,12 @@ long DM_CALL dm_writeDataFromBin(intptr_t hwnd, long addr, long data, long len);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| data | long | 是 | 二进制数据的内存地址 |
-| len | long | 是 | 数据长度（字节） |
+| 参数   | 类型       | 必填 | 说明         |
+| ---- | -------- | -- | ---------- |
+| hwnd | intptr_t | 是  | 窗口句柄       |
+| addr | long     | 是  | 内存地址       |
+| data | long     | 是  | 二进制数据的内存地址 |
+| len  | long     | 是  | 数据长度（字节）   |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5196,6 +5441,7 @@ long DM_CALL dm_writeDataFromBin(intptr_t hwnd, long addr, long data, long len);
 ### 6.38 dm_writeDataAddrFromBin
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeDataAddrFromBin(intptr_t hwnd, long addr, long data, long len);
 ```
@@ -5211,6 +5457,7 @@ long DM_CALL dm_writeDataAddrFromBin(intptr_t hwnd, long addr, long data, long l
 ### 6.39 dm_virtualAllocEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_virtualAllocEx(intptr_t hwnd, long size, long type, long protect);
 ```
@@ -5219,12 +5466,12 @@ long DM_CALL dm_virtualAllocEx(intptr_t hwnd, long size, long type, long protect
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| size | long | 是 | 分配的字节数 |
-| type | long | 是 | 分配类型：0=MEM_COMMIT，1=MEM_RESERVE |
-| protect | long | 是 | 内存保护常量：0=PAGE_READWRITE，1=PAGE_EXECUTE_READWRITE |
+| 参数      | 类型       | 必填 | 说明                                               |
+| ------- | -------- | -- | ------------------------------------------------ |
+| hwnd    | intptr_t | 是  | 窗口句柄                                             |
+| size    | long     | 是  | 分配的字节数                                           |
+| type    | long     | 是  | 分配类型：0=MEM_COMMIT，1=MEM_RESERVE                  |
+| protect | long     | 是  | 内存保护常量：0=PAGE_READWRITE，1=PAGE_EXECUTE_READWRITE |
 
 **返回值**：分配的内存地址，0=失败。
 
@@ -5233,6 +5480,7 @@ long DM_CALL dm_virtualAllocEx(intptr_t hwnd, long size, long type, long protect
 ### 6.40 dm_virtualFreeEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_virtualFreeEx(intptr_t hwnd, long addr);
 ```
@@ -5241,10 +5489,10 @@ long DM_CALL dm_virtualFreeEx(intptr_t hwnd, long addr);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 要释放的内存地址 |
+| 参数   | 类型       | 必填 | 说明       |
+| ---- | -------- | -- | -------- |
+| hwnd | intptr_t | 是  | 窗口句柄     |
+| addr | long     | 是  | 要释放的内存地址 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5253,6 +5501,7 @@ long DM_CALL dm_virtualFreeEx(intptr_t hwnd, long addr);
 ### 6.41 dm_virtualProtectEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_virtualProtectEx(intptr_t hwnd, long addr, long size, long type, long* old_protect);
 ```
@@ -5261,13 +5510,13 @@ long DM_CALL dm_virtualProtectEx(intptr_t hwnd, long addr, long size, long type,
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 内存地址 |
-| size | long | 是 | 区域大小 |
-| type | long | 是 | 新的保护类型 |
-| old_protect | long* | 输出 | 原来的保护类型 |
+| 参数          | 类型       | 必填 | 说明      |
+| ----------- | -------- | -- | ------- |
+| hwnd        | intptr_t | 是  | 窗口句柄    |
+| addr        | long     | 是  | 内存地址    |
+| size        | long     | 是  | 区域大小    |
+| type        | long     | 是  | 新的保护类型  |
+| old_protect | long*    | 输出 | 原来的保护类型 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5276,6 +5525,7 @@ long DM_CALL dm_virtualProtectEx(intptr_t hwnd, long addr, long size, long type,
 ### 6.42 dm_virtualQueryEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_virtualQueryEx(intptr_t hwnd, long addr, long pmbi);
 ```
@@ -5284,11 +5534,11 @@ const char* DM_CALL dm_virtualQueryEx(intptr_t hwnd, long addr, long pmbi);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| addr | long | 是 | 要查询的内存地址 |
-| pmbi | long | 是 | 查询信息类型 |
+| 参数   | 类型       | 必填 | 说明       |
+| ---- | -------- | -- | -------- |
+| hwnd | intptr_t | 是  | 窗口句柄     |
+| addr | long     | 是  | 要查询的内存地址 |
+| pmbi | long     | 是  | 查询信息类型   |
 
 **返回值**：内存信息字符串。
 
@@ -5297,6 +5547,7 @@ const char* DM_CALL dm_virtualQueryEx(intptr_t hwnd, long addr, long pmbi);
 ### 6.43 dm_freeProcessMemory
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_freeProcessMemory(intptr_t hwnd);
 ```
@@ -5305,9 +5556,9 @@ long DM_CALL dm_freeProcessMemory(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：0=成功。
 
@@ -5316,6 +5567,7 @@ long DM_CALL dm_freeProcessMemory(intptr_t hwnd);
 ### 6.44 dm_getCommandLine
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getCommandLine(intptr_t hwnd);
 ```
@@ -5324,9 +5576,9 @@ const char* DM_CALL dm_getCommandLine(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
+| 参数   | 类型       | 必填 | 说明   |
+| ---- | -------- | -- | ---- |
+| hwnd | intptr_t | 是  | 窗口句柄 |
 
 **返回值**：命令行字符串。
 
@@ -5335,6 +5587,7 @@ const char* DM_CALL dm_getCommandLine(intptr_t hwnd);
 ### 6.45 dm_terminateProcess
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_terminateProcess(long pid);
 ```
@@ -5343,9 +5596,9 @@ long DM_CALL dm_terminateProcess(long pid);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pid | long | 是 | 进程 ID |
+| 参数  | 类型   | 必填 | 说明    |
+| --- | ---- | -- | ----- |
+| pid | long | 是  | 进程 ID |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5354,6 +5607,7 @@ long DM_CALL dm_terminateProcess(long pid);
 ### 6.46 dm_terminateProcessTree
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_terminateProcessTree(long pid);
 ```
@@ -5362,9 +5616,9 @@ long DM_CALL dm_terminateProcessTree(long pid);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pid | long | 是 | 进程 ID |
+| 参数  | 类型   | 必填 | 说明    |
+| --- | ---- | -- | ----- |
+| pid | long | 是  | 进程 ID |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5373,6 +5627,7 @@ long DM_CALL dm_terminateProcessTree(long pid);
 ### 6.47 dm_setMemoryFindResultToFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setMemoryFindResultToFile(long enable);
 ```
@@ -5381,9 +5636,9 @@ long DM_CALL dm_setMemoryFindResultToFile(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=不保存，1=保存到文件 |
+| 参数     | 类型   | 必填 | 说明            |
+| ------ | ---- | -- | ------------- |
+| enable | long | 是  | 0=不保存，1=保存到文件 |
 
 **返回值**：0=成功。
 
@@ -5392,6 +5647,7 @@ long DM_CALL dm_setMemoryFindResultToFile(long enable);
 ### 6.48 dm_setMemoryHwndAsProcessId
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setMemoryHwndAsProcessId(long enable);
 ```
@@ -5400,9 +5656,9 @@ long DM_CALL dm_setMemoryHwndAsProcessId(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=作为窗口句柄，1=作为进程 ID |
+| 参数     | 类型   | 必填 | 说明                 |
+| ------ | ---- | -- | ------------------ |
+| enable | long | 是  | 0=作为窗口句柄，1=作为进程 ID |
 
 **返回值**：0=成功。
 
@@ -5411,6 +5667,7 @@ long DM_CALL dm_setMemoryHwndAsProcessId(long enable);
 ### 6.49 dm_setParam64ToPointer
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setParam64ToPointer(long enable);
 ```
@@ -5419,9 +5676,9 @@ long DM_CALL dm_setParam64ToPointer(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=普通参数，1=指针参数 |
+| 参数     | 类型   | 必填 | 说明            |
+| ------ | ---- | -- | ------------- |
+| enable | long | 是  | 0=普通参数，1=指针参数 |
 
 **返回值**：0=成功。
 
@@ -5430,6 +5687,7 @@ long DM_CALL dm_setParam64ToPointer(long enable);
 ### 6.50 dm_int64ToInt32
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_int64ToInt32(long v_high, long v_low, long flag);
 ```
@@ -5438,11 +5696,11 @@ const char* DM_CALL dm_int64ToInt32(long v_high, long v_low, long flag);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| v_high | long | 是 | 64 位值的高 32 位 |
-| v_low | long | 是 | 64 位值的低 32 位 |
-| flag | long | 是 | 转换标志 |
+| 参数     | 类型   | 必填 | 说明           |
+| ------ | ---- | -- | ------------ |
+| v_high | long | 是  | 64 位值的高 32 位 |
+| v_low  | long | 是  | 64 位值的低 32 位 |
+| flag   | long | 是  | 转换标志         |
 
 **返回值**：转换后的地址字符串。
 
@@ -5451,6 +5709,7 @@ const char* DM_CALL dm_int64ToInt32(long v_high, long v_low, long flag);
 ### 6.51 dm_intToData
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_intToData(long v, long type);
 ```
@@ -5459,10 +5718,10 @@ const char* DM_CALL dm_intToData(long v, long type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| v | long | 是 | 整数值 |
-| type | long | 是 | 数据类型：0=字节，1=字，2=整数 |
+| 参数   | 类型   | 必填 | 说明                 |
+| ---- | ---- | -- | ------------------ |
+| v    | long | 是  | 整数值                |
+| type | long | 是  | 数据类型：0=字节，1=字，2=整数 |
 
 **返回值**：十六进制数据字符串。
 
@@ -5471,6 +5730,7 @@ const char* DM_CALL dm_intToData(long v, long type);
 ### 6.52 dm_floatToData
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_floatToData(float v);
 ```
@@ -5479,9 +5739,9 @@ const char* DM_CALL dm_floatToData(float v);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| v | float | 是 | 浮点数值 |
+| 参数 | 类型    | 必填 | 说明   |
+| -- | ----- | -- | ---- |
+| v  | float | 是  | 浮点数值 |
 
 **返回值**：十六进制数据字符串。
 
@@ -5490,6 +5750,7 @@ const char* DM_CALL dm_floatToData(float v);
 ### 6.53 dm_doubleToData
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_doubleToData(double v);
 ```
@@ -5498,9 +5759,9 @@ const char* DM_CALL dm_doubleToData(double v);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| v | double | 是 | 双精度浮点数值 |
+| 参数 | 类型     | 必填 | 说明      |
+| -- | ------ | -- | ------- |
+| v  | double | 是  | 双精度浮点数值 |
 
 **返回值**：十六进制数据字符串。
 
@@ -5509,6 +5770,7 @@ const char* DM_CALL dm_doubleToData(double v);
 ### 6.54 dm_stringToData
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_stringToData(const char* v, long type);
 ```
@@ -5517,10 +5779,10 @@ const char* DM_CALL dm_stringToData(const char* v, long type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| v | const char* | 是 | 字符串内容 |
-| type | long | 是 | 0=ASCII，1=Unicode |
+| 参数   | 类型          | 必填 | 说明                |
+| ---- | ----------- | -- | ----------------- |
+| v    | const char* | 是  | 字符串内容             |
+| type | long        | 是  | 0=ASCII，1=Unicode |
 
 **返回值**：十六进制数据字符串。
 
@@ -5535,6 +5797,7 @@ const char* DM_CALL dm_stringToData(const char* v, long type);
 ### 7.1 dm_writeFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeFile(const char* file, const char* content);
 ```
@@ -5543,10 +5806,10 @@ long DM_CALL dm_writeFile(const char* file, const char* content);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 文件路径 |
-| content | const char* | 是 | 要写入的文本内容 |
+| 参数      | 类型          | 必填 | 说明       |
+| ------- | ----------- | -- | -------- |
+| file    | const char* | 是  | 文件路径     |
+| content | const char* | 是  | 要写入的文本内容 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5562,6 +5825,7 @@ dm.write_file("log.txt", "操作日志：开始执行任务")
 ### 7.2 dm_readFile
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_readFile(const char* file);
 ```
@@ -5570,9 +5834,9 @@ const char* DM_CALL dm_readFile(const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 文件路径 |
+| 参数   | 类型          | 必填 | 说明   |
+| ---- | ----------- | -- | ---- |
+| file | const char* | 是  | 文件路径 |
 
 **返回值**：文件内容字符串，失败返回空字符串。
 
@@ -5581,6 +5845,7 @@ const char* DM_CALL dm_readFile(const char* file);
 ### 7.3 dm_deleteFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_deleteFile(const char* file);
 ```
@@ -5589,9 +5854,9 @@ long DM_CALL dm_deleteFile(const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 文件路径 |
+| 参数   | 类型          | 必填 | 说明   |
+| ---- | ----------- | -- | ---- |
+| file | const char* | 是  | 文件路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5600,6 +5865,7 @@ long DM_CALL dm_deleteFile(const char* file);
 ### 7.4 dm_copyFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_copyFile(const char* src, const char* dest, long over);
 ```
@@ -5608,11 +5874,11 @@ long DM_CALL dm_copyFile(const char* src, const char* dest, long over);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| src | const char* | 是 | 源文件路径 |
-| dest | const char* | 是 | 目标文件路径 |
-| over | long | 是 | 0=目标存在时询问，1=覆盖 |
+| 参数   | 类型          | 必填 | 说明             |
+| ---- | ----------- | -- | -------------- |
+| src  | const char* | 是  | 源文件路径          |
+| dest | const char* | 是  | 目标文件路径         |
+| over | long        | 是  | 0=目标存在时询问，1=覆盖 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5621,6 +5887,7 @@ long DM_CALL dm_copyFile(const char* src, const char* dest, long over);
 ### 7.5 dm_moveFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_moveFile(const char* src, const char* dest);
 ```
@@ -5629,10 +5896,10 @@ long DM_CALL dm_moveFile(const char* src, const char* dest);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| src | const char* | 是 | 源文件路径 |
-| dest | const char* | 是 | 目标文件路径 |
+| 参数   | 类型          | 必填 | 说明     |
+| ---- | ----------- | -- | ------ |
+| src  | const char* | 是  | 源文件路径  |
+| dest | const char* | 是  | 目标文件路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5641,6 +5908,7 @@ long DM_CALL dm_moveFile(const char* src, const char* dest);
 ### 7.6 dm_createFolder
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_createFolder(const char* folder);
 ```
@@ -5649,9 +5917,9 @@ long DM_CALL dm_createFolder(const char* folder);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| folder | const char* | 是 | 文件夹路径 |
+| 参数     | 类型          | 必填 | 说明    |
+| ------ | ----------- | -- | ----- |
+| folder | const char* | 是  | 文件夹路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5660,6 +5928,7 @@ long DM_CALL dm_createFolder(const char* folder);
 ### 7.7 dm_deleteFolder
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_deleteFolder(const char* folder);
 ```
@@ -5668,9 +5937,9 @@ long DM_CALL dm_deleteFolder(const char* folder);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| folder | const char* | 是 | 文件夹路径 |
+| 参数     | 类型          | 必填 | 说明    |
+| ------ | ----------- | -- | ----- |
+| folder | const char* | 是  | 文件夹路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5679,6 +5948,7 @@ long DM_CALL dm_deleteFolder(const char* folder);
 ### 7.8 dm_isFileExist
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_isFileExist(const char* file);
 ```
@@ -5687,9 +5957,9 @@ long DM_CALL dm_isFileExist(const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 文件路径 |
+| 参数   | 类型          | 必填 | 说明   |
+| ---- | ----------- | -- | ---- |
+| file | const char* | 是  | 文件路径 |
 
 **返回值**：0=不存在，1=存在。
 
@@ -5698,6 +5968,7 @@ long DM_CALL dm_isFileExist(const char* file);
 ### 7.9 dm_isFolderExist
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_isFolderExist(const char* folder);
 ```
@@ -5706,9 +5977,9 @@ long DM_CALL dm_isFolderExist(const char* folder);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| folder | const char* | 是 | 文件夹路径 |
+| 参数     | 类型          | 必填 | 说明    |
+| ------ | ----------- | -- | ----- |
+| folder | const char* | 是  | 文件夹路径 |
 
 **返回值**：0=不存在，1=存在。
 
@@ -5717,6 +5988,7 @@ long DM_CALL dm_isFolderExist(const char* folder);
 ### 7.10 dm_getFileLength
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getFileLength(const char* file);
 ```
@@ -5725,9 +5997,9 @@ long DM_CALL dm_getFileLength(const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 文件路径 |
+| 参数   | 类型          | 必填 | 说明   |
+| ---- | ----------- | -- | ---- |
+| file | const char* | 是  | 文件路径 |
 
 **返回值**：文件大小（字节），-1=文件不存在。
 
@@ -5736,6 +6008,7 @@ long DM_CALL dm_getFileLength(const char* file);
 ### 7.11 dm_getRealPath
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getRealPath(const char* path);
 ```
@@ -5744,9 +6017,9 @@ const char* DM_CALL dm_getRealPath(const char* path);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| path | const char* | 是 | 相对路径 |
+| 参数   | 类型          | 必填 | 说明   |
+| ---- | ----------- | -- | ---- |
+| path | const char* | 是  | 相对路径 |
 
 **返回值**：绝对路径字符串。
 
@@ -5755,6 +6028,7 @@ const char* DM_CALL dm_getRealPath(const char* path);
 ### 7.12 dm_selectFile
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_selectFile();
 ```
@@ -5770,6 +6044,7 @@ const char* DM_CALL dm_selectFile();
 ### 7.13 dm_selectDirectory
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_selectDirectory();
 ```
@@ -5785,6 +6060,7 @@ const char* DM_CALL dm_selectDirectory();
 ### 7.14 dm_downloadFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_downloadFile(const char* url, const char* save_file, long timeout);
 ```
@@ -5793,11 +6069,11 @@ long DM_CALL dm_downloadFile(const char* url, const char* save_file, long timeou
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| url | const char* | 是 | 文件下载 URL |
-| save_file | const char* | 是 | 本地保存路径 |
-| timeout | long | 是 | 超时时间（毫秒） |
+| 参数        | 类型          | 必填 | 说明       |
+| --------- | ----------- | -- | -------- |
+| url       | const char* | 是  | 文件下载 URL |
+| save_file | const char* | 是  | 本地保存路径   |
+| timeout   | long        | 是  | 超时时间（毫秒） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5815,6 +6091,7 @@ if ret == 0:
 ### 7.15 dm_encodeFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_encodeFile(const char* file, const char* pwd);
 ```
@@ -5823,10 +6100,10 @@ long DM_CALL dm_encodeFile(const char* file, const char* pwd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 文件路径 |
-| pwd | const char* | 是 | 加密密码 |
+| 参数   | 类型          | 必填 | 说明   |
+| ---- | ----------- | -- | ---- |
+| file | const char* | 是  | 文件路径 |
+| pwd  | const char* | 是  | 加密密码 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5835,6 +6112,7 @@ long DM_CALL dm_encodeFile(const char* file, const char* pwd);
 ### 7.16 dm_decodeFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_decodeFile(const char* file, const char* pwd);
 ```
@@ -5843,10 +6121,10 @@ long DM_CALL dm_decodeFile(const char* file, const char* pwd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 文件路径 |
-| pwd | const char* | 是 | 解密密码（需与加密时一致） |
+| 参数   | 类型          | 必填 | 说明            |
+| ---- | ----------- | -- | ------------- |
+| file | const char* | 是  | 文件路径          |
+| pwd  | const char* | 是  | 解密密码（需与加密时一致） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5855,6 +6133,7 @@ long DM_CALL dm_decodeFile(const char* file, const char* pwd);
 ### 7.17 dm_writeIni
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeIni(const char* section, const char* key, const char* value, const char* file);
 ```
@@ -5863,12 +6142,12 @@ long DM_CALL dm_writeIni(const char* section, const char* key, const char* value
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| section | const char* | 是 | 节名称（如 `"[config]"` -> `"config"`） |
-| key | const char* | 是 | 键名 |
-| value | const char* | 是 | 值 |
-| file | const char* | 是 | INI 文件路径 |
+| 参数      | 类型          | 必填 | 说明                                |
+| ------- | ----------- | -- | --------------------------------- |
+| section | const char* | 是  | 节名称（如 `"[config]"` -> `"config"`） |
+| key     | const char* | 是  | 键名                                |
+| value   | const char* | 是  | 值                                 |
+| file    | const char* | 是  | INI 文件路径                          |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5885,6 +6164,7 @@ dm.write_ini("config", "volume", "80", "settings.ini")
 ### 7.18 dm_readIni
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_readIni(const char* section, const char* key, const char* file);
 ```
@@ -5893,11 +6173,11 @@ const char* DM_CALL dm_readIni(const char* section, const char* key, const char*
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| section | const char* | 是 | 节名称 |
-| key | const char* | 是 | 键名 |
-| file | const char* | 是 | INI 文件路径 |
+| 参数      | 类型          | 必填 | 说明       |
+| ------- | ----------- | -- | -------- |
+| section | const char* | 是  | 节名称      |
+| key     | const char* | 是  | 键名       |
+| file    | const char* | 是  | INI 文件路径 |
 
 **返回值**：键对应的值字符串，键不存在时返回空字符串。
 
@@ -5914,6 +6194,7 @@ print(f"用户名: {username}")
 ### 7.19 dm_deleteIni
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_deleteIni(const char* section, const char* key, const char* file);
 ```
@@ -5922,11 +6203,11 @@ long DM_CALL dm_deleteIni(const char* section, const char* key, const char* file
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| section | const char* | 是 | 节名称 |
-| key | const char* | 是 | 键名（传空字符串表示删除整个节） |
-| file | const char* | 是 | INI 文件路径 |
+| 参数      | 类型          | 必填 | 说明               |
+| ------- | ----------- | -- | ---------------- |
+| section | const char* | 是  | 节名称              |
+| key     | const char* | 是  | 键名（传空字符串表示删除整个节） |
+| file    | const char* | 是  | INI 文件路径         |
 
 **返回值**：0=成功，非0=失败。
 
@@ -5935,6 +6216,7 @@ long DM_CALL dm_deleteIni(const char* section, const char* key, const char* file
 ### 7.20 dm_enumIniKey
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_enumIniKey(const char* section, const char* file);
 ```
@@ -5943,10 +6225,10 @@ const char* DM_CALL dm_enumIniKey(const char* section, const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| section | const char* | 是 | 节名称 |
-| file | const char* | 是 | INI 文件路径 |
+| 参数      | 类型          | 必填 | 说明       |
+| ------- | ----------- | -- | -------- |
+| section | const char* | 是  | 节名称      |
+| file    | const char* | 是  | INI 文件路径 |
 
 **返回值**：键名列表，以 `"|"` 分隔。
 
@@ -5955,6 +6237,7 @@ const char* DM_CALL dm_enumIniKey(const char* section, const char* file);
 ### 7.21 dm_enumIniSection
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_enumIniSection(const char* file);
 ```
@@ -5963,9 +6246,9 @@ const char* DM_CALL dm_enumIniSection(const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | INI 文件路径 |
+| 参数   | 类型          | 必填 | 说明       |
+| ---- | ----------- | -- | -------- |
+| file | const char* | 是  | INI 文件路径 |
 
 **返回值**：节名称列表，以 `"|"` 分隔。
 
@@ -5974,6 +6257,7 @@ const char* DM_CALL dm_enumIniSection(const char* file);
 ### 7.22 dm_writeIniPwd
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_writeIniPwd(const char* section, const char* key, const char* value, const char* file, const char* pwd);
 ```
@@ -5989,6 +6273,7 @@ long DM_CALL dm_writeIniPwd(const char* section, const char* key, const char* va
 ### 7.23 dm_readIniPwd
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_readIniPwd(const char* section, const char* key, const char* file, const char* pwd);
 ```
@@ -6004,6 +6289,7 @@ const char* DM_CALL dm_readIniPwd(const char* section, const char* key, const ch
 ### 7.24 dm_deleteIniPwd
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_deleteIniPwd(const char* section, const char* key, const char* file, const char* pwd);
 ```
@@ -6019,6 +6305,7 @@ long DM_CALL dm_deleteIniPwd(const char* section, const char* key, const char* f
 ### 7.25 dm_enumIniKeyPwd
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_enumIniKeyPwd(const char* section, const char* file, const char* pwd);
 ```
@@ -6034,6 +6321,7 @@ const char* DM_CALL dm_enumIniKeyPwd(const char* section, const char* file, cons
 ### 7.26 dm_enumIniSectionPwd
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_enumIniSectionPwd(const char* file, const char* pwd);
 ```
@@ -6055,6 +6343,7 @@ const char* DM_CALL dm_enumIniSectionPwd(const char* file, const char* pwd);
 ### 8.1 dm_setDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setDict(long index, const char* file);
 ```
@@ -6063,10 +6352,10 @@ long DM_CALL dm_setDict(long index, const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 字库索引（0-255） |
-| file | const char* | 是 | 字库文件路径 |
+| 参数    | 类型          | 必填 | 说明          |
+| ----- | ----------- | -- | ----------- |
+| index | long        | 是  | 字库索引（0-255） |
+| file  | const char* | 是  | 字库文件路径      |
 
 **返回值**：0=成功，非0=失败。
 
@@ -6083,6 +6372,7 @@ dm.set_dict(1, "font_dict.txt")  # 加载字库到索引1
 ### 8.2 dm_setDictMem
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setDictMem(long index, const char* data, long size);
 ```
@@ -6091,11 +6381,11 @@ long DM_CALL dm_setDictMem(long index, const char* data, long size);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 字库索引 |
-| data | const char* | 是 | 字库数据内存地址 |
-| size | long | 是 | 数据大小 |
+| 参数    | 类型          | 必填 | 说明       |
+| ----- | ----------- | -- | -------- |
+| index | long        | 是  | 字库索引     |
+| data  | const char* | 是  | 字库数据内存地址 |
+| size  | long        | 是  | 数据大小     |
 
 **返回值**：0=成功，非0=失败。
 
@@ -6104,6 +6394,7 @@ long DM_CALL dm_setDictMem(long index, const char* data, long size);
 ### 8.3 dm_setDictPwd
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setDictPwd(const char* pwd);
 ```
@@ -6112,9 +6403,9 @@ long DM_CALL dm_setDictPwd(const char* pwd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pwd | const char* | 是 | 密码字符串 |
+| 参数  | 类型          | 必填 | 说明    |
+| --- | ----------- | -- | ----- |
+| pwd | const char* | 是  | 密码字符串 |
 
 **返回值**：0=成功。
 
@@ -6123,6 +6414,7 @@ long DM_CALL dm_setDictPwd(const char* pwd);
 ### 8.4 dm_useDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_useDict(long index);
 ```
@@ -6131,9 +6423,9 @@ long DM_CALL dm_useDict(long index);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 字库索引 |
+| 参数    | 类型   | 必填 | 说明   |
+| ----- | ---- | -- | ---- |
+| index | long | 是  | 字库索引 |
 
 **返回值**：0=成功。
 
@@ -6142,6 +6434,7 @@ long DM_CALL dm_useDict(long index);
 ### 8.5 dm_getDict
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getDict(long index, long font_index);
 ```
@@ -6150,10 +6443,10 @@ const char* DM_CALL dm_getDict(long index, long font_index);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 字库索引 |
-| font_index | long | 是 | 字体索引（0=所有字体） |
+| 参数         | 类型   | 必填 | 说明           |
+| ---------- | ---- | -- | ------------ |
+| index      | long | 是  | 字库索引         |
+| font_index | long | 是  | 字体索引（0=所有字体） |
 
 **返回值**：字库信息字符串。
 
@@ -6162,6 +6455,7 @@ const char* DM_CALL dm_getDict(long index, long font_index);
 ### 8.6 dm_getDictCount
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getDictCount(long index);
 ```
@@ -6170,9 +6464,9 @@ long DM_CALL dm_getDictCount(long index);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 字库索引 |
+| 参数    | 类型   | 必填 | 说明   |
+| ----- | ---- | -- | ---- |
+| index | long | 是  | 字库索引 |
 
 **返回值**：字体数量。
 
@@ -6181,6 +6475,7 @@ long DM_CALL dm_getDictCount(long index);
 ### 8.7 dm_getDictInfo
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getDictInfo(const char* file, long index);
 ```
@@ -6189,10 +6484,10 @@ const char* DM_CALL dm_getDictInfo(const char* file, long index);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 字库文件路径 |
-| index | long | 是 | 字体索引 |
+| 参数    | 类型          | 必填 | 说明     |
+| ----- | ----------- | -- | ------ |
+| file  | const char* | 是  | 字库文件路径 |
+| index | long        | 是  | 字体索引   |
 
 **返回值**：字库信息字符串。
 
@@ -6201,6 +6496,7 @@ const char* DM_CALL dm_getDictInfo(const char* file, long index);
 ### 8.8 dm_getNowDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getNowDict();
 ```
@@ -6216,6 +6512,7 @@ long DM_CALL dm_getNowDict();
 ### 8.9 dm_addDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_addDict(const char* dict_info);
 ```
@@ -6224,9 +6521,9 @@ long DM_CALL dm_addDict(const char* dict_info);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| dict_info | const char* | 是 | 字体信息字符串 |
+| 参数        | 类型          | 必填 | 说明      |
+| --------- | ----------- | -- | ------- |
+| dict_info | const char* | 是  | 字体信息字符串 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -6235,6 +6532,7 @@ long DM_CALL dm_addDict(const char* dict_info);
 ### 8.10 dm_saveDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_saveDict(long index, const char* file);
 ```
@@ -6243,10 +6541,10 @@ long DM_CALL dm_saveDict(long index, const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 字库索引 |
-| file | const char* | 是 | 保存路径 |
+| 参数    | 类型          | 必填 | 说明   |
+| ----- | ----------- | -- | ---- |
+| index | long        | 是  | 字库索引 |
+| file  | const char* | 是  | 保存路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -6255,6 +6553,7 @@ long DM_CALL dm_saveDict(long index, const char* file);
 ### 8.11 dm_clearDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_clearDict(long index);
 ```
@@ -6263,9 +6562,9 @@ long DM_CALL dm_clearDict(long index);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 字库索引 |
+| 参数    | 类型   | 必填 | 说明   |
+| ----- | ---- | -- | ---- |
+| index | long | 是  | 字库索引 |
 
 **返回值**：0=成功。
 
@@ -6274,6 +6573,7 @@ long DM_CALL dm_clearDict(long index);
 ### 8.12 dm_enableShareDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableShareDict(long enable);
 ```
@@ -6282,9 +6582,9 @@ long DM_CALL dm_enableShareDict(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -6293,6 +6593,7 @@ long DM_CALL dm_enableShareDict(long enable);
 ### 8.13 dm_ocr
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_ocr(long x1, long y1, long x2, long y2, const char* color_format, long sim);
 ```
@@ -6301,14 +6602,14 @@ const char* DM_CALL dm_ocr(long x1, long y1, long x2, long y2, const char* color
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1 | long | 是 | 识别区域左上角 X |
-| y1 | long | 是 | 识别区域左上角 Y |
-| x2 | long | 是 | 识别区域右下角 X |
-| y2 | long | 是 | 识别区域右下角 Y |
-| color_format | const char* | 是 | 颜色格式，如 `"000000-000000"`，表示文字颜色-偏色 |
-| sim | long | 是 | 相似度（0.0-1.0） |
+| 参数           | 类型          | 必填 | 说明                                 |
+| ------------ | ----------- | -- | ---------------------------------- |
+| x1           | long        | 是  | 识别区域左上角 X                          |
+| y1           | long        | 是  | 识别区域左上角 Y                          |
+| x2           | long        | 是  | 识别区域右下角 X                          |
+| y2           | long        | 是  | 识别区域右下角 Y                          |
+| color_format | const char* | 是  | 颜色格式，如 `"000000-000000"`，表示文字颜色-偏色 |
+| sim          | long        | 是  | 相似度（0.0-1.0）                       |
 
 **返回值**：识别到的文本内容字符串。
 
@@ -6333,6 +6634,7 @@ text = dm.ocr(100, 100, 500, 200, "FFFFFF-101010", 0.8)
 ### 8.14 dm_ocrEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_ocrEx(long x1, long y1, long x2, long y2, const char* color_format, long sim);
 ```
@@ -6348,6 +6650,7 @@ const char* DM_CALL dm_ocrEx(long x1, long y1, long x2, long y2, const char* col
 ### 8.15 dm_ocrExOne
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_ocrExOne(long x1, long y1, long x2, long y2, const char* color_format, long sim);
 ```
@@ -6363,6 +6666,7 @@ const char* DM_CALL dm_ocrExOne(long x1, long y1, long x2, long y2, const char* 
 ### 8.16 dm_ocrInFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_ocrInFile(long x1, long y1, long x2, long y2, const char* color_format, long sim, const char* file);
 ```
@@ -6378,6 +6682,7 @@ long DM_CALL dm_ocrInFile(long x1, long y1, long x2, long y2, const char* color_
 ### 8.17 dm_findStr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findStr(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
@@ -6386,14 +6691,14 @@ long DM_CALL dm_findStr(long x1, long y1, long x2, long y2, const char* str, con
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 查找区域 |
-| str | const char* | 是 | 要查找的文字内容 |
-| color_format | const char* | 是 | 颜色格式 |
-| sim | long | 是 | 相似度 |
-| intX | long* | 输出 | 找到的 X 坐标 |
-| intY | long* | 输出 | 找到的 Y 坐标 |
+| 参数           | 类型          | 必填 | 说明       |
+| ------------ | ----------- | -- | -------- |
+| x1-y2        | long        | 是  | 查找区域     |
+| str          | const char* | 是  | 要查找的文字内容 |
+| color_format | const char* | 是  | 颜色格式     |
+| sim          | long        | 是  | 相似度      |
+| intX         | long*       | 输出 | 找到的 X 坐标 |
+| intY         | long*       | 输出 | 找到的 Y 坐标 |
 
 **返回值**：0=找到，1=未找到。
 
@@ -6414,6 +6719,7 @@ if ret == 0:
 ### 8.18 dm_findStrE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
@@ -6429,6 +6735,7 @@ const char* DM_CALL dm_findStrE(long x1, long y1, long x2, long y2, const char* 
 ### 8.19 dm_findStrEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
@@ -6444,6 +6751,7 @@ const char* DM_CALL dm_findStrEx(long x1, long y1, long x2, long y2, const char*
 ### 8.20 dm_findStrS
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findStrS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
@@ -6459,6 +6767,7 @@ long DM_CALL dm_findStrS(long x1, long y1, long x2, long y2, const char* str, co
 ### 8.21 dm_findStrExS
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
@@ -6474,6 +6783,7 @@ const char* DM_CALL dm_findStrExS(long x1, long y1, long x2, long y2, const char
 ### 8.22 dm_findStrFast
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findStrFast(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
@@ -6489,6 +6799,7 @@ long DM_CALL dm_findStrFast(long x1, long y1, long x2, long y2, const char* str,
 ### 8.23 dm_findStrFastE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrFastE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
@@ -6504,6 +6815,7 @@ const char* DM_CALL dm_findStrFastE(long x1, long y1, long x2, long y2, const ch
 ### 8.24 dm_findStrFastEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrFastEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
@@ -6519,6 +6831,7 @@ const char* DM_CALL dm_findStrFastEx(long x1, long y1, long x2, long y2, const c
 ### 8.25 dm_findStrFastS
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findStrFastS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, long* intX, long* intY);
 ```
@@ -6534,6 +6847,7 @@ long DM_CALL dm_findStrFastS(long x1, long y1, long x2, long y2, const char* str
 ### 8.26 dm_findStrFastExS
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrFastExS(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim);
 ```
@@ -6549,6 +6863,7 @@ const char* DM_CALL dm_findStrFastExS(long x1, long y1, long x2, long y2, const 
 ### 8.27 dm_findStrWithFont
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findStrWithFont(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size, long* intX, long* intY);
 ```
@@ -6557,16 +6872,16 @@ long DM_CALL dm_findStrWithFont(long x1, long y1, long x2, long y2, const char* 
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 查找区域 |
-| str | const char* | 是 | 要查找的文字 |
-| color_format | const char* | 是 | 颜色格式 |
-| sim | long | 是 | 相似度 |
-| font_name | const char* | 是 | 字体名称，如 `"Arial"`、`"宋体"` |
-| font_flag | long | 是 | 字体标志：0=普通，1=粗体，2=斜体 |
-| font_size | long | 是 | 字体大小（像素或磅值） |
-| intX/intY | long* | 输出 | 坐标 |
+| 参数           | 类型          | 必填 | 说明                      |
+| ------------ | ----------- | -- | ----------------------- |
+| x1-y2        | long        | 是  | 查找区域                    |
+| str          | const char* | 是  | 要查找的文字                  |
+| color_format | const char* | 是  | 颜色格式                    |
+| sim          | long        | 是  | 相似度                     |
+| font_name    | const char* | 是  | 字体名称，如 `"Arial"`、`"宋体"` |
+| font_flag    | long        | 是  | 字体标志：0=普通，1=粗体，2=斜体     |
+| font_size    | long        | 是  | 字体大小（像素或磅值）             |
+| intX/intY    | long*       | 输出 | 坐标                      |
 
 **返回值**：0=找到，1=未找到。
 
@@ -6575,6 +6890,7 @@ long DM_CALL dm_findStrWithFont(long x1, long y1, long x2, long y2, const char* 
 ### 8.28 dm_findStrWithFontE
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrWithFontE(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size);
 ```
@@ -6590,6 +6906,7 @@ const char* DM_CALL dm_findStrWithFontE(long x1, long y1, long x2, long y2, cons
 ### 8.29 dm_findStrWithFontEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findStrWithFontEx(long x1, long y1, long x2, long y2, const char* str, const char* color_format, long sim, const char* font_name, long font_flag, long font_size);
 ```
@@ -6605,6 +6922,7 @@ const char* DM_CALL dm_findStrWithFontEx(long x1, long y1, long x2, long y2, con
 ### 8.30 dm_getWords
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getWords(long x1, long y1, long x2, long y2, const char* color, const char* words);
 ```
@@ -6613,11 +6931,11 @@ const char* DM_CALL dm_getWords(long x1, long y1, long x2, long y2, const char* 
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 区域坐标 |
-| color | const char* | 是 | 颜色描述 |
-| words | const char* | 是 | 已知的文字内容（用于辅助提取） |
+| 参数    | 类型          | 必填 | 说明              |
+| ----- | ----------- | -- | --------------- |
+| x1-y2 | long        | 是  | 区域坐标            |
+| color | const char* | 是  | 颜色描述            |
+| words | const char* | 是  | 已知的文字内容（用于辅助提取） |
 
 **返回值**：提取的文字信息字符串。
 
@@ -6626,6 +6944,7 @@ const char* DM_CALL dm_getWords(long x1, long y1, long x2, long y2, const char* 
 ### 8.31 dm_getWordsNoDict
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getWordsNoDict(long x1, long y1, long x2, long y2, const char* color);
 ```
@@ -6634,10 +6953,10 @@ const char* DM_CALL dm_getWordsNoDict(long x1, long y1, long x2, long y2, const 
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 区域坐标 |
-| color | const char* | 是 | 颜色描述 |
+| 参数    | 类型          | 必填 | 说明   |
+| ----- | ----------- | -- | ---- |
+| x1-y2 | long        | 是  | 区域坐标 |
+| color | const char* | 是  | 颜色描述 |
 
 **返回值**：提取的文字信息字符串。
 
@@ -6646,6 +6965,7 @@ const char* DM_CALL dm_getWordsNoDict(long x1, long y1, long x2, long y2, const 
 ### 8.32 dm_fetchWord
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_fetchWord(long x1, long y1, long x2, long y2, const char* color, const char* words);
 ```
@@ -6654,11 +6974,11 @@ long DM_CALL dm_fetchWord(long x1, long y1, long x2, long y2, const char* color,
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 区域坐标 |
-| color | const char* | 是 | 颜色描述 |
-| words | const char* | 是 | 对应的文字内容 |
+| 参数    | 类型          | 必填 | 说明      |
+| ----- | ----------- | -- | ------- |
+| x1-y2 | long        | 是  | 区域坐标    |
+| color | const char* | 是  | 颜色描述    |
+| words | const char* | 是  | 对应的文字内容 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -6667,6 +6987,7 @@ long DM_CALL dm_fetchWord(long x1, long y1, long x2, long y2, const char* color,
 ### 8.33 dm_getResultCount
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getResultCount(const char* ret);
 ```
@@ -6675,9 +6996,9 @@ long DM_CALL dm_getResultCount(const char* ret);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| ret | const char* | 是 | 查找结果字符串（如 `findStrEx` 的返回值） |
+| 参数  | 类型          | 必填 | 说明                          |
+| --- | ----------- | -- | --------------------------- |
+| ret | const char* | 是  | 查找结果字符串（如 `findStrEx` 的返回值） |
 
 **返回值**：匹配数量。
 
@@ -6695,6 +7016,7 @@ print(f"找到 {count} 个'确定'")
 ### 8.34 dm_getResultPos
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getResultPos(const char* ret, long index, long* intX, long* intY);
 ```
@@ -6703,12 +7025,12 @@ long DM_CALL dm_getResultPos(const char* ret, long index, long* intX, long* intY
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| ret | const char* | 是 | 查找结果字符串 |
-| index | long | 是 | 索引（从0开始） |
-| intX | long* | 输出 | X 坐标 |
-| intY | long* | 输出 | Y 坐标 |
+| 参数    | 类型          | 必填 | 说明       |
+| ----- | ----------- | -- | -------- |
+| ret   | const char* | 是  | 查找结果字符串  |
+| index | long        | 是  | 索引（从0开始） |
+| intX  | long*       | 输出 | X 坐标     |
+| intY  | long*       | 输出 | Y 坐标     |
 
 **返回值**：0=成功，1=索引无效。
 
@@ -6717,6 +7039,7 @@ long DM_CALL dm_getResultPos(const char* ret, long index, long* intX, long* intY
 ### 8.35 dm_getWordResultCount
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getWordResultCount(const char* str);
 ```
@@ -6725,9 +7048,9 @@ long DM_CALL dm_getWordResultCount(const char* str);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| str | const char* | 是 | OCR 识别结果字符串 |
+| 参数  | 类型          | 必填 | 说明          |
+| --- | ----------- | -- | ----------- |
+| str | const char* | 是  | OCR 识别结果字符串 |
 
 **返回值**：字符数量。
 
@@ -6736,6 +7059,7 @@ long DM_CALL dm_getWordResultCount(const char* str);
 ### 8.36 dm_getWordResultPos
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getWordResultPos(const char* str, long index, long* intX, long* intY);
 ```
@@ -6744,11 +7068,11 @@ long DM_CALL dm_getWordResultPos(const char* str, long index, long* intX, long* 
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| str | const char* | 是 | OCR 结果字符串 |
-| index | long | 是 | 字符索引 |
-| intX/intY | long* | 输出 | 坐标 |
+| 参数        | 类型          | 必填 | 说明        |
+| --------- | ----------- | -- | --------- |
+| str       | const char* | 是  | OCR 结果字符串 |
+| index     | long        | 是  | 字符索引      |
+| intX/intY | long*       | 输出 | 坐标        |
 
 **返回值**：0=成功。
 
@@ -6757,6 +7081,7 @@ long DM_CALL dm_getWordResultPos(const char* str, long index, long* intX, long* 
 ### 8.37 dm_getWordResultStr
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getWordResultStr(const char* str, long index);
 ```
@@ -6765,10 +7090,10 @@ const char* DM_CALL dm_getWordResultStr(const char* str, long index);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| str | const char* | 是 | OCR 结果字符串 |
-| index | long | 是 | 字符索引 |
+| 参数    | 类型          | 必填 | 说明        |
+| ----- | ----------- | -- | --------- |
+| str   | const char* | 是  | OCR 结果字符串 |
+| index | long        | 是  | 字符索引      |
 
 **返回值**：指定索引处的字符识别结果。
 
@@ -6777,6 +7102,7 @@ const char* DM_CALL dm_getWordResultStr(const char* str, long index);
 ### 8.38 dm_setColGapNoDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setColGapNoDict(long col_gap);
 ```
@@ -6785,9 +7111,9 @@ long DM_CALL dm_setColGapNoDict(long col_gap);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| col_gap | long | 是 | 列间距（像素） |
+| 参数      | 类型   | 必填 | 说明      |
+| ------- | ---- | -- | ------- |
+| col_gap | long | 是  | 列间距（像素） |
 
 **返回值**：0=成功。
 
@@ -6796,6 +7122,7 @@ long DM_CALL dm_setColGapNoDict(long col_gap);
 ### 8.39 dm_setRowGapNoDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setRowGapNoDict(long row_gap);
 ```
@@ -6804,9 +7131,9 @@ long DM_CALL dm_setRowGapNoDict(long row_gap);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| row_gap | long | 是 | 行间距（像素） |
+| 参数      | 类型   | 必填 | 说明      |
+| ------- | ---- | -- | ------- |
+| row_gap | long | 是  | 行间距（像素） |
 
 **返回值**：0=成功。
 
@@ -6815,6 +7142,7 @@ long DM_CALL dm_setRowGapNoDict(long row_gap);
 ### 8.40 dm_setWordGapNoDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWordGapNoDict(long word_gap);
 ```
@@ -6823,9 +7151,9 @@ long DM_CALL dm_setWordGapNoDict(long word_gap);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| word_gap | long | 是 | 字间距（像素） |
+| 参数       | 类型   | 必填 | 说明      |
+| -------- | ---- | -- | ------- |
+| word_gap | long | 是  | 字间距（像素） |
 
 **返回值**：0=成功。
 
@@ -6834,6 +7162,7 @@ long DM_CALL dm_setWordGapNoDict(long word_gap);
 ### 8.41 dm_setWordLineHeightNoDict
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWordLineHeightNoDict(long line_height);
 ```
@@ -6842,9 +7171,9 @@ long DM_CALL dm_setWordLineHeightNoDict(long line_height);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| line_height | long | 是 | 行高（像素） |
+| 参数          | 类型   | 必填 | 说明     |
+| ----------- | ---- | -- | ------ |
+| line_height | long | 是  | 行高（像素） |
 
 **返回值**：0=成功。
 
@@ -6853,6 +7182,7 @@ long DM_CALL dm_setWordLineHeightNoDict(long line_height);
 ### 8.42 dm_setExactOcr
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setExactOcr(long exact_ocr);
 ```
@@ -6861,9 +7191,9 @@ long DM_CALL dm_setExactOcr(long exact_ocr);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| exact_ocr | long | 是 | 0=普通模式，1=精确模式 |
+| 参数        | 类型   | 必填 | 说明            |
+| --------- | ---- | -- | ------------- |
+| exact_ocr | long | 是  | 0=普通模式，1=精确模式 |
 
 **返回值**：0=成功。
 
@@ -6872,6 +7202,7 @@ long DM_CALL dm_setExactOcr(long exact_ocr);
 ### 8.43 dm_setMinColGap
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setMinColGap(long min_col_gap);
 ```
@@ -6880,9 +7211,9 @@ long DM_CALL dm_setMinColGap(long min_col_gap);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| min_col_gap | long | 是 | 最小列间距（像素） |
+| 参数          | 类型   | 必填 | 说明        |
+| ----------- | ---- | -- | --------- |
+| min_col_gap | long | 是  | 最小列间距（像素） |
 
 **返回值**：0=成功。
 
@@ -6891,6 +7222,7 @@ long DM_CALL dm_setMinColGap(long min_col_gap);
 ### 8.44 dm_setMinRowGap
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setMinRowGap(long min_row_gap);
 ```
@@ -6899,9 +7231,9 @@ long DM_CALL dm_setMinRowGap(long min_row_gap);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| min_row_gap | long | 是 | 最小行间距（像素） |
+| 参数          | 类型   | 必填 | 说明        |
+| ----------- | ---- | -- | --------- |
+| min_row_gap | long | 是  | 最小行间距（像素） |
 
 **返回值**：0=成功。
 
@@ -6910,6 +7242,7 @@ long DM_CALL dm_setMinRowGap(long min_row_gap);
 ### 8.45 dm_setWordGap
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWordGap(long word_gap);
 ```
@@ -6918,9 +7251,9 @@ long DM_CALL dm_setWordGap(long word_gap);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| word_gap | long | 是 | 字间距（像素） |
+| 参数       | 类型   | 必填 | 说明      |
+| -------- | ---- | -- | ------- |
+| word_gap | long | 是  | 字间距（像素） |
 
 **返回值**：0=成功。
 
@@ -6929,6 +7262,7 @@ long DM_CALL dm_setWordGap(long word_gap);
 ### 8.46 dm_setWordLineHeight
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setWordLineHeight(long line_height);
 ```
@@ -6937,9 +7271,9 @@ long DM_CALL dm_setWordLineHeight(long line_height);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| line_height | long | 是 | 行高（像素） |
+| 参数          | 类型   | 必填 | 说明     |
+| ----------- | ---- | -- | ------ |
+| line_height | long | 是  | 行高（像素） |
 
 **返回值**：0=成功。
 
@@ -6954,6 +7288,7 @@ long DM_CALL dm_setWordLineHeight(long line_height);
 ### 9.1 dm_beep
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_beep(long f, long duration);
 ```
@@ -6962,10 +7297,10 @@ long DM_CALL dm_beep(long f, long duration);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| f | long | 是 | 频率（Hz），如 1000=1kHz |
-| duration | long | 是 | 持续时间（毫秒） |
+| 参数       | 类型   | 必填 | 说明                 |
+| -------- | ---- | -- | ------------------ |
+| f        | long | 是  | 频率（Hz），如 1000=1kHz |
+| duration | long | 是  | 持续时间（毫秒）           |
 
 **返回值**：0=成功。
 
@@ -6974,6 +7309,7 @@ long DM_CALL dm_beep(long f, long duration);
 ### 9.2 dm_delay
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_delay(long mis);
 ```
@@ -6982,9 +7318,9 @@ long DM_CALL dm_delay(long mis);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| mis | long | 是 | 延时毫秒数 |
+| 参数  | 类型   | 必填 | 说明    |
+| --- | ---- | -- | ----- |
+| mis | long | 是  | 延时毫秒数 |
 
 **返回值**：0=成功。
 
@@ -7001,6 +7337,7 @@ dm.delay(500)      # 等待 0.5 秒
 ### 9.3 dm_delays
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_delays(long mis_min, long mis_max);
 ```
@@ -7009,10 +7346,10 @@ long DM_CALL dm_delays(long mis_min, long mis_max);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| mis_min | long | 是 | 最小延时（毫秒） |
-| mis_max | long | 是 | 最大延时（毫秒） |
+| 参数      | 类型   | 必填 | 说明       |
+| ------- | ---- | -- | -------- |
+| mis_min | long | 是  | 最小延时（毫秒） |
+| mis_max | long | 是  | 最大延时（毫秒） |
 
 **返回值**：0=成功。
 
@@ -7028,6 +7365,7 @@ dm.delays(500, 1500)  # 随机等待 0.5-1.5 秒
 ### 9.4 dm_runApp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_runApp(const char* app_path, long mode);
 ```
@@ -7036,19 +7374,19 @@ long DM_CALL dm_runApp(const char* app_path, long mode);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| app_path | const char* | 是 | 可执行文件路径或文档路径 |
-| mode | long | 是 | 显示模式（见下表） |
+| 参数       | 类型          | 必填 | 说明           |
+| -------- | ----------- | -- | ------------ |
+| app_path | const char* | 是  | 可执行文件路径或文档路径 |
+| mode     | long        | 是  | 显示模式（见下表）    |
 
 **mode 取值**：
 
-| 值 | 说明 |
-|----|------|
+| 值 | 说明   |
+| - | ---- |
 | 0 | 正常显示 |
-| 1 | 隐藏 |
-| 2 | 最小化 |
-| 3 | 最大化 |
+| 1 | 隐藏   |
+| 2 | 最小化  |
+| 3 | 最大化  |
 
 **返回值**：进程 ID，0=失败。
 
@@ -7066,6 +7404,7 @@ pid = dm.run_app("C:\\game.exe", 1)    # 隐藏运行游戏
 ### 9.5 dm_stop
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_stop(long id);
 ```
@@ -7074,9 +7413,9 @@ long DM_CALL dm_stop(long id);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| id | long | 是 | 进程 ID（由 `dm_runApp` 返回） |
+| 参数 | 类型   | 必填 | 说明                      |
+| -- | ---- | -- | ----------------------- |
+| id | long | 是  | 进程 ID（由 `dm_runApp` 返回） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -7085,6 +7424,7 @@ long DM_CALL dm_stop(long id);
 ### 9.6 dm_play
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_play(const char* media_file);
 ```
@@ -7093,9 +7433,9 @@ long DM_CALL dm_play(const char* media_file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| media_file | const char* | 是 | 音频文件路径（支持 WAV、MP3 等格式） |
+| 参数         | 类型          | 必填 | 说明                     |
+| ---------- | ----------- | -- | ---------------------- |
+| media_file | const char* | 是  | 音频文件路径（支持 WAV、MP3 等格式） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -7104,6 +7444,7 @@ long DM_CALL dm_play(const char* media_file);
 ### 9.7 dm_exitOs
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_exitOs(long type);
 ```
@@ -7112,9 +7453,9 @@ long DM_CALL dm_exitOs(long type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | long | 是 | 操作类型：0=注销，1=关机，2=重启 |
+| 参数   | 类型   | 必填 | 说明                  |
+| ---- | ---- | -- | ------------------- |
+| type | long | 是  | 操作类型：0=注销，1=关机，2=重启 |
 
 **返回值**：0=成功（通常不会返回，因为系统会关闭）。
 
@@ -7123,6 +7464,7 @@ long DM_CALL dm_exitOs(long type);
 ### 9.8 dm_setScreen
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setScreen(long width, long height, long depth);
 ```
@@ -7131,11 +7473,11 @@ long DM_CALL dm_setScreen(long width, long height, long depth);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| width | long | 是 | 屏幕宽度（像素） |
-| height | long | 是 | 屏幕高度（像素） |
-| depth | long | 是 | 颜色深度（位），如 32 |
+| 参数     | 类型   | 必填 | 说明           |
+| ------ | ---- | -- | ------------ |
+| width  | long | 是  | 屏幕宽度（像素）     |
+| height | long | 是  | 屏幕高度（像素）     |
+| depth  | long | 是  | 颜色深度（位），如 32 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -7144,6 +7486,7 @@ long DM_CALL dm_setScreen(long width, long height, long depth);
 ### 9.9 dm_getScreenWidth
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getScreenWidth();
 ```
@@ -7168,6 +7511,7 @@ print(f"当前屏幕分辨率: {w}x{h}")
 ### 9.10 dm_getScreenHeight
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getScreenHeight();
 ```
@@ -7183,6 +7527,7 @@ long DM_CALL dm_getScreenHeight();
 ### 9.11 dm_getScreenDepth
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getScreenDepth();
 ```
@@ -7198,6 +7543,7 @@ long DM_CALL dm_getScreenDepth();
 ### 9.12 dm_getDPI
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getDPI();
 ```
@@ -7213,6 +7559,7 @@ long DM_CALL dm_getDPI();
 ### 9.13 dm_getTime
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getTime();
 ```
@@ -7238,6 +7585,7 @@ print(f"操作耗时: {elapsed} 毫秒")
 ### 9.14 dm_getOsType
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getOsType();
 ```
@@ -7248,23 +7596,24 @@ long DM_CALL dm_getOsType();
 
 **返回值**：系统类型代码：
 
-| 返回值 | 说明 |
-|--------|------|
-| 0 | 未知 |
-| 1 | Windows 2000 |
-| 2 | Windows XP |
-| 3 | Windows Server 2003 |
-| 4 | Windows Vista |
-| 5 | Windows 7 |
-| 6 | Windows 8 |
-| 7 | Windows 10 |
-| 8 | Windows 11 |
+| 返回值 | 说明                  |
+| --- | ------------------- |
+| 0   | 未知                  |
+| 1   | Windows 2000        |
+| 2   | Windows XP          |
+| 3   | Windows Server 2003 |
+| 4   | Windows Vista       |
+| 5   | Windows 7           |
+| 6   | Windows 8           |
+| 7   | Windows 10          |
+| 8   | Windows 11          |
 
 ---
 
 ### 9.15 dm_getOsBuildNumber
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getOsBuildNumber();
 ```
@@ -7280,6 +7629,7 @@ long DM_CALL dm_getOsBuildNumber();
 ### 9.16 dm_is64Bit
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_is64Bit();
 ```
@@ -7295,6 +7645,7 @@ long DM_CALL dm_is64Bit();
 ### 9.17 dm_isSurrpotVt
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_isSurrpotVt();
 ```
@@ -7310,6 +7661,7 @@ long DM_CALL dm_isSurrpotVt();
 ### 9.18 dm_getSystemInfo
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getSystemInfo(long type, long method);
 ```
@@ -7318,10 +7670,10 @@ const char* DM_CALL dm_getSystemInfo(long type, long method);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | long | 是 | 信息类型 |
-| method | long | 是 | 获取方法 |
+| 参数     | 类型   | 必填 | 说明   |
+| ------ | ---- | -- | ---- |
+| type   | long | 是  | 信息类型 |
+| method | long | 是  | 获取方法 |
 
 **返回值**：系统信息字符串。
 
@@ -7330,6 +7682,7 @@ const char* DM_CALL dm_getSystemInfo(long type, long method);
 ### 9.19 dm_getDir
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getDir(long type);
 ```
@@ -7338,9 +7691,9 @@ const char* DM_CALL dm_getDir(long type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | long | 是 | 目录类型：0=Windows 目录，1=System 目录，2=Temp 目录 |
+| 参数   | 类型   | 必填 | 说明                                      |
+| ---- | ---- | -- | --------------------------------------- |
+| type | long | 是  | 目录类型：0=Windows 目录，1=System 目录，2=Temp 目录 |
 
 **返回值**：目录路径字符串。
 
@@ -7349,6 +7702,7 @@ const char* DM_CALL dm_getDir(long type);
 ### 9.20 dm_getLocale
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getLocale();
 ```
@@ -7364,6 +7718,7 @@ long DM_CALL dm_getLocale();
 ### 9.21 dm_getCpuType
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getCpuType();
 ```
@@ -7379,6 +7734,7 @@ long DM_CALL dm_getCpuType();
 ### 9.22 dm_getCpuUsage
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getCpuUsage();
 ```
@@ -7394,6 +7750,7 @@ long DM_CALL dm_getCpuUsage();
 ### 9.23 dm_getMemoryUsage
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getMemoryUsage();
 ```
@@ -7409,6 +7766,7 @@ long DM_CALL dm_getMemoryUsage();
 ### 9.24 dm_getDiskSerial
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getDiskSerial();
 ```
@@ -7424,6 +7782,7 @@ const char* DM_CALL dm_getDiskSerial();
 ### 9.25 dm_getDiskModel
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getDiskModel();
 ```
@@ -7439,6 +7798,7 @@ const char* DM_CALL dm_getDiskModel();
 ### 9.26 dm_getDiskReversion
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getDiskReversion();
 ```
@@ -7454,6 +7814,7 @@ const char* DM_CALL dm_getDiskReversion();
 ### 9.27 dm_getMachineCode
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getMachineCode();
 ```
@@ -7477,6 +7838,7 @@ print(f"本机机器码: {code}")
 ### 9.28 dm_getMachineCodeNoMac
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getMachineCodeNoMac();
 ```
@@ -7492,6 +7854,7 @@ const char* DM_CALL dm_getMachineCodeNoMac();
 ### 9.29 dm_getNetTime
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getNetTime();
 ```
@@ -7507,6 +7870,7 @@ const char* DM_CALL dm_getNetTime();
 ### 9.30 dm_getNetTimeByIp
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getNetTimeByIp(const char* ip);
 ```
@@ -7515,9 +7879,9 @@ const char* DM_CALL dm_getNetTimeByIp(const char* ip);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| ip | const char* | 是 | 时间服务器 IP 地址 |
+| 参数 | 类型          | 必填 | 说明          |
+| -- | ----------- | -- | ----------- |
+| ip | const char* | 是  | 时间服务器 IP 地址 |
 
 **返回值**：网络时间字符串。
 
@@ -7526,6 +7890,7 @@ const char* DM_CALL dm_getNetTimeByIp(const char* ip);
 ### 9.31 dm_getNetTimeSafe
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getNetTimeSafe(long time_out);
 ```
@@ -7534,9 +7899,9 @@ const char* DM_CALL dm_getNetTimeSafe(long time_out);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| time_out | long | 是 | 超时时间（毫秒） |
+| 参数       | 类型   | 必填 | 说明       |
+| -------- | ---- | -- | -------- |
+| time_out | long | 是  | 超时时间（毫秒） |
 
 **返回值**：网络时间字符串，超时返回空字符串。
 
@@ -7545,6 +7910,7 @@ const char* DM_CALL dm_getNetTimeSafe(long time_out);
 ### 9.32 dm_getClipboard
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_getClipboard();
 ```
@@ -7568,6 +7934,7 @@ print(f"剪贴板内容: {text}")
 ### 9.33 dm_setClipboard
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setClipboard(const char* value);
 ```
@@ -7576,9 +7943,9 @@ long DM_CALL dm_setClipboard(const char* value);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| value | const char* | 是 | 要设置的文本内容 |
+| 参数    | 类型          | 必填 | 说明       |
+| ----- | ----------- | -- | -------- |
+| value | const char* | 是  | 要设置的文本内容 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -7587,6 +7954,7 @@ long DM_CALL dm_setClipboard(const char* value);
 ### 9.34 dm_getDisplayInfo
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_getDisplayInfo(long type);
 ```
@@ -7595,9 +7963,9 @@ long DM_CALL dm_getDisplayInfo(long type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | long | 是 | 信息类型 |
+| 参数   | 类型   | 必填 | 说明   |
+| ---- | ---- | -- | ---- |
+| type | long | 是  | 信息类型 |
 
 **返回值**：显示器信息值。
 
@@ -7606,6 +7974,7 @@ long DM_CALL dm_getDisplayInfo(long type);
 ### 9.35 dm_disableCloseDisplayAndSleep
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_disableCloseDisplayAndSleep(long enable);
 ```
@@ -7614,9 +7983,9 @@ long DM_CALL dm_disableCloseDisplayAndSleep(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 1=禁用（阻止关闭显示器和睡眠），0=恢复 |
+| 参数     | 类型   | 必填 | 说明                    |
+| ------ | ---- | -- | --------------------- |
+| enable | long | 是  | 1=禁用（阻止关闭显示器和睡眠），0=恢复 |
 
 **返回值**：0=成功。
 
@@ -7625,6 +7994,7 @@ long DM_CALL dm_disableCloseDisplayAndSleep(long enable);
 ### 9.36 dm_disablePowerSave
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_disablePowerSave(long enable);
 ```
@@ -7633,9 +8003,9 @@ long DM_CALL dm_disablePowerSave(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 1=禁用节能，0=启用节能 |
+| 参数     | 类型   | 必填 | 说明            |
+| ------ | ---- | -- | ------------- |
+| enable | long | 是  | 1=禁用节能，0=启用节能 |
 
 **返回值**：0=成功。
 
@@ -7644,6 +8014,7 @@ long DM_CALL dm_disablePowerSave(long enable);
 ### 9.37 dm_disableScreenSave
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_disableScreenSave(long enable);
 ```
@@ -7652,9 +8023,9 @@ long DM_CALL dm_disableScreenSave(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 1=禁用屏保，0=启用屏保 |
+| 参数     | 类型   | 必填 | 说明            |
+| ------ | ---- | -- | ------------- |
+| enable | long | 是  | 1=禁用屏保，0=启用屏保 |
 
 **返回值**：0=成功。
 
@@ -7663,6 +8034,7 @@ long DM_CALL dm_disableScreenSave(long enable);
 ### 9.38 dm_disableFontSmooth
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_disableFontSmooth();
 ```
@@ -7678,6 +8050,7 @@ long DM_CALL dm_disableFontSmooth();
 ### 9.39 dm_enableFontSmooth
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enableFontSmooth();
 ```
@@ -7693,6 +8066,7 @@ long DM_CALL dm_enableFontSmooth();
 ### 9.40 dm_checkFontSmooth
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_checkFontSmooth();
 ```
@@ -7708,6 +8082,7 @@ long DM_CALL dm_checkFontSmooth();
 ### 9.41 dm_checkUAC
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_checkUAC();
 ```
@@ -7723,6 +8098,7 @@ long DM_CALL dm_checkUAC();
 ### 9.42 dm_setUAC
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setUAC(long enable);
 ```
@@ -7731,9 +8107,9 @@ long DM_CALL dm_setUAC(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -7742,6 +8118,7 @@ long DM_CALL dm_setUAC(long enable);
 ### 9.43 dm_setDisplayAcceler
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setDisplayAcceler(long flag);
 ```
@@ -7750,9 +8127,9 @@ long DM_CALL dm_setDisplayAcceler(long flag);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| flag | long | 是 | 加速标志值 |
+| 参数   | 类型   | 必填 | 说明    |
+| ---- | ---- | -- | ----- |
+| flag | long | 是  | 加速标志值 |
 
 **返回值**：0=成功。
 
@@ -7761,6 +8138,7 @@ long DM_CALL dm_setDisplayAcceler(long flag);
 ### 9.44 dm_showTaskBarIcon
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_showTaskBarIcon(intptr_t hwnd, long show);
 ```
@@ -7769,10 +8147,10 @@ long DM_CALL dm_showTaskBarIcon(intptr_t hwnd, long show);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| show | long | 是 | 0=隐藏，1=显示 |
+| 参数   | 类型       | 必填 | 说明        |
+| ---- | -------- | -- | --------- |
+| hwnd | intptr_t | 是  | 窗口句柄      |
+| show | long     | 是  | 0=隐藏，1=显示 |
 
 **返回值**：0=成功。
 
@@ -7787,6 +8165,7 @@ long DM_CALL dm_showTaskBarIcon(intptr_t hwnd, long show);
 ### 10.1 dm_enterCri
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_enterCri();
 ```
@@ -7802,6 +8181,7 @@ long DM_CALL dm_enterCri();
 ### 10.2 dm_leaveCri
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_leaveCri();
 ```
@@ -7817,6 +8197,7 @@ long DM_CALL dm_leaveCri();
 ### 10.3 dm_initCri
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_initCri();
 ```
@@ -7832,6 +8213,7 @@ long DM_CALL dm_initCri();
 ### 10.4 dm_releaseRef
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_releaseRef();
 ```
@@ -7847,6 +8229,7 @@ long DM_CALL dm_releaseRef();
 ### 10.5 dm_setExitThread
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setExitThread(long mode);
 ```
@@ -7855,9 +8238,9 @@ long DM_CALL dm_setExitThread(long mode);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| mode | long | 是 | 0=正常退出，1=强制退出 |
+| 参数   | 类型   | 必填 | 说明            |
+| ---- | ---- | -- | ------------- |
+| mode | long | 是  | 0=正常退出，1=强制退出 |
 
 **返回值**：0=成功。
 
@@ -7866,6 +8249,7 @@ long DM_CALL dm_setExitThread(long mode);
 ### 10.6 dm_executeCmd
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_executeCmd(const char* cmd, long time_out);
 ```
@@ -7874,10 +8258,10 @@ const char* DM_CALL dm_executeCmd(const char* cmd, long time_out);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| cmd | const char* | 是 | 要执行的命令行 |
-| time_out | long | 是 | 超时时间（毫秒），0=无限等待 |
+| 参数       | 类型          | 必填 | 说明              |
+| -------- | ----------- | -- | --------------- |
+| cmd      | const char* | 是  | 要执行的命令行         |
+| time_out | long        | 是  | 超时时间（毫秒），0=无限等待 |
 
 **返回值**：命令执行输出结果字符串。
 
@@ -7898,6 +8282,7 @@ print(f"C盘文件列表: {result}")
 ### 10.7 dm_activeInputMethod
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_activeInputMethod(intptr_t hwnd, const char* input_method);
 ```
@@ -7906,10 +8291,10 @@ long DM_CALL dm_activeInputMethod(intptr_t hwnd, const char* input_method);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| input_method | const char* | 是 | 输入法名称 |
+| 参数           | 类型          | 必填 | 说明    |
+| ------------ | ----------- | -- | ----- |
+| hwnd         | intptr_t    | 是  | 窗口句柄  |
+| input_method | const char* | 是  | 输入法名称 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -7918,6 +8303,7 @@ long DM_CALL dm_activeInputMethod(intptr_t hwnd, const char* input_method);
 ### 10.8 dm_checkInputMethod
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_checkInputMethod(intptr_t hwnd, const char* input_method);
 ```
@@ -7926,10 +8312,10 @@ long DM_CALL dm_checkInputMethod(intptr_t hwnd, const char* input_method);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 窗口句柄 |
-| input_method | const char* | 是 | 输入法名称 |
+| 参数           | 类型          | 必填 | 说明    |
+| ------------ | ----------- | -- | ----- |
+| hwnd         | intptr_t    | 是  | 窗口句柄  |
+| input_method | const char* | 是  | 输入法名称 |
 
 **返回值**：0=不是，1=是。
 
@@ -7938,6 +8324,7 @@ long DM_CALL dm_checkInputMethod(intptr_t hwnd, const char* input_method);
 ### 10.9 dm_findInputMethod
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_findInputMethod(const char* input_method);
 ```
@@ -7946,9 +8333,9 @@ long DM_CALL dm_findInputMethod(const char* input_method);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| input_method | const char* | 是 | 输入法名称 |
+| 参数           | 类型          | 必填 | 说明    |
+| ------------ | ----------- | -- | ----- |
+| input_method | const char* | 是  | 输入法名称 |
 
 **返回值**：0=未找到，1=找到。
 
@@ -7963,6 +8350,7 @@ long DM_CALL dm_findInputMethod(const char* input_method);
 ### 11.1 dm_asmAdd
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_asmAdd(const char* asm_ins);
 ```
@@ -7971,9 +8359,9 @@ long DM_CALL dm_asmAdd(const char* asm_ins);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| asm_ins | const char* | 是 | 汇编指令，如 `"push 0"`、`"mov eax, 1"` |
+| 参数      | 类型          | 必填 | 说明                               |
+| ------- | ----------- | -- | -------------------------------- |
+| asm_ins | const char* | 是  | 汇编指令，如 `"push 0"`、`"mov eax, 1"` |
 
 **返回值**：0=成功，非0=失败。
 
@@ -7994,6 +8382,7 @@ dm.asm_add("ret")
 ### 11.2 dm_asmCall
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_asmCall(intptr_t hwnd, long mode);
 ```
@@ -8002,10 +8391,10 @@ long DM_CALL dm_asmCall(intptr_t hwnd, long mode);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 目标窗口句柄 |
-| mode | long | 是 | 执行模式：0=直接执行，1=创建新线程执行 |
+| 参数   | 类型       | 必填 | 说明                    |
+| ---- | -------- | -- | --------------------- |
+| hwnd | intptr_t | 是  | 目标窗口句柄                |
+| mode | long     | 是  | 执行模式：0=直接执行，1=创建新线程执行 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -8014,6 +8403,7 @@ long DM_CALL dm_asmCall(intptr_t hwnd, long mode);
 ### 11.3 dm_asmCallEx
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_asmCallEx(intptr_t hwnd, long mode, long base_addr, long call_addr);
 ```
@@ -8022,12 +8412,12 @@ long DM_CALL dm_asmCallEx(intptr_t hwnd, long mode, long base_addr, long call_ad
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 目标窗口句柄 |
-| mode | long | 是 | 执行模式 |
-| base_addr | long | 是 | 代码基址 |
-| call_addr | long | 是 | 调用地址 |
+| 参数        | 类型       | 必填 | 说明     |
+| --------- | -------- | -- | ------ |
+| hwnd      | intptr_t | 是  | 目标窗口句柄 |
+| mode      | long     | 是  | 执行模式   |
+| base_addr | long     | 是  | 代码基址   |
+| call_addr | long     | 是  | 调用地址   |
 
 **返回值**：0=成功，非0=失败。
 
@@ -8036,6 +8426,7 @@ long DM_CALL dm_asmCallEx(intptr_t hwnd, long mode, long base_addr, long call_ad
 ### 11.4 dm_asmClear
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_asmClear();
 ```
@@ -8051,6 +8442,7 @@ long DM_CALL dm_asmClear();
 ### 11.5 dm_asmSetTimeout
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_asmSetTimeout(long timeout);
 ```
@@ -8059,9 +8451,9 @@ long DM_CALL dm_asmSetTimeout(long timeout);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| timeout | long | 是 | 超时时间（毫秒） |
+| 参数      | 类型   | 必填 | 说明       |
+| ------- | ---- | -- | -------- |
+| timeout | long | 是  | 超时时间（毫秒） |
 
 **返回值**：0=成功。
 
@@ -8070,6 +8462,7 @@ long DM_CALL dm_asmSetTimeout(long timeout);
 ### 11.6 dm_assemble
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_assemble(long base_addr, long is_asm_code);
 ```
@@ -8078,10 +8471,10 @@ const char* DM_CALL dm_assemble(long base_addr, long is_asm_code);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| base_addr | long | 是 | 基址（用于计算相对跳转） |
-| is_asm_code | long | 是 | 0=返回十六进制机器码，1=返回 asm 代码 |
+| 参数          | 类型   | 必填 | 说明                      |
+| ----------- | ---- | -- | ----------------------- |
+| base_addr   | long | 是  | 基址（用于计算相对跳转）            |
+| is_asm_code | long | 是  | 0=返回十六进制机器码，1=返回 asm 代码 |
 
 **返回值**：编译后的机器码字符串。
 
@@ -8090,6 +8483,7 @@ const char* DM_CALL dm_assemble(long base_addr, long is_asm_code);
 ### 11.7 dm_disAssemble
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_disAssemble(long asm_code, long base_addr, long is_asm_code);
 ```
@@ -8098,11 +8492,11 @@ const char* DM_CALL dm_disAssemble(long asm_code, long base_addr, long is_asm_co
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| asm_code | long | 是 | 机器码数据 |
-| base_addr | long | 是 | 基址 |
-| is_asm_code | long | 是 | 0=十六进制字符串，1=asm 代码 |
+| 参数          | 类型   | 必填 | 说明                 |
+| ----------- | ---- | -- | ------------------ |
+| asm_code    | long | 是  | 机器码数据              |
+| base_addr   | long | 是  | 基址                 |
+| is_asm_code | long | 是  | 0=十六进制字符串，1=asm 代码 |
 
 **返回值**：反汇编结果字符串。
 
@@ -8111,6 +8505,7 @@ const char* DM_CALL dm_disAssemble(long asm_code, long base_addr, long is_asm_co
 ### 11.8 dm_setAsmHwndAsProcessId
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setAsmHwndAsProcessId(long enable);
 ```
@@ -8119,9 +8514,9 @@ long DM_CALL dm_setAsmHwndAsProcessId(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=作为窗口句柄，1=作为进程 ID |
+| 参数     | 类型   | 必填 | 说明                 |
+| ------ | ---- | -- | ------------------ |
+| enable | long | 是  | 0=作为窗口句柄，1=作为进程 ID |
 
 **返回值**：0=成功。
 
@@ -8130,6 +8525,7 @@ long DM_CALL dm_setAsmHwndAsProcessId(long enable);
 ### 11.9 dm_setShowAsmErrorMsg
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_setShowAsmErrorMsg(long show);
 ```
@@ -8138,9 +8534,9 @@ long DM_CALL dm_setShowAsmErrorMsg(long show);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| show | long | 是 | 0=不显示，1=显示 |
+| 参数   | 类型   | 必填 | 说明         |
+| ---- | ---- | -- | ---------- |
+| show | long | 是  | 0=不显示，1=显示 |
 
 **返回值**：0=成功。
 
@@ -8155,6 +8551,7 @@ AI 功能模块提供基于 AI 模型的找图和 YOLO 目标检测功能。
 ### 12.1 dm_loadAi
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_loadAi(const char* file);
 ```
@@ -8163,9 +8560,9 @@ long DM_CALL dm_loadAi(const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | AI 模型文件路径 |
+| 参数   | 类型          | 必填 | 说明        |
+| ---- | ----------- | -- | --------- |
+| file | const char* | 是  | AI 模型文件路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -8174,6 +8571,7 @@ long DM_CALL dm_loadAi(const char* file);
 ### 12.2 dm_loadAiMemory
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_loadAiMemory(long data, long size);
 ```
@@ -8182,10 +8580,10 @@ long DM_CALL dm_loadAiMemory(long data, long size);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| data | long | 是 | 模型数据内存地址 |
-| size | long | 是 | 数据大小 |
+| 参数   | 类型   | 必填 | 说明       |
+| ---- | ---- | -- | -------- |
+| data | long | 是  | 模型数据内存地址 |
+| size | long | 是  | 数据大小     |
 
 **返回值**：0=成功，非0=失败。
 
@@ -8194,6 +8592,7 @@ long DM_CALL dm_loadAiMemory(long data, long size);
 ### 12.3 dm_aiEnableFindPicWindow
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiEnableFindPicWindow(long enable);
 ```
@@ -8202,9 +8601,9 @@ long DM_CALL dm_aiEnableFindPicWindow(long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=禁用，1=启用 |
+| 参数     | 类型   | 必填 | 说明        |
+| ------ | ---- | -- | --------- |
+| enable | long | 是  | 0=禁用，1=启用 |
 
 **返回值**：0=成功。
 
@@ -8213,6 +8612,7 @@ long DM_CALL dm_aiEnableFindPicWindow(long enable);
 ### 12.4 dm_aiFindPic
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiFindPic(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir, long* intX, long* intY);
 ```
@@ -8228,6 +8628,7 @@ long DM_CALL dm_aiFindPic(long x1, long y1, long x2, long y2, const char* pic_na
 ### 12.5 dm_aiFindPicEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_aiFindPicEx(long x1, long y1, long x2, long y2, const char* pic_name, long sim, long dir);
 ```
@@ -8243,6 +8644,7 @@ const char* DM_CALL dm_aiFindPicEx(long x1, long y1, long x2, long y2, const cha
 ### 12.6 dm_aiFindPicMem
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiFindPicMem(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir, long* intX, long* intY);
 ```
@@ -8258,6 +8660,7 @@ long DM_CALL dm_aiFindPicMem(long x1, long y1, long x2, long y2, const char* pic
 ### 12.7 dm_aiFindPicMemEx
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_aiFindPicMemEx(long x1, long y1, long x2, long y2, const char* pic_info, long sim, long dir);
 ```
@@ -8273,6 +8676,7 @@ const char* DM_CALL dm_aiFindPicMemEx(long x1, long y1, long x2, long y2, const 
 ### 12.8 dm_aiYoloDetectObjects
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_aiYoloDetectObjects(long x1, long y1, long x2, long y2, float prob, float iou);
 ```
@@ -8281,11 +8685,11 @@ const char* DM_CALL dm_aiYoloDetectObjects(long x1, long y1, long x2, long y2, f
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 检测区域 |
-| prob | float | 是 | 置信度阈值（0.0-1.0），低于此值的检测结果将被过滤 |
-| iou | float | 是 | IOU 阈值（0.0-1.0），用于 NMS 去重 |
+| 参数    | 类型    | 必填 | 说明                           |
+| ----- | ----- | -- | ---------------------------- |
+| x1-y2 | long  | 是  | 检测区域                         |
+| prob  | float | 是  | 置信度阈值（0.0-1.0），低于此值的检测结果将被过滤 |
+| iou   | float | 是  | IOU 阈值（0.0-1.0），用于 NMS 去重    |
 
 **返回值**：检测结果字符串，包含所有检测到的目标信息。
 
@@ -8305,6 +8709,7 @@ print(f"检测结果: {objects}")
 ### 12.9 dm_aiYoloDetectObjectsToDataBmp
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiYoloDetectObjectsToDataBmp(long x1, long y1, long x2, long y2, float prob, float iou, long data, long size, long mode);
 ```
@@ -8320,6 +8725,7 @@ long DM_CALL dm_aiYoloDetectObjectsToDataBmp(long x1, long y1, long x2, long y2,
 ### 12.10 dm_aiYoloDetectObjectsToFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiYoloDetectObjectsToFile(long x1, long y1, long x2, long y2, float prob, float iou, const char* file, long mode);
 ```
@@ -8335,6 +8741,7 @@ long DM_CALL dm_aiYoloDetectObjectsToFile(long x1, long y1, long x2, long y2, fl
 ### 12.11 dm_aiYoloSetModel
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiYoloSetModel(const char* model_file, const char* model_type);
 ```
@@ -8343,10 +8750,10 @@ long DM_CALL dm_aiYoloSetModel(const char* model_file, const char* model_type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| model_file | const char* | 是 | 模型文件路径（如 `.onnx` 文件） |
-| model_type | const char* | 是 | 模型类型，如 `"yolov5"`、`"yolov8"` |
+| 参数         | 类型          | 必填 | 说明                           |
+| ---------- | ----------- | -- | ---------------------------- |
+| model_file | const char* | 是  | 模型文件路径（如 `.onnx` 文件）         |
+| model_type | const char* | 是  | 模型类型，如 `"yolov5"`、`"yolov8"` |
 
 **返回值**：0=成功，非0=失败。
 
@@ -8355,6 +8762,7 @@ long DM_CALL dm_aiYoloSetModel(const char* model_file, const char* model_type);
 ### 12.12 dm_aiYoloSetModelMemory
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiYoloSetModelMemory(long data, long size, const char* model_type);
 ```
@@ -8363,11 +8771,11 @@ long DM_CALL dm_aiYoloSetModelMemory(long data, long size, const char* model_typ
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| data | long | 是 | 模型数据内存地址 |
-| size | long | 是 | 数据大小 |
-| model_type | const char* | 是 | 模型类型 |
+| 参数         | 类型          | 必填 | 说明       |
+| ---------- | ----------- | -- | -------- |
+| data       | long        | 是  | 模型数据内存地址 |
+| size       | long        | 是  | 数据大小     |
+| model_type | const char* | 是  | 模型类型     |
 
 **返回值**：0=成功，非0=失败。
 
@@ -8376,6 +8784,7 @@ long DM_CALL dm_aiYoloSetModelMemory(long data, long size, const char* model_typ
 ### 12.13 dm_aiYoloFreeModel
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiYoloFreeModel();
 ```
@@ -8391,6 +8800,7 @@ long DM_CALL dm_aiYoloFreeModel();
 ### 12.14 dm_aiYoloUseModel
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiYoloUseModel(long index);
 ```
@@ -8399,9 +8809,9 @@ long DM_CALL dm_aiYoloUseModel(long index);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| index | long | 是 | 模型索引 |
+| 参数    | 类型   | 必填 | 说明   |
+| ----- | ---- | -- | ---- |
+| index | long | 是  | 模型索引 |
 
 **返回值**：0=成功。
 
@@ -8410,6 +8820,7 @@ long DM_CALL dm_aiYoloUseModel(long index);
 ### 12.15 dm_aiYoloSetVersion
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_aiYoloSetVersion(const char* version);
 ```
@@ -8418,9 +8829,9 @@ long DM_CALL dm_aiYoloSetVersion(const char* version);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| version | const char* | 是 | 版本号，如 `"v5"`、`"v8"` |
+| 参数      | 类型          | 必填 | 说明                  |
+| ------- | ----------- | -- | ------------------- |
+| version | const char* | 是  | 版本号，如 `"v5"`、`"v8"` |
 
 **返回值**：0=成功。
 
@@ -8429,6 +8840,7 @@ long DM_CALL dm_aiYoloSetVersion(const char* version);
 ### 12.16 dm_aiYoloObjectsToString
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_aiYoloObjectsToString(const char* objects);
 ```
@@ -8437,9 +8849,9 @@ const char* DM_CALL dm_aiYoloObjectsToString(const char* objects);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| objects | const char* | 是 | YOLO 检测结果 |
+| 参数      | 类型          | 必填 | 说明        |
+| ------- | ----------- | -- | --------- |
+| objects | const char* | 是  | YOLO 检测结果 |
 
 **返回值**：格式化后的字符串。
 
@@ -8448,6 +8860,7 @@ const char* DM_CALL dm_aiYoloObjectsToString(const char* objects);
 ### 12.17 dm_aiYoloSortsObjects
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_aiYoloSortsObjects(const char* objects, long sort_type);
 ```
@@ -8456,10 +8869,10 @@ const char* DM_CALL dm_aiYoloSortsObjects(const char* objects, long sort_type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| objects | const char* | 是 | 检测结果 |
-| sort_type | long | 是 | 排序方式 |
+| 参数        | 类型          | 必填 | 说明   |
+| --------- | ----------- | -- | ---- |
+| objects   | const char* | 是  | 检测结果 |
+| sort_type | long        | 是  | 排序方式 |
 
 **返回值**：排序后的结果字符串。
 
@@ -8474,6 +8887,7 @@ Foobar 是窗口上的浮动图形控件系统，支持在窗口上绘制文字�
 ### 13.1 dm_createFoobarRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_createFoobarRect(intptr_t hwnd, long x, long y, long w, long h);
 ```
@@ -8482,13 +8896,13 @@ long DM_CALL dm_createFoobarRect(intptr_t hwnd, long x, long y, long w, long h);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 父窗口句柄 |
-| x | long | 是 | 控件左上角 X |
-| y | long | 是 | 控件左上角 Y |
-| w | long | 是 | 控件宽度 |
-| h | long | 是 | 控件高度 |
+| 参数   | 类型       | 必填 | 说明      |
+| ---- | -------- | -- | ------- |
+| hwnd | intptr_t | 是  | 父窗口句柄   |
+| x    | long     | 是  | 控件左上角 X |
+| y    | long     | 是  | 控件左上角 Y |
+| w    | long     | 是  | 控件宽度    |
+| h    | long     | 是  | 控件高度    |
 
 **返回值**：Foobar 句柄，0=失败。
 
@@ -8507,6 +8921,7 @@ dm.foobar_draw_text(fb, 0, 0, 300, 30, "Hello, World!", 0x00FF00, 0)
 ### 13.2 dm_createFoobarEllipse
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_createFoobarEllipse(intptr_t hwnd, long x, long y, long w, long h);
 ```
@@ -8522,6 +8937,7 @@ long DM_CALL dm_createFoobarEllipse(intptr_t hwnd, long x, long y, long w, long 
 ### 13.3 dm_createFoobarRoundRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_createFoobarRoundRect(intptr_t hwnd, long x, long y, long w, long h, long rw, long rh);
 ```
@@ -8530,12 +8946,12 @@ long DM_CALL dm_createFoobarRoundRect(intptr_t hwnd, long x, long y, long w, lon
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 父窗口句柄 |
-| x-y | long | 是 | 位置和大小 |
-| rw | long | 是 | 圆角宽度 |
-| rh | long | 是 | 圆角高度 |
+| 参数   | 类型       | 必填 | 说明    |
+| ---- | -------- | -- | ----- |
+| hwnd | intptr_t | 是  | 父窗口句柄 |
+| x-y  | long     | 是  | 位置和大小 |
+| rw   | long     | 是  | 圆角宽度  |
+| rh   | long     | 是  | 圆角高度  |
 
 **返回值**：Foobar 句柄，0=失败。
 
@@ -8544,6 +8960,7 @@ long DM_CALL dm_createFoobarRoundRect(intptr_t hwnd, long x, long y, long w, lon
 ### 13.4 dm_createFoobarCustom
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_createFoobarCustom(intptr_t hwnd, long x, long y, long w, long h, const char* pic);
 ```
@@ -8552,11 +8969,11 @@ long DM_CALL dm_createFoobarCustom(intptr_t hwnd, long x, long y, long w, long h
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | 父窗口句柄 |
-| x-y | long | 是 | 位置和大小 |
-| pic | const char* | 是 | 遮罩图片路径 |
+| 参数   | 类型          | 必填 | 说明     |
+| ---- | ----------- | -- | ------ |
+| hwnd | intptr_t    | 是  | 父窗口句柄  |
+| x-y  | long        | 是  | 位置和大小  |
+| pic  | const char* | 是  | 遮罩图片路径 |
 
 **返回值**：Foobar 句柄，0=失败。
 
@@ -8565,6 +8982,7 @@ long DM_CALL dm_createFoobarCustom(intptr_t hwnd, long x, long y, long w, long h
 ### 13.5 dm_foobarClose
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarClose(intptr_t hwnd);
 ```
@@ -8573,9 +8991,9 @@ long DM_CALL dm_foobarClose(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 控件句柄 |
+| 参数   | 类型       | 必填 | 说明          |
+| ---- | -------- | -- | ----------- |
+| hwnd | intptr_t | 是  | Foobar 控件句柄 |
 
 **返回值**：0=成功。
 
@@ -8584,6 +9002,7 @@ long DM_CALL dm_foobarClose(intptr_t hwnd);
 ### 13.6 dm_foobarLock
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarLock(intptr_t hwnd);
 ```
@@ -8592,9 +9011,9 @@ long DM_CALL dm_foobarLock(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 控件句柄 |
+| 参数   | 类型       | 必填 | 说明          |
+| ---- | -------- | -- | ----------- |
+| hwnd | intptr_t | 是  | Foobar 控件句柄 |
 
 **返回值**：0=成功。
 
@@ -8603,6 +9022,7 @@ long DM_CALL dm_foobarLock(intptr_t hwnd);
 ### 13.7 dm_foobarUnlock
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarUnlock(intptr_t hwnd);
 ```
@@ -8611,9 +9031,9 @@ long DM_CALL dm_foobarUnlock(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 控件句柄 |
+| 参数   | 类型       | 必填 | 说明          |
+| ---- | -------- | -- | ----------- |
+| hwnd | intptr_t | 是  | Foobar 控件句柄 |
 
 **返回值**：0=成功。
 
@@ -8622,6 +9042,7 @@ long DM_CALL dm_foobarUnlock(intptr_t hwnd);
 ### 13.8 dm_foobarUpdate
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarUpdate(intptr_t hwnd);
 ```
@@ -8630,9 +9051,9 @@ long DM_CALL dm_foobarUpdate(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 控件句柄 |
+| 参数   | 类型       | 必填 | 说明          |
+| ---- | -------- | -- | ----------- |
+| hwnd | intptr_t | 是  | Foobar 控件句柄 |
 
 **返回值**：0=成功。
 
@@ -8641,6 +9062,7 @@ long DM_CALL dm_foobarUpdate(intptr_t hwnd);
 ### 13.9 dm_foobarSetFont
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarSetFont(intptr_t hwnd, const char* font_name, long size, long flag);
 ```
@@ -8649,12 +9071,12 @@ long DM_CALL dm_foobarSetFont(intptr_t hwnd, const char* font_name, long size, l
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| font_name | const char* | 是 | 字体名称，如 `"宋体"`、`"Arial"` |
-| size | long | 是 | 字体大小（像素） |
-| flag | long | 是 | 0=普通，1=粗体，2=斜体，3=粗体+斜体 |
+| 参数        | 类型          | 必填 | 说明                      |
+| --------- | ----------- | -- | ----------------------- |
+| hwnd      | intptr_t    | 是  | Foobar 句柄               |
+| font_name | const char* | 是  | 字体名称，如 `"宋体"`、`"Arial"` |
+| size      | long        | 是  | 字体大小（像素）                |
+| flag      | long        | 是  | 0=普通，1=粗体，2=斜体，3=粗体+斜体  |
 
 **返回值**：0=成功。
 
@@ -8663,6 +9085,7 @@ long DM_CALL dm_foobarSetFont(intptr_t hwnd, const char* font_name, long size, l
 ### 13.10 dm_foobarSetSave
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarSetSave(intptr_t hwnd, const char* file, long enable);
 ```
@@ -8671,11 +9094,11 @@ long DM_CALL dm_foobarSetSave(intptr_t hwnd, const char* file, long enable);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| file | const char* | 是 | 保存文件路径 |
-| enable | long | 是 | 0=不保存，1=保存 |
+| 参数     | 类型          | 必填 | 说明         |
+| ------ | ----------- | -- | ---------- |
+| hwnd   | intptr_t    | 是  | Foobar 句柄  |
+| file   | const char* | 是  | 保存文件路径     |
+| enable | long        | 是  | 0=不保存，1=保存 |
 
 **返回值**：0=成功。
 
@@ -8684,6 +9107,7 @@ long DM_CALL dm_foobarSetSave(intptr_t hwnd, const char* file, long enable);
 ### 13.11 dm_foobarSetTrans
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarSetTrans(intptr_t hwnd, long trans, long color);
 ```
@@ -8692,11 +9116,11 @@ long DM_CALL dm_foobarSetTrans(intptr_t hwnd, long trans, long color);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| trans | long | 是 | 透明度（0-255），0=完全透明，255=不透明 |
-| color | long | 是 | 透明色（RGB 颜色值），该颜色将被视为透明 |
+| 参数    | 类型       | 必填 | 说明                        |
+| ----- | -------- | -- | ------------------------- |
+| hwnd  | intptr_t | 是  | Foobar 句柄                 |
+| trans | long     | 是  | 透明度（0-255），0=完全透明，255=不透明 |
+| color | long     | 是  | 透明色（RGB 颜色值），该颜色将被视为透明    |
 
 **返回值**：0=成功。
 
@@ -8705,6 +9129,7 @@ long DM_CALL dm_foobarSetTrans(intptr_t hwnd, long trans, long color);
 ### 13.12 dm_foobarDrawText
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarDrawText(intptr_t hwnd, long x, long y, long w, long h, const char* text, long color, long align);
 ```
@@ -8713,14 +9138,14 @@ long DM_CALL dm_foobarDrawText(intptr_t hwnd, long x, long y, long w, long h, co
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| x-y | long | 是 | 文本区域位置 |
-| w-h | long | 是 | 文本区域大小 |
-| text | const char* | 是 | 要显示的文本 |
-| color | long | 是 | 文本颜色（RGB 格式十六进制，如 0xFF0000=红色） |
-| align | long | 是 | 对齐方式：0=左对齐，1=居中，2=右对齐 |
+| 参数    | 类型          | 必填 | 说明                             |
+| ----- | ----------- | -- | ------------------------------ |
+| hwnd  | intptr_t    | 是  | Foobar 句柄                      |
+| x-y   | long        | 是  | 文本区域位置                         |
+| w-h   | long        | 是  | 文本区域大小                         |
+| text  | const char* | 是  | 要显示的文本                         |
+| color | long        | 是  | 文本颜色（RGB 格式十六进制，如 0xFF0000=红色） |
+| align | long        | 是  | 对齐方式：0=左对齐，1=居中，2=右对齐          |
 
 **返回值**：0=成功。
 
@@ -8729,6 +9154,7 @@ long DM_CALL dm_foobarDrawText(intptr_t hwnd, long x, long y, long w, long h, co
 ### 13.13 dm_foobarPrintText
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarPrintText(intptr_t hwnd, const char* text, long color);
 ```
@@ -8737,11 +9163,11 @@ long DM_CALL dm_foobarPrintText(intptr_t hwnd, const char* text, long color);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| text | const char* | 是 | 要打印的文本 |
-| color | long | 是 | 文本颜色 |
+| 参数    | 类型          | 必填 | 说明        |
+| ----- | ----------- | -- | --------- |
+| hwnd  | intptr_t    | 是  | Foobar 句柄 |
+| text  | const char* | 是  | 要打印的文本    |
+| color | long        | 是  | 文本颜色      |
 
 **返回值**：0=成功。
 
@@ -8750,6 +9176,7 @@ long DM_CALL dm_foobarPrintText(intptr_t hwnd, const char* text, long color);
 ### 13.14 dm_foobarDrawRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarDrawRect(intptr_t hwnd, long x1, long y1, long x2, long y2, long color, long style);
 ```
@@ -8758,12 +9185,12 @@ long DM_CALL dm_foobarDrawRect(intptr_t hwnd, long x1, long y1, long x2, long y2
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| x1-y2 | long | 是 | 矩形坐标 |
-| color | long | 是 | 边框颜色 |
-| style | long | 是 | 边框样式：0=实线，1=虚线 |
+| 参数    | 类型       | 必填 | 说明             |
+| ----- | -------- | -- | -------------- |
+| hwnd  | intptr_t | 是  | Foobar 句柄      |
+| x1-y2 | long     | 是  | 矩形坐标           |
+| color | long     | 是  | 边框颜色           |
+| style | long     | 是  | 边框样式：0=实线，1=虚线 |
 
 **返回值**：0=成功。
 
@@ -8772,6 +9199,7 @@ long DM_CALL dm_foobarDrawRect(intptr_t hwnd, long x1, long y1, long x2, long y2
 ### 13.15 dm_foobarDrawLine
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarDrawLine(intptr_t hwnd, long x1, long y1, long x2, long y2, long color, long style);
 ```
@@ -8780,12 +9208,12 @@ long DM_CALL dm_foobarDrawLine(intptr_t hwnd, long x1, long y1, long x2, long y2
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| x1-y2 | long | 是 | 线段起点和终点坐标 |
-| color | long | 是 | 线条颜色 |
-| style | long | 是 | 线条样式：0=实线，1=虚线 |
+| 参数    | 类型       | 必填 | 说明             |
+| ----- | -------- | -- | -------------- |
+| hwnd  | intptr_t | 是  | Foobar 句柄      |
+| x1-y2 | long     | 是  | 线段起点和终点坐标      |
+| color | long     | 是  | 线条颜色           |
+| style | long     | 是  | 线条样式：0=实线，1=虚线 |
 
 **返回值**：0=成功。
 
@@ -8794,6 +9222,7 @@ long DM_CALL dm_foobarDrawLine(intptr_t hwnd, long x1, long y1, long x2, long y2
 ### 13.16 dm_foobarFillRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarFillRect(intptr_t hwnd, long x1, long y1, long x2, long y2, long color);
 ```
@@ -8802,11 +9231,11 @@ long DM_CALL dm_foobarFillRect(intptr_t hwnd, long x1, long y1, long x2, long y2
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| x1-y2 | long | 是 | 矩形坐标 |
-| color | long | 是 | 填充颜色 |
+| 参数    | 类型       | 必填 | 说明        |
+| ----- | -------- | -- | --------- |
+| hwnd  | intptr_t | 是  | Foobar 句柄 |
+| x1-y2 | long     | 是  | 矩形坐标      |
+| color | long     | 是  | 填充颜色      |
 
 **返回值**：0=成功。
 
@@ -8815,6 +9244,7 @@ long DM_CALL dm_foobarFillRect(intptr_t hwnd, long x1, long y1, long x2, long y2
 ### 13.17 dm_foobarDrawPic
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarDrawPic(intptr_t hwnd, long x, long y, const char* pic);
 ```
@@ -8823,12 +9253,12 @@ long DM_CALL dm_foobarDrawPic(intptr_t hwnd, long x, long y, const char* pic);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| x | long | 是 | 图片左上角 X |
-| y | long | 是 | 图片左上角 Y |
-| pic | const char* | 是 | 图片文件路径 |
+| 参数   | 类型          | 必填 | 说明        |
+| ---- | ----------- | -- | --------- |
+| hwnd | intptr_t    | 是  | Foobar 句柄 |
+| x    | long        | 是  | 图片左上角 X   |
+| y    | long        | 是  | 图片左上角 Y   |
+| pic  | const char* | 是  | 图片文件路径    |
 
 **返回值**：0=成功。
 
@@ -8837,6 +9267,7 @@ long DM_CALL dm_foobarDrawPic(intptr_t hwnd, long x, long y, const char* pic);
 ### 13.18 dm_foobarClearText
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarClearText(intptr_t hwnd);
 ```
@@ -8845,9 +9276,9 @@ long DM_CALL dm_foobarClearText(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
+| 参数   | 类型       | 必填 | 说明        |
+| ---- | -------- | -- | --------- |
+| hwnd | intptr_t | 是  | Foobar 句柄 |
 
 **返回值**：0=成功。
 
@@ -8856,6 +9287,7 @@ long DM_CALL dm_foobarClearText(intptr_t hwnd);
 ### 13.19 dm_foobarTextRect
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarTextRect(intptr_t hwnd, long x, long y, long w, long h);
 ```
@@ -8864,10 +9296,10 @@ long DM_CALL dm_foobarTextRect(intptr_t hwnd, long x, long y, long w, long h);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| x-y | long | 是 | 文本区域位置和大小 |
+| 参数   | 类型       | 必填 | 说明        |
+| ---- | -------- | -- | --------- |
+| hwnd | intptr_t | 是  | Foobar 句柄 |
+| x-y  | long     | 是  | 文本区域位置和大小 |
 
 **返回值**：0=成功。
 
@@ -8876,6 +9308,7 @@ long DM_CALL dm_foobarTextRect(intptr_t hwnd, long x, long y, long w, long h);
 ### 13.20 dm_foobarTextLineGap
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarTextLineGap(intptr_t hwnd, long line_gap);
 ```
@@ -8884,10 +9317,10 @@ long DM_CALL dm_foobarTextLineGap(intptr_t hwnd, long line_gap);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| line_gap | long | 是 | 行间距（像素） |
+| 参数       | 类型       | 必填 | 说明        |
+| -------- | -------- | -- | --------- |
+| hwnd     | intptr_t | 是  | Foobar 句柄 |
+| line_gap | long     | 是  | 行间距（像素）   |
 
 **返回值**：0=成功。
 
@@ -8896,6 +9329,7 @@ long DM_CALL dm_foobarTextLineGap(intptr_t hwnd, long line_gap);
 ### 13.21 dm_foobarTextPrintDir
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarTextPrintDir(intptr_t hwnd, long dir);
 ```
@@ -8904,10 +9338,10 @@ long DM_CALL dm_foobarTextPrintDir(intptr_t hwnd, long dir);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| dir | long | 是 | 0=从左到右，1=从右到左 |
+| 参数   | 类型       | 必填 | 说明            |
+| ---- | -------- | -- | ------------- |
+| hwnd | intptr_t | 是  | Foobar 句柄     |
+| dir  | long     | 是  | 0=从左到右，1=从右到左 |
 
 **返回值**：0=成功。
 
@@ -8916,6 +9350,7 @@ long DM_CALL dm_foobarTextPrintDir(intptr_t hwnd, long dir);
 ### 13.22 dm_foobarStartGif
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarStartGif(intptr_t hwnd, const char* pic, long x, long y);
 ```
@@ -8924,12 +9359,12 @@ long DM_CALL dm_foobarStartGif(intptr_t hwnd, const char* pic, long x, long y);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
-| pic | const char* | 是 | GIF 文件路径 |
-| x | long | 是 | 显示位置 X |
-| y | long | 是 | 显示位置 Y |
+| 参数   | 类型          | 必填 | 说明        |
+| ---- | ----------- | -- | --------- |
+| hwnd | intptr_t    | 是  | Foobar 句柄 |
+| pic  | const char* | 是  | GIF 文件路径  |
+| x    | long        | 是  | 显示位置 X    |
+| y    | long        | 是  | 显示位置 Y    |
 
 **返回值**：0=成功。
 
@@ -8938,6 +9373,7 @@ long DM_CALL dm_foobarStartGif(intptr_t hwnd, const char* pic, long x, long y);
 ### 13.23 dm_foobarStopGif
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_foobarStopGif(intptr_t hwnd);
 ```
@@ -8946,9 +9382,9 @@ long DM_CALL dm_foobarStopGif(intptr_t hwnd);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| hwnd | intptr_t | 是 | Foobar 句柄 |
+| 参数   | 类型       | 必填 | 说明        |
+| ---- | -------- | -- | --------- |
+| hwnd | intptr_t | 是  | Foobar 句柄 |
 
 **返回值**：0=成功。
 
@@ -8963,6 +9399,7 @@ long DM_CALL dm_foobarStopGif(intptr_t hwnd);
 ### 14.1 dm_faqCapture
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqCapture(long x1, long y1, long x2, long y2, long quality, long delay, long time);
 ```
@@ -8971,12 +9408,12 @@ long DM_CALL dm_faqCapture(long x1, long y1, long x2, long y2, long quality, lon
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| x1-y2 | long | 是 | 截图区域 |
-| quality | long | 是 | 图片质量（1-100） |
-| delay | long | 是 | 截图延迟（毫秒） |
-| time | long | 是 | 超时时间 |
+| 参数      | 类型   | 必填 | 说明          |
+| ------- | ---- | -- | ----------- |
+| x1-y2   | long | 是  | 截图区域        |
+| quality | long | 是  | 图片质量（1-100） |
+| delay   | long | 是  | 截图延迟（毫秒）    |
+| time    | long | 是  | 超时时间        |
 
 **返回值**：答题句柄，0=失败。
 
@@ -8985,6 +9422,7 @@ long DM_CALL dm_faqCapture(long x1, long y1, long x2, long y2, long quality, lon
 ### 14.2 dm_faqCaptureFromFile
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqCaptureFromFile(const char* file, long quality, long delay, long time);
 ```
@@ -8993,10 +9431,10 @@ long DM_CALL dm_faqCaptureFromFile(const char* file, long quality, long delay, l
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | const char* | 是 | 图片文件路径 |
-| quality-long | long | 是 | 质量和延迟参数 |
+| 参数           | 类型          | 必填 | 说明      |
+| ------------ | ----------- | -- | ------- |
+| file         | const char* | 是  | 图片文件路径  |
+| quality-long | long        | 是  | 质量和延迟参数 |
 
 **返回值**：答题句柄。
 
@@ -9005,6 +9443,7 @@ long DM_CALL dm_faqCaptureFromFile(const char* file, long quality, long delay, l
 ### 14.3 dm_faqCaptureString
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_faqCaptureString(long x1, long y1, long x2, long y2, long quality, long delay, long time);
 ```
@@ -9020,6 +9459,7 @@ const char* DM_CALL dm_faqCaptureString(long x1, long y1, long x2, long y2, long
 ### 14.4 dm_faqGetSize
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqGetSize(long handle);
 ```
@@ -9028,9 +9468,9 @@ long DM_CALL dm_faqGetSize(long handle);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| handle | long | 是 | 答题句柄 |
+| 参数     | 类型   | 必填 | 说明   |
+| ------ | ---- | -- | ---- |
+| handle | long | 是  | 答题句柄 |
 
 **返回值**：数据大小（字节）。
 
@@ -9039,6 +9479,7 @@ long DM_CALL dm_faqGetSize(long handle);
 ### 14.5 dm_faqPost
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqPost(const char* server, long handle, long request_type, long time_out);
 ```
@@ -9047,12 +9488,12 @@ long DM_CALL dm_faqPost(const char* server, long handle, long request_type, long
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| server | const char* | 是 | 服务器地址 |
-| handle | long | 是 | 答题句柄 |
-| request_type | long | 是 | 请求类型 |
-| time_out | long | 是 | 超时时间（毫秒） |
+| 参数           | 类型          | 必填 | 说明       |
+| ------------ | ----------- | -- | -------- |
+| server       | const char* | 是  | 服务器地址    |
+| handle       | long        | 是  | 答题句柄     |
+| request_type | long        | 是  | 请求类型     |
+| time_out     | long        | 是  | 超时时间（毫秒） |
 
 **返回值**：0=成功，非0=失败。
 
@@ -9061,6 +9502,7 @@ long DM_CALL dm_faqPost(const char* server, long handle, long request_type, long
 ### 14.6 dm_faqSend
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqSend(long handle, long time_out);
 ```
@@ -9069,10 +9511,10 @@ long DM_CALL dm_faqSend(long handle, long time_out);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| handle | long | 是 | 答题句柄 |
-| time_out | long | 是 | 超时时间 |
+| 参数       | 类型   | 必填 | 说明   |
+| -------- | ---- | -- | ---- |
+| handle   | long | 是  | 答题句柄 |
+| time_out | long | 是  | 超时时间 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -9081,6 +9523,7 @@ long DM_CALL dm_faqSend(long handle, long time_out);
 ### 14.7 dm_faqFetch
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqFetch(long time_out);
 ```
@@ -9089,9 +9532,9 @@ long DM_CALL dm_faqFetch(long time_out);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| time_out | long | 是 | 超时时间（毫秒） |
+| 参数       | 类型   | 必填 | 说明       |
+| -------- | ---- | -- | -------- |
+| time_out | long | 是  | 超时时间（毫秒） |
 
 **返回值**：答案数据句柄，0=获取失败。
 
@@ -9100,6 +9543,7 @@ long DM_CALL dm_faqFetch(long time_out);
 ### 14.8 dm_faqCancel
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqCancel();
 ```
@@ -9115,6 +9559,7 @@ long DM_CALL dm_faqCancel();
 ### 14.9 dm_faqIsPosted
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_faqIsPosted();
 ```
@@ -9136,6 +9581,7 @@ long DM_CALL dm_faqIsPosted();
 ### 15.1 dm_excludePos
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_excludePos(const char* all_pos, long type, long x1, long y1, long x2, long y2);
 ```
@@ -9144,11 +9590,11 @@ const char* DM_CALL dm_excludePos(const char* all_pos, long type, long x1, long 
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| all_pos | const char* | 是 | 坐标列表字符串，格式 `"x1|y1,x2|y2,..."` |
-| type | long | 是 | 0=排除矩形区域内的坐标，1=排除矩形区域外的坐标 |
-| x1-y2 | long | 是 | 区域坐标 |
+| 参数      | 类型          | 必填 | 说明                        |       |           |
+| ------- | ----------- | -- | ------------------------- | ----- | --------- |
+| all_pos | const char* | 是  | 坐标列表字符串，格式 \`"x1          | y1,x2 | y2,..."\` |
+| type    | long        | 是  | 0=排除矩形区域内的坐标，1=排除矩形区域外的坐标 |       |           |
+| x1-y2   | long        | 是  | 区域坐标                      |       |           |
 
 **返回值**：过滤后的坐标列表字符串。
 
@@ -9157,6 +9603,7 @@ const char* DM_CALL dm_excludePos(const char* all_pos, long type, long x1, long 
 ### 15.2 dm_findNearestPos
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_findNearestPos(const char* all_pos, long type, long x, long y);
 ```
@@ -9165,12 +9612,12 @@ const char* DM_CALL dm_findNearestPos(const char* all_pos, long type, long x, lo
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| all_pos | const char* | 是 | 坐标列表 |
-| type | long | 是 | 0=返回最近的一个坐标，1=返回按距离排序的坐标列表 |
-| x | long | 是 | 参考点 X |
-| y | long | 是 | 参考点 Y |
+| 参数      | 类型          | 必填 | 说明                         |
+| ------- | ----------- | -- | -------------------------- |
+| all_pos | const char* | 是  | 坐标列表                       |
+| type    | long        | 是  | 0=返回最近的一个坐标，1=返回按距离排序的坐标列表 |
+| x       | long        | 是  | 参考点 X                      |
+| y       | long        | 是  | 参考点 Y                      |
 
 **返回值**：最近的坐标或排序后的坐标列表。
 
@@ -9179,6 +9626,7 @@ const char* DM_CALL dm_findNearestPos(const char* all_pos, long type, long x, lo
 ### 15.3 dm_sortPosDistance
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_sortPosDistance(const char* all_pos, long type, long x, long y);
 ```
@@ -9187,12 +9635,12 @@ const char* DM_CALL dm_sortPosDistance(const char* all_pos, long type, long x, l
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| all_pos | const char* | 是 | 坐标列表 |
-| type | long | 是 | 排序方式 |
-| x | long | 是 | 参考点 X |
-| y | long | 是 | 参考点 Y |
+| 参数      | 类型          | 必填 | 说明    |
+| ------- | ----------- | -- | ----- |
+| all_pos | const char* | 是  | 坐标列表  |
+| type    | long        | 是  | 排序方式  |
+| x       | long        | 是  | 参考点 X |
+| y       | long        | 是  | 参考点 Y |
 
 **返回值**：排序后的坐标列表字符串。
 
@@ -9207,6 +9655,7 @@ const char* DM_CALL dm_sortPosDistance(const char* all_pos, long type, long x, l
 ### 16.1 dm_dmGuard
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_dmGuard(long enable, const char* type);
 ```
@@ -9215,10 +9664,10 @@ long DM_CALL dm_dmGuard(long enable, const char* type);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| enable | long | 是 | 0=卸载，1=加载 |
-| type | const char* | 是 | 防护类型，如 `"np"` 等 |
+| 参数     | 类型          | 必填 | 说明              |
+| ------ | ----------- | -- | --------------- |
+| enable | long        | 是  | 0=卸载，1=加载       |
+| type   | const char* | 是  | 防护类型，如 `"np"` 等 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -9227,6 +9676,7 @@ long DM_CALL dm_dmGuard(long enable, const char* type);
 ### 16.2 dm_dmGuardExtract
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_dmGuardExtract(const char* type, const char* file);
 ```
@@ -9235,10 +9685,10 @@ long DM_CALL dm_dmGuardExtract(const char* type, const char* file);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | const char* | 是 | 防护类型 |
-| file | const char* | 是 | 提取到的文件路径 |
+| 参数   | 类型          | 必填 | 说明       |
+| ---- | ----------- | -- | -------- |
+| type | const char* | 是  | 防护类型     |
+| file | const char* | 是  | 提取到的文件路径 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -9247,6 +9697,7 @@ long DM_CALL dm_dmGuardExtract(const char* type, const char* file);
 ### 16.3 dm_dmGuardLoadCustom
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_dmGuardLoadCustom(const char* type, const char* data);
 ```
@@ -9255,10 +9706,10 @@ long DM_CALL dm_dmGuardLoadCustom(const char* type, const char* data);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | const char* | 是 | 防护类型 |
-| data | const char* | 是 | 自定义数据 |
+| 参数   | 类型          | 必填 | 说明    |
+| ---- | ----------- | -- | ----- |
+| type | const char* | 是  | 防护类型  |
+| data | const char* | 是  | 自定义数据 |
 
 **返回值**：0=成功，非0=失败。
 
@@ -9267,6 +9718,7 @@ long DM_CALL dm_dmGuardLoadCustom(const char* type, const char* data);
 ### 16.4 dm_dmGuardParams
 
 **函数签名**：
+
 ```c
 const char* DM_CALL dm_dmGuardParams(const char* cmd, const char* param);
 ```
@@ -9275,10 +9727,10 @@ const char* DM_CALL dm_dmGuardParams(const char* cmd, const char* param);
 
 **参数列表**：
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| cmd | const char* | 是 | 命令 |
-| param | const char* | 是 | 参数值 |
+| 参数    | 类型          | 必填 | 说明  |
+| ----- | ----------- | -- | --- |
+| cmd   | const char* | 是  | 命令  |
+| param | const char* | 是  | 参数值 |
 
 **返回值**：执行结果字符串。
 
@@ -9287,6 +9739,7 @@ const char* DM_CALL dm_dmGuardParams(const char* cmd, const char* param);
 ### 16.5 dm_unLoadDriver
 
 **函数签名**：
+
 ```c
 long DM_CALL dm_unLoadDriver();
 ```
@@ -9301,62 +9754,62 @@ long DM_CALL dm_unLoadDriver();
 
 ## 附录 A：错误码表
 
-| 错误码 | 常量名 | 说明 |
-|--------|--------|------|
-| 0 | DMERR_SUCCESS | 成功 |
-| -1 | DMERR_NEED_REG | 需要注册 |
-| -2 | DMERR_WINDOW_PROTECTED | 窗口保护 |
-| -3 | DMERR_WINDOW_ABNORMAL | 窗口异常 |
-| -4 | DMERR_EXCEPTION | 异常 |
-| -5 | DMERR_NEED_RESTART | 需要重启 |
-| -6 | DMERR_BLOCKED_BY_AV | 被杀毒软件拦截 |
-| -8 | DMERR_PROCESS_PROTECTED | 进程保护 |
-| -13 | DMERR_BIND_NOT_RELEASED | 绑定未释放 |
-| -14 | DMERR_MISSING_DLL | 缺少 DLL |
+| 错误码 | 常量名                     | 说明      |
+| --- | ----------------------- | ------- |
+| 0   | DMERR_SUCCESS           | 成功      |
+| -1  | DMERR_NEED_REG          | 需要注册    |
+| -2  | DMERR_WINDOW_PROTECTED  | 窗口保护    |
+| -3  | DMERR_WINDOW_ABNORMAL   | 窗口异常    |
+| -4  | DMERR_EXCEPTION         | 异常      |
+| -5  | DMERR_NEED_RESTART      | 需要重启    |
+| -6  | DMERR_BLOCKED_BY_AV     | 被杀毒软件拦截 |
+| -8  | DMERR_PROCESS_PROTECTED | 进程保护    |
+| -13 | DMERR_BIND_NOT_RELEASED | 绑定未释放   |
+| -14 | DMERR_MISSING_DLL       | 缺少 DLL  |
 
 ---
 
 ## 附录 B：虚拟键码表
 
-| 键名 | 键码 | 说明 |
-|------|------|------|
-| VK_LBUTTON | 0x01 | 鼠标左键 |
-| VK_RBUTTON | 0x02 | 鼠标右键 |
-| VK_MBUTTON | 0x04 | 鼠标中键 |
-| VK_BACK | 0x08 | Backspace |
-| VK_TAB | 0x09 | Tab |
-| VK_CLEAR | 0x0C | Clear |
-| VK_RETURN | 0x0D | Enter |
-| VK_SHIFT | 0x10 | Shift |
-| VK_CONTROL | 0x11 | Ctrl |
-| VK_MENU | 0x12 | Alt |
-| VK_PAUSE | 0x13 | Pause |
-| VK_CAPITAL | 0x14 | Caps Lock |
-| VK_ESCAPE | 0x1B | ESC |
-| VK_SPACE | 0x20 | 空格 |
-| VK_PRIOR | 0x21 | Page Up |
-| VK_NEXT | 0x22 | Page Down |
-| VK_END | 0x23 | End |
-| VK_HOME | 0x24 | Home |
-| VK_LEFT | 0x25 | ← |
-| VK_UP | 0x26 | ↑ |
-| VK_RIGHT | 0x27 | → |
-| VK_DOWN | 0x28 | ↓ |
-| VK_SNAPSHOT | 0x2C | Print Screen |
-| VK_INSERT | 0x2D | Insert |
-| VK_DELETE | 0x2E | Delete |
-| 0-9 | 0x30-0x39 | 数字键 |
-| A-Z | 0x41-0x5A | 字母键 |
-| VK_NUMPAD0-9 | 0x60-0x69 | 小键盘数字 |
-| VK_F1-F12 | 0x70-0x7B | 功能键 |
-| VK_NUMLOCK | 0x90 | Num Lock |
-| VK_SCROLL | 0x91 | Scroll Lock |
-| VK_LSHIFT | 0xA0 | 左 Shift |
-| VK_RSHIFT | 0xA1 | 右 Shift |
-| VK_LCONTROL | 0xA2 | 左 Ctrl |
-| VK_RCONTROL | 0xA3 | 右 Ctrl |
-| VK_LMENU | 0xA4 | 左 Alt |
-| VK_RMENU | 0xA5 | 右 Alt |
+| 键名           | 键码        | 说明           |
+| ------------ | --------- | ------------ |
+| VK_LBUTTON   | 0x01      | 鼠标左键         |
+| VK_RBUTTON   | 0x02      | 鼠标右键         |
+| VK_MBUTTON   | 0x04      | 鼠标中键         |
+| VK_BACK      | 0x08      | Backspace    |
+| VK_TAB       | 0x09      | Tab          |
+| VK_CLEAR     | 0x0C      | Clear        |
+| VK_RETURN    | 0x0D      | Enter        |
+| VK_SHIFT     | 0x10      | Shift        |
+| VK_CONTROL   | 0x11      | Ctrl         |
+| VK_MENU      | 0x12      | Alt          |
+| VK_PAUSE     | 0x13      | Pause        |
+| VK_CAPITAL   | 0x14      | Caps Lock    |
+| VK_ESCAPE    | 0x1B      | ESC          |
+| VK_SPACE     | 0x20      | 空格           |
+| VK_PRIOR     | 0x21      | Page Up      |
+| VK_NEXT      | 0x22      | Page Down    |
+| VK_END       | 0x23      | End          |
+| VK_HOME      | 0x24      | Home         |
+| VK_LEFT      | 0x25      | ←            |
+| VK_UP        | 0x26      | ↑            |
+| VK_RIGHT     | 0x27      | →            |
+| VK_DOWN      | 0x28      | ↓            |
+| VK_SNAPSHOT  | 0x2C      | Print Screen |
+| VK_INSERT    | 0x2D      | Insert       |
+| VK_DELETE    | 0x2E      | Delete       |
+| 0-9          | 0x30-0x39 | 数字键          |
+| A-Z          | 0x41-0x5A | 字母键          |
+| VK_NUMPAD0-9 | 0x60-0x69 | 小键盘数字        |
+| VK_F1-F12    | 0x70-0x7B | 功能键          |
+| VK_NUMLOCK   | 0x90      | Num Lock     |
+| VK_SCROLL    | 0x91      | Scroll Lock  |
+| VK_LSHIFT    | 0xA0      | 左 Shift      |
+| VK_RSHIFT    | 0xA1      | 右 Shift      |
+| VK_LCONTROL  | 0xA2      | 左 Ctrl       |
+| VK_RCONTROL  | 0xA3      | 右 Ctrl       |
+| VK_LMENU     | 0xA4      | 左 Alt        |
+| VK_RMENU     | 0xA5      | 右 Alt        |
 
 ---
 
@@ -9581,45 +10034,60 @@ MsgBox "屏幕: " & dm.GetScreenWidth() & "x" & dm.GetScreenHeight()
 
 COM 接口的方法名采用 **PascalCase**（首字母大写），与 C 导出函数名的对应关系：
 
-| C 函数 | COM 方法 |
-|--------|---------|
-| `dm_ver` | `Ver` |
-| `dm_getID` | `GetID` |
+| C 函数            | COM 方法       |
+| --------------- | ------------ |
+| `dm_ver`        | `Ver`        |
+| `dm_getID`      | `GetID`      |
 | `dm_findWindow` | `FindWindow` |
-| `dm_moveTo` | `MoveTo` |
-| `dm_leftClick` | `LeftClick` |
-| `dm_capture` | `Capture` |
-| `dm_findColor` | `FindColor` |
-| `dm_findPic` | `FindPic` |
-| `dm_ocr` | `Ocr` |
-| `dm_delay` | `Delay` |
+| `dm_moveTo`     | `MoveTo`     |
+| `dm_leftClick`  | `LeftClick`  |
+| `dm_capture`    | `Capture`    |
+| `dm_findColor`  | `FindColor`  |
+| `dm_findPic`    | `FindPic`    |
+| `dm_ocr`        | `Ocr`        |
+| `dm_delay`      | `Delay`      |
 
 ### 有输出参数的函数
 
 以下函数在 COM 中返回 `"x|y"` 或 `"x1|y1|x2|y2"` 格式的字符串：
 
-| 函数 | COM 返回值格式 |
-|------|---------------|
-| `FindColor` | `"x\|y"` 或空字符串 |
-| `FindColorBlock` | `"x\|y"` 或空字符串 |
-| `FindMultiColor` | `"x\|y"` 或空字符串 |
-| `FindPic` | `"x\|y"` 或空字符串 |
-| `FindStr` | `"x\|y"` 或空字符串 |
-| `FindStrFast` | `"x\|y"` 或空字符串 |
-| `GetCursorPos` | `"x\|y"` |
-| `GetWindowRect` | `"x1\|y1\|x2\|y2"` |
-| `GetClientRect` | `"x1\|y1\|x2\|y2"` |
-| `GetClientSize` | `"width\|height"` |
-| `ClientToScreen` | `"x\|y"` |
-| `ScreenToClient` | `"x\|y"` |
-| `ReadInt` | 整数（直接返回） |
-| `ReadFloat` | 浮点数（直接返回） |
-| `ReadDouble` | 浮点数（直接返回） |
+| 函数                 | COM 返回值格式                |
+| ------------------ | ------------------------ |
+| `FindColor`        | `"x\|y"` 或空字符串           |
+| `FindColorBlock`   | `"x\|y"` 或空字符串           |
+| `FindMultiColor`   | `"x\|y"` 或空字符串           |
+| `FindPic`          | `"x\|y"` 或空字符串           |
+| `FindStr`          | `"x\|y"` 或空字符串           |
+| `FindStrFast`      | `"x\|y"` 或空字符串           |
+| `GetCursorPos`     | `"x\|y"`                 |
+| `GetWindowRect`    | `"x1\|y1\|x2\|y2"` 或空字符串 |
+| `GetClientRect`    | `"x1\|y1\|x2\|y2"` 或空字符串 |
+| `GetClientSize`    | `"width\|height"` 或空字符串  |
+| `ClientToScreen`   | `"x\|y"` 或空字符串           |
+| `ScreenToClient`   | `"x\|y"` 或空字符串           |
+| `GetResultPos`     | `"x\|y"` 或空字符串           |
+| `GetWordResultPos` | `"x\|y"` 或空字符串           |
+| `VirtualProtectEx` | 旧保护属性值（字符串）或空字符串         |
+| `GetScreenDataBmp` | BMP 数据字符串                |
+| `ReadInt`          | 整数（直接返回）                 |
+| `ReadFloat`        | 浮点数（直接返回）                |
+| `ReadDouble`       | 浮点数（直接返回）                |
+
+### COM 支持状态（完整覆盖）
+
+截至本文档版本，所有 **417** 个函数在 COM 分发表（`g_dispTable[]`）中均已注册条目，可通过 `win32com.client.Dispatch('dm.dmsoft')` 完整调用，无例外。
+
+此前"COM 尚未支持的函数"章节列出的 40 个函数（窗口操作 2 个、内存操作 23 个、文字识别 4 个、Foobar 控件 5 个、AI 功能 6 个）已于 **v1.4** 全部补齐：
+
+- **标准模式直接映射**（10 个）：`findWindowEx`、`readDataAddrToBin`、`writeIntAddr`、`writeFloatAddr`、`writeStringAddr`、`writeDataAddr`、`writeDataFromBin`、`writeDataAddrFromBin`、`foobarSetSave`、`foobarSetTrans`
+- **SPECIAL 自定义处理器**（30 个）：`enumWindowSuper`、`readFloatAddr`、`readDoubleAddr`、`readStringAddr`、`readDataAddr`、`findIntEx`、`findFloat`、`findFloatEx`、`findDouble`、`findDoubleEx`、`findString`、`findStringEx`、`findData`、`findDataEx`、`writeDouble`、`writeDoubleAddr`、`virtualQueryEx`、`setDictMem`、`findStrWithFont`、`findStrWithFontE`、`findStrWithFontEx`、`loadAiMemory`、`aiFindPicMem`、`aiFindPicMemEx`、`aiYoloDetectObjectsToDataBmp`、`aiYoloDetectObjectsToFile`、`aiYoloSetModelMemory`、`foobarDrawText`、`foobarDrawRect`、`foobarDrawLine`
+
+> 涉及输出参数（如 `x|y` 坐标、内存读取结果）的函数在 COM 中统一通过 `SetResult*` 辅助函数返回拼接字符串，保持与原版大漠 COM 接口一致。
 
 ---
 
-> **文档版本**: 1.2  
+> **文档版本**: 1.4  
 > **最后更新**: 2026-08-13  
-> **项目地址**: [https://github.com/Pkk233/dm_hook](https://github.com/Pkk233/dm_hook)  
+> **项目地址**: <https://github.com/Pkk233/dm_hook>  
 > **总函数数**: 约 417 个（含同类变体，涵盖 16 个模块）  
 > **调用方式**: 支持 `LoadLibrary` 直调 + `COM` 组件注册

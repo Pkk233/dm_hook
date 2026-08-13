@@ -1,0 +1,14 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\CLSID\{9AEDF74E-E647-443C-A42A-2D7B50AE7345}]
+@="dm.dmsoft"
+
+[HKEY_CLASSES_ROOT\CLSID\{9AEDF74E-E647-443C-A42A-2D7B50AE7345}\InprocServer32]
+@="D:\\dm\\dm_hook\\dm_hook.dll"
+"ThreadingModel"="Both"
+
+[HKEY_CLASSES_ROOT\dm.dmsoft]
+@="dm.dmsoft"
+
+[HKEY_CLASSES_ROOT\dm.dmsoft\CLSID]
+@="{9AEDF74E-E647-443C-A42A-2D7B50AE7345}"

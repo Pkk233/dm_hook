@@ -26,6 +26,12 @@ EXTERN_C const GUID CLSID_DmSoft;
 #define DISPID_START 1
 
 // 函数模式枚举（用于 Invoke 中分发）
+// 命名规则：L=long 参数, S=string 参数, P=pointer 参数, F=float 参数
+//           数字=参数个数, 结尾 L=返回 long, S=返回 string
+// 例如：L2L = 2 个 long 参数, 返回 long
+//       L1L1S = 1 个 long + 1 个 string 参数, 返回 long
+//       P1L1S = 1 个 pointer + 1 个 long + 1 个 string 参数, 返回 long
+//       S2L1S = 2 个 string + 1 个 long 参数, 返回 string
 enum class FuncPattern : uint8_t {
     L0, S0, L1L, L1S, L2L, L3L, L4L, L5L,
     L2S, L3S, L1L1S, L1S1L, L2L1S, L1S2L, L4L1S,
@@ -80,8 +86,8 @@ private:
     // 在调用 C 函数前/后切换状态
     class StateGuard {
     public:
-        StateGuard(DmState* s) { dm_setComState(s); }
-        ~StateGuard() { dm_setComState(nullptr); }
+        StateGuard(DmState* s) { setComState(s); }
+        ~StateGuard() { setComState(nullptr); }
     };
 };
 

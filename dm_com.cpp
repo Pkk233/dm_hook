@@ -11,6 +11,11 @@
 #include <string>
 #include <cstring>
 #include <algorithm>
+#include <vector>
+#include <unordered_map>
+#include <mutex>
+#include <cassert>
+#include <cstdio>
 #pragma comment(lib, "shlwapi.lib")
 
 // GUID 定义（生成 GUID 数据）
@@ -24,36 +29,52 @@ LONG g_dllRefCount = 0;
 LONG g_dllLockCount = 0;
 
 // ============================================================================
+// 匿名命名空间 — 内部辅助函数与数据，避免符号污染
+// ============================================================================
+namespace {
+
+// ============================================================================
 // 辅助函数 — VARIANT 参数提取
 // ============================================================================
 
+/// 从 VARIANT 数组中提取 long 值（支持 VT_I4/I2/R4/R8/BOOL 隐式转换）
+/// @param args  VARIANT 参数数组（已反转，args[0] 是第一个参数）
+/// @param index 参数索引
+/// @return 提取的 long 值，类型不匹配时返回 0
 static long GetLongArg(const VARIANT* args, UINT index) {
+    assert(args != nullptr);
     const VARIANT* v = &args[index];
     if (v->vt == VT_I4) return v->lVal;
     if (v->vt == VT_I2) return v->iVal;
-    if (v->vt == VT_R4) return (long)v->fltVal;
-    if (v->vt == VT_R8) return (long)v->dblVal;
+    if (v->vt == VT_R4) return static_cast<long>(v->fltVal);
+    if (v->vt == VT_R8) return static_cast<long>(v->dblVal);
     if (v->vt == VT_BOOL) return v->boolVal ? 1 : 0;
     return 0;
 }
 
+/// 从 VARIANT 数组中提取 float 值
 static float GetFloatArg(const VARIANT* args, UINT index) {
+    assert(args != nullptr);
     const VARIANT* v = &args[index];
     if (v->vt == VT_R4) return v->fltVal;
-    if (v->vt == VT_R8) return (float)v->dblVal;
-    if (v->vt == VT_I4) return (float)v->lVal;
+    if (v->vt == VT_R8) return static_cast<float>(v->dblVal);
+    if (v->vt == VT_I4) return static_cast<float>(v->lVal);
     return 0.0f;
 }
 
+/// 从 VARIANT 数组中提取 double 值
 static double GetDoubleArg(const VARIANT* args, UINT index) {
+    assert(args != nullptr);
     const VARIANT* v = &args[index];
     if (v->vt == VT_R8) return v->dblVal;
-    if (v->vt == VT_R4) return (double)v->fltVal;
-    if (v->vt == VT_I4) return (double)v->lVal;
+    if (v->vt == VT_R4) return static_cast<double>(v->fltVal);
+    if (v->vt == VT_I4) return static_cast<double>(v->lVal);
     return 0.0;
 }
 
+/// 从 VARIANT 数组中提取字符串（BSTR → UTF-8 std::string）
 static std::string GetStringArg(const VARIANT* args, UINT index) {
+    assert(args != nullptr);
     const VARIANT* v = &args[index];
     if (v->vt == VT_BSTR) {
         int len = WideCharToMultiByte(CP_UTF8, 0, v->bstrVal, -1, NULL, 0, NULL, NULL);
@@ -66,17 +87,23 @@ static std::string GetStringArg(const VARIANT* args, UINT index) {
     return "";
 }
 
+/// 从 VARIANT 数组中提取指针（long → intptr_t）
 static intptr_t GetPtrArg(const VARIANT* args, UINT index) {
-    return (intptr_t)GetLongArg(args, index);
+    return static_cast<intptr_t>(GetLongArg(args, index));
 }
 
-// 设置返回值
+// ============================================================================
+// 辅助函数 — 设置 VARIANT 返回值
+// ============================================================================
+
+/// 设置 long 返回值
 static void SetResultLong(VARIANT* ret, long val) {
     if (!ret) return;
     ret->vt = VT_I4;
     ret->lVal = val;
 }
 
+/// 设置字符串返回值（UTF-8 → BSTR）
 static void SetResultString(VARIANT* ret, const char* val) {
     if (!ret) return;
     if (!val) val = "";
@@ -88,10 +115,25 @@ static void SetResultString(VARIANT* ret, const char* val) {
     }
 }
 
+/// 设置 double 返回值
 static void SetResultDouble(VARIANT* ret, double val) {
     if (!ret) return;
     ret->vt = VT_R8;
     ret->dblVal = val;
+}
+
+/// 设置坐标返回值 "x|y"（用于 findColor 等返回位置的方法）
+static void SetResultCoord(VARIANT* ret, long x, long y) {
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%ld|%ld", x, y);
+    SetResultString(ret, buf);
+}
+
+/// 设置矩形返回值 "x1|y1|x2|y2"（用于 getWindowRect 等返回矩形的方法）
+static void SetResultCoord4(VARIANT* ret, long x1, long y1, long x2, long y2) {
+    char buf[128];
+    snprintf(buf, sizeof(buf), "%ld|%ld|%ld|%ld", x1, y1, x2, y2);
+    SetResultString(ret, buf);
 }
 
 // ============================================================================
@@ -103,11 +145,11 @@ static HRESULT H_findColor(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 7) return DISP_E_BADPARAMCOUNT;
     long x = 0, y = 0;
     std::string color = GetStringArg(args, 4);
-    long r = dm_findColor(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+    long r = findColor(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                           GetLongArg(args, 3), color.c_str(), GetLongArg(args, 5),
                           GetLongArg(args, 6), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -116,11 +158,11 @@ static HRESULT H_findColorBlock9(VARIANT* ret, const VARIANT* args, UINT argCoun
     if (argCount < 9) return DISP_E_BADPARAMCOUNT;
     long x = 0, y = 0;
     std::string color = GetStringArg(args, 4);
-    long r = dm_findColorBlock(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+    long r = findColorBlock(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                                GetLongArg(args, 3), color.c_str(), GetLongArg(args, 5),
                                GetLongArg(args, 6), GetLongArg(args, 7), GetLongArg(args, 8), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -129,11 +171,11 @@ static HRESULT H_findMultiColor(VARIANT* ret, const VARIANT* args, UINT argCount
     if (argCount < 8) return DISP_E_BADPARAMCOUNT;
     long x = 0, y = 0;
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
-    long r = dm_findMultiColor(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+    long r = findMultiColor(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                                GetLongArg(args, 3), s0.c_str(), s1.c_str(),
                                GetLongArg(args, 6), GetLongArg(args, 7), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -142,11 +184,11 @@ static HRESULT H_findPic(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 8) return DISP_E_BADPARAMCOUNT;
     long x = 0, y = 0;
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
-    long r = dm_findPic(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+    long r = findPic(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                         GetLongArg(args, 3), s0.c_str(), s1.c_str(),
                         GetLongArg(args, 6), GetLongArg(args, 7), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -155,11 +197,11 @@ static HRESULT H_findStr(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 7) return DISP_E_BADPARAMCOUNT;
     long x = 0, y = 0;
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
-    long r = dm_findStr(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+    long r = findStr(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                         GetLongArg(args, 3), s0.c_str(), s1.c_str(),
                         GetLongArg(args, 6), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -168,18 +210,18 @@ static HRESULT H_findStrFast(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 7) return DISP_E_BADPARAMCOUNT;
     long x = 0, y = 0;
     std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5);
-    long r = dm_findStrFast(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+    long r = findStrFast(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
                             GetLongArg(args, 3), s0.c_str(), s1.c_str(),
                             GetLongArg(args, 6), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
 // getCursorPos
 static HRESULT H_getCursorPos(VARIANT* ret, const VARIANT*, UINT) {
-    long x = 0, y = 0; dm_getCursorPos(&x, &y);
-    char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf);
+    long x = 0, y = 0; getCursorPos(&x, &y);
+    SetResultCoord(ret, x, y);
     return S_OK;
 }
 
@@ -187,9 +229,9 @@ static HRESULT H_getCursorPos(VARIANT* ret, const VARIANT*, UINT) {
 static HRESULT H_getWindowRect(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 1) return DISP_E_BADPARAMCOUNT;
     long x1=0,y1=0,x2=0,y2=0;
-    long r = dm_getWindowRect(GetPtrArg(args,0), &x1,&y1,&x2,&y2);
-    if (r == 0) { char buf[128]; sprintf_s(buf, "%ld|%ld|%ld|%ld", x1,y1,x2,y2); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = getWindowRect(GetPtrArg(args,0), &x1,&y1,&x2,&y2);
+    if (r == 0) SetResultCoord4(ret, x1, y1, x2, y2);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -197,9 +239,9 @@ static HRESULT H_getWindowRect(VARIANT* ret, const VARIANT* args, UINT argCount)
 static HRESULT H_getClientRect(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 1) return DISP_E_BADPARAMCOUNT;
     long x1=0,y1=0,x2=0,y2=0;
-    long r = dm_getClientRect(GetPtrArg(args,0), &x1,&y1,&x2,&y2);
-    if (r == 0) { char buf[128]; sprintf_s(buf, "%ld|%ld|%ld|%ld", x1,y1,x2,y2); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = getClientRect(GetPtrArg(args,0), &x1,&y1,&x2,&y2);
+    if (r == 0) SetResultCoord4(ret, x1, y1, x2, y2);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -207,9 +249,9 @@ static HRESULT H_getClientRect(VARIANT* ret, const VARIANT* args, UINT argCount)
 static HRESULT H_getClientSize(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 1) return DISP_E_BADPARAMCOUNT;
     long w=0,h=0;
-    long r = dm_getClientSize(GetPtrArg(args,0), &w, &h);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", w, h); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = getClientSize(GetPtrArg(args,0), &w, &h);
+    if (r == 0) SetResultCoord(ret, w, h);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -217,9 +259,9 @@ static HRESULT H_getClientSize(VARIANT* ret, const VARIANT* args, UINT argCount)
 static HRESULT H_clientToScreen(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 3) return DISP_E_BADPARAMCOUNT;
     long x = GetLongArg(args,1), y = GetLongArg(args,2);
-    long r = dm_clientToScreen(GetPtrArg(args,0), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = clientToScreen(GetPtrArg(args,0), &x, &y);
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -227,9 +269,9 @@ static HRESULT H_clientToScreen(VARIANT* ret, const VARIANT* args, UINT argCount
 static HRESULT H_screenToClient(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 3) return DISP_E_BADPARAMCOUNT;
     long x = GetLongArg(args,1), y = GetLongArg(args,2);
-    long r = dm_screenToClient(GetPtrArg(args,0), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = screenToClient(GetPtrArg(args,0), &x, &y);
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -237,9 +279,9 @@ static HRESULT H_screenToClient(VARIANT* ret, const VARIANT* args, UINT argCount
 static HRESULT H_getResultPos(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 2) return DISP_E_BADPARAMCOUNT;
     long x=0,y=0; std::string s = GetStringArg(args,0);
-    long r = dm_getResultPos(s.c_str(), GetLongArg(args,1), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = getResultPos(s.c_str(), GetLongArg(args,1), &x, &y);
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -247,9 +289,9 @@ static HRESULT H_getResultPos(VARIANT* ret, const VARIANT* args, UINT argCount) 
 static HRESULT H_getWordResultPos(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 2) return DISP_E_BADPARAMCOUNT;
     long x=0,y=0; std::string s = GetStringArg(args,0);
-    long r = dm_getWordResultPos(s.c_str(), GetLongArg(args,1), &x, &y);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld|%ld", x, y); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = getWordResultPos(s.c_str(), GetLongArg(args,1), &x, &y);
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -257,9 +299,9 @@ static HRESULT H_getWordResultPos(VARIANT* ret, const VARIANT* args, UINT argCou
 static HRESULT H_virtualProtectEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 4) return DISP_E_BADPARAMCOUNT;
     long old = 0;
-    long r = dm_virtualProtectEx(GetPtrArg(args,0), GetLongArg(args,1), GetLongArg(args,2), GetLongArg(args,3), &old);
-    if (r == 0) { char buf[64]; sprintf_s(buf, "%ld", old); SetResultString(ret, buf); }
-    else { SetResultString(ret, ""); }
+    long r = virtualProtectEx(GetPtrArg(args,0), GetLongArg(args,1), GetLongArg(args,2), GetLongArg(args,3), &old);
+    if (r == 0) { char buf[64]; snprintf(buf, sizeof(buf), "%ld", old); SetResultString(ret, buf); }
+    else SetResultString(ret, "");
     return S_OK;
 }
 
@@ -267,7 +309,7 @@ static HRESULT H_virtualProtectEx(VARIANT* ret, const VARIANT* args, UINT argCou
 static HRESULT H_readInt(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 2) return DISP_E_BADPARAMCOUNT;
     long val = 0;
-    dm_readInt(GetPtrArg(args,0), GetLongArg(args,1), &val);
+    readInt(GetPtrArg(args,0), GetLongArg(args,1), &val);
     SetResultLong(ret, val);
     return S_OK;
 }
@@ -276,7 +318,7 @@ static HRESULT H_readInt(VARIANT* ret, const VARIANT* args, UINT argCount) {
 static HRESULT H_readFloat(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 2) return DISP_E_BADPARAMCOUNT;
     float val = 0;
-    dm_readFloat(GetPtrArg(args,0), GetLongArg(args,1), &val);
+    readFloat(GetPtrArg(args,0), GetLongArg(args,1), &val);
     SetResultDouble(ret, val);
     return S_OK;
 }
@@ -285,7 +327,7 @@ static HRESULT H_readFloat(VARIANT* ret, const VARIANT* args, UINT argCount) {
 static HRESULT H_readDouble(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 2) return DISP_E_BADPARAMCOUNT;
     double val = 0;
-    dm_readDouble(GetPtrArg(args,0), GetLongArg(args,1), &val);
+    readDouble(GetPtrArg(args,0), GetLongArg(args,1), &val);
     SetResultDouble(ret, val);
     return S_OK;
 }
@@ -294,9 +336,321 @@ static HRESULT H_readDouble(VARIANT* ret, const VARIANT* args, UINT argCount) {
 static HRESULT H_getScreenDataBmp(VARIANT* ret, const VARIANT* args, UINT argCount) {
     if (argCount < 4) return DISP_E_BADPARAMCOUNT;
     long size = 0;
-    const char* data = dm_getScreenDataBmp(GetLongArg(args,0), GetLongArg(args,1),
+    const char* data = getScreenDataBmp(GetLongArg(args,0), GetLongArg(args,1),
                                            GetLongArg(args,2), GetLongArg(args,3), &size);
     SetResultString(ret, data);
+    return S_OK;
+}
+
+// ============================================================================
+// 补充特殊处理函数 — 为之前缺失的 COM 分发表条目提供支持
+// ============================================================================
+
+// --- 模块 2: 窗口操作 ---
+
+// enumWindowSuper(spec1, flag1, spec2, flag2, filter) -> long
+static HRESULT H_enumWindowSuper(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 5) return DISP_E_BADPARAMCOUNT;
+    std::string s0 = GetStringArg(args, 0), s2 = GetStringArg(args, 2);
+    long r = enumWindowSuper(s0.c_str(), GetLongArg(args, 1), s2.c_str(),
+                                GetLongArg(args, 3), GetLongArg(args, 4));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// --- 模块 6: 内存操作 ---
+
+// readFloatAddr(hwnd, addr) -> float value
+static HRESULT H_readFloatAddr(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 2) return DISP_E_BADPARAMCOUNT;
+    float val = 0;
+    readFloatAddr(GetPtrArg(args, 0), GetLongArg(args, 1), &val);
+    SetResultDouble(ret, val);
+    return S_OK;
+}
+
+// readDoubleAddr(hwnd, addr) -> double value
+static HRESULT H_readDoubleAddr(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 2) return DISP_E_BADPARAMCOUNT;
+    double val = 0;
+    readDoubleAddr(GetPtrArg(args, 0), GetLongArg(args, 1), &val);
+    SetResultDouble(ret, val);
+    return S_OK;
+}
+
+// readStringAddr(hwnd, addr, type, len) -> string
+static HRESULT H_readStringAddr(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 4) return DISP_E_BADPARAMCOUNT;
+    const char* result = readStringAddr(GetPtrArg(args, 0), GetLongArg(args, 1),
+                                           GetLongArg(args, 2), GetLongArg(args, 3));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// readDataAddr(hwnd, addr, len) -> string
+static HRESULT H_readDataAddr(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 3) return DISP_E_BADPARAMCOUNT;
+    const char* result = readDataAddr(GetPtrArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findIntEx(hwnd, addr_range, int_min, int_max, step, multi_thread, mode) -> string
+static HRESULT H_findIntEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 1);
+    const char* result = findIntEx(GetPtrArg(args, 0), s.c_str(),
+                                      GetLongArg(args, 2), GetLongArg(args, 3),
+                                      GetLongArg(args, 4), GetLongArg(args, 5), GetLongArg(args, 6));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findFloat(hwnd, addr_range, float_min, float_max) -> string
+static HRESULT H_findFloat(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 4) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 1);
+    const char* result = findFloat(GetPtrArg(args, 0), s.c_str(),
+                                      GetFloatArg(args, 2), GetFloatArg(args, 3));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findFloatEx(hwnd, addr_range, float_min, float_max, step, multi_thread, mode) -> string
+static HRESULT H_findFloatEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 1);
+    const char* result = findFloatEx(GetPtrArg(args, 0), s.c_str(),
+                                        GetFloatArg(args, 2), GetFloatArg(args, 3),
+                                        GetLongArg(args, 4), GetLongArg(args, 5), GetLongArg(args, 6));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findDouble(hwnd, addr_range, double_min, double_max) -> string
+static HRESULT H_findDouble(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 4) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 1);
+    const char* result = findDouble(GetPtrArg(args, 0), s.c_str(),
+                                       GetDoubleArg(args, 2), GetDoubleArg(args, 3));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findDoubleEx(hwnd, addr_range, double_min, double_max, step, multi_thread, mode) -> string
+static HRESULT H_findDoubleEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 1);
+    const char* result = findDoubleEx(GetPtrArg(args, 0), s.c_str(),
+                                         GetDoubleArg(args, 2), GetDoubleArg(args, 3),
+                                         GetLongArg(args, 4), GetLongArg(args, 5), GetLongArg(args, 6));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findString(hwnd, addr_range, string_value, type) -> string
+static HRESULT H_findString(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 4) return DISP_E_BADPARAMCOUNT;
+    std::string s1 = GetStringArg(args, 1), s2 = GetStringArg(args, 2);
+    const char* result = findString(GetPtrArg(args, 0), s1.c_str(), s2.c_str(), GetLongArg(args, 3));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findStringEx(hwnd, addr_range, string_value, type, step, multi_thread, mode) -> string
+static HRESULT H_findStringEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    std::string s1 = GetStringArg(args, 1), s2 = GetStringArg(args, 2);
+    const char* result = findStringEx(GetPtrArg(args, 0), s1.c_str(), s2.c_str(),
+                                         GetLongArg(args, 3), GetLongArg(args, 4),
+                                         GetLongArg(args, 5), GetLongArg(args, 6));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findData(hwnd, addr_range, data) -> string
+static HRESULT H_findData(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 3) return DISP_E_BADPARAMCOUNT;
+    std::string s1 = GetStringArg(args, 1), s2 = GetStringArg(args, 2);
+    const char* result = findData(GetPtrArg(args, 0), s1.c_str(), s2.c_str());
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findDataEx(hwnd, addr_range, data, step, multi_thread, mode) -> string
+static HRESULT H_findDataEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 6) return DISP_E_BADPARAMCOUNT;
+    std::string s1 = GetStringArg(args, 1), s2 = GetStringArg(args, 2);
+    const char* result = findDataEx(GetPtrArg(args, 0), s1.c_str(), s2.c_str(),
+                                       GetLongArg(args, 3), GetLongArg(args, 4), GetLongArg(args, 5));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// writeDouble(hwnd, addr, double v) -> long
+static HRESULT H_writeDouble(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 3) return DISP_E_BADPARAMCOUNT;
+    long r = writeDouble(GetPtrArg(args, 0), GetLongArg(args, 1), GetDoubleArg(args, 2));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// writeDoubleAddr(hwnd, addr, double v) -> long
+static HRESULT H_writeDoubleAddr(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 3) return DISP_E_BADPARAMCOUNT;
+    long r = writeDoubleAddr(GetPtrArg(args, 0), GetLongArg(args, 1), GetDoubleArg(args, 2));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// virtualQueryEx(hwnd, addr, pmbi) -> string
+static HRESULT H_virtualQueryEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 3) return DISP_E_BADPARAMCOUNT;
+    const char* result = virtualQueryEx(GetPtrArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// --- 模块 8: 文字识别 ---
+
+// setDictMem(index, data, size) -> long
+static HRESULT H_setDictMem(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 3) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 1);
+    long r = setDictMem(GetLongArg(args, 0), s.c_str(), GetLongArg(args, 2));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// findStrWithFont(x1, y1, x2, y2, str, color, sim, font_name, font_flag, font_size) -> "x|y"
+static HRESULT H_findStrWithFont(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 10) return DISP_E_BADPARAMCOUNT;
+    long x = 0, y = 0;
+    std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5), s2 = GetStringArg(args, 7);
+    long r = findStrWithFont(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                                GetLongArg(args, 3), s0.c_str(), s1.c_str(), GetLongArg(args, 6),
+                                s2.c_str(), GetLongArg(args, 8), GetLongArg(args, 9), &x, &y);
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
+    return S_OK;
+}
+
+// findStrWithFontE(x1, y1, x2, y2, str, color, sim, font_name, font_flag, font_size) -> string
+static HRESULT H_findStrWithFontE(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 10) return DISP_E_BADPARAMCOUNT;
+    std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5), s2 = GetStringArg(args, 7);
+    const char* result = findStrWithFontE(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                                             GetLongArg(args, 3), s0.c_str(), s1.c_str(), GetLongArg(args, 6),
+                                             s2.c_str(), GetLongArg(args, 8), GetLongArg(args, 9));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// findStrWithFontEx(x1, y1, x2, y2, str, color, sim, font_name, font_flag, font_size) -> string
+static HRESULT H_findStrWithFontEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 10) return DISP_E_BADPARAMCOUNT;
+    std::string s0 = GetStringArg(args, 4), s1 = GetStringArg(args, 5), s2 = GetStringArg(args, 7);
+    const char* result = findStrWithFontEx(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                                              GetLongArg(args, 3), s0.c_str(), s1.c_str(), GetLongArg(args, 6),
+                                              s2.c_str(), GetLongArg(args, 8), GetLongArg(args, 9));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// --- 模块 12: AI ---
+
+// loadAiMemory(data, size) -> long
+static HRESULT H_loadAiMemory(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 2) return DISP_E_BADPARAMCOUNT;
+    long r = loadAiMemory(GetLongArg(args, 0), GetLongArg(args, 1));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// aiFindPicMem(x1, y1, x2, y2, pic_info, sim, dir) -> "x|y"
+static HRESULT H_aiFindPicMem(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    long x = 0, y = 0;
+    std::string s = GetStringArg(args, 4);
+    long r = aiFindPicMem(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                             GetLongArg(args, 3), s.c_str(), GetLongArg(args, 5),
+                             GetLongArg(args, 6), &x, &y);
+    if (r == 0) SetResultCoord(ret, x, y);
+    else SetResultString(ret, "");
+    return S_OK;
+}
+
+// aiFindPicMemEx(x1, y1, x2, y2, pic_info, sim, dir) -> string
+static HRESULT H_aiFindPicMemEx(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 4);
+    const char* result = aiFindPicMemEx(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                                           GetLongArg(args, 3), s.c_str(), GetLongArg(args, 5),
+                                           GetLongArg(args, 6));
+    SetResultString(ret, result);
+    return S_OK;
+}
+
+// aiYoloDetectObjectsToDataBmp(x1, y1, x2, y2, prob, iou, data, size, mode) -> long
+static HRESULT H_aiYoloDetectObjectsToDataBmp(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 9) return DISP_E_BADPARAMCOUNT;
+    long r = aiYoloDetectObjectsToDataBmp(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                                             GetLongArg(args, 3), GetFloatArg(args, 4), GetFloatArg(args, 5),
+                                             GetLongArg(args, 6), GetLongArg(args, 7), GetLongArg(args, 8));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// aiYoloDetectObjectsToFile(x1, y1, x2, y2, prob, iou, file, mode) -> long
+static HRESULT H_aiYoloDetectObjectsToFile(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 8) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 6);
+    long r = aiYoloDetectObjectsToFile(GetLongArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                                          GetLongArg(args, 3), GetFloatArg(args, 4), GetFloatArg(args, 5),
+                                          s.c_str(), GetLongArg(args, 7));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// aiYoloSetModelMemory(data, size, model_type) -> long
+static HRESULT H_aiYoloSetModelMemory(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 3) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 2);
+    long r = aiYoloSetModelMemory(GetLongArg(args, 0), GetLongArg(args, 1), s.c_str());
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// --- 模块 13: Foobar ---
+
+// foobarDrawText(hwnd, x, y, w, h, text, color, align) -> long
+static HRESULT H_foobarDrawText(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 8) return DISP_E_BADPARAMCOUNT;
+    std::string s = GetStringArg(args, 5);
+    long r = foobarDrawText(GetPtrArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                               GetLongArg(args, 3), GetLongArg(args, 4), s.c_str(),
+                               GetLongArg(args, 6), GetLongArg(args, 7));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// foobarDrawRect(hwnd, x1, y1, x2, y2, color, style) -> long
+static HRESULT H_foobarDrawRect(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    long r = foobarDrawRect(GetPtrArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                               GetLongArg(args, 3), GetLongArg(args, 4), GetLongArg(args, 5),
+                               GetLongArg(args, 6));
+    SetResultLong(ret, r);
+    return S_OK;
+}
+
+// foobarDrawLine(hwnd, x1, y1, x2, y2, color, style) -> long
+static HRESULT H_foobarDrawLine(VARIANT* ret, const VARIANT* args, UINT argCount) {
+    if (argCount < 7) return DISP_E_BADPARAMCOUNT;
+    long r = foobarDrawLine(GetPtrArg(args, 0), GetLongArg(args, 1), GetLongArg(args, 2),
+                               GetLongArg(args, 3), GetLongArg(args, 4), GetLongArg(args, 5),
+                               GetLongArg(args, 6));
+    SetResultLong(ret, r);
     return S_OK;
 }
 
@@ -495,411 +849,496 @@ enum DispIds {
 // ============================================================================
 const DispFuncEntry g_dispTable[] = {
     // ====== 模块1: 基本设置 ======
-    ENTRY_L2S(dm_reg, DISPID_reg),
-    ENTRY_REGEX(dm_regEx, DISPID_regEx),
-    ENTRY_L2S(dm_regNoMac, DISPID_regNoMac),
-    ENTRY_REGEX(dm_regExNoMac, DISPID_regExNoMac),
-    ENTRY_S0(dm_ver, DISPID_ver),
-    ENTRY_L0(dm_getID, DISPID_getID),
-    ENTRY_L0(dm_getDmCount, DISPID_getDmCount),
-    ENTRY_L0(dm_getLastError, DISPID_getLastError),
-    ENTRY_S0(dm_getPath, DISPID_getPath),
-    ENTRY_L1S(dm_setPath, DISPID_setPath),
-    ENTRY_S0(dm_getBasePath, DISPID_getBasePath),
-    ENTRY_L1L(dm_setShowErrorMsg, DISPID_setShowErrorMsg),
-    ENTRY_L1L(dm_enablePicCache, DISPID_enablePicCache),
+    ENTRY_L2S(reg, DISPID_reg),
+    ENTRY_REGEX(regEx, DISPID_regEx),
+    ENTRY_L2S(regNoMac, DISPID_regNoMac),
+    ENTRY_REGEX(regExNoMac, DISPID_regExNoMac),
+    ENTRY_S0(ver, DISPID_ver),
+    ENTRY_L0(getID, DISPID_getID),
+    ENTRY_L0(getDmCount, DISPID_getDmCount),
+    ENTRY_L0(getLastError, DISPID_getLastError),
+    ENTRY_S0(getPath, DISPID_getPath),
+    ENTRY_L1S(setPath, DISPID_setPath),
+    ENTRY_S0(getBasePath, DISPID_getBasePath),
+    ENTRY_L1L(setShowErrorMsg, DISPID_setShowErrorMsg),
+    ENTRY_L1L(enablePicCache, DISPID_enablePicCache),
     // ====== 模块2: 窗口操作 ======
-    ENTRY_L2S(dm_findWindow, DISPID_findWindow),
-    ENTRY_L2S(dm_findWindowByProcess, DISPID_findWindowByProcess),
-    ENTRY_L3L(dm_findWindowByProcessId, DISPID_findWindowByProcessId),
-    ENTRY_L1S1L(dm_findWindowSuper, DISPID_findWindowSuper),
-    ENTRY_L1S1L(dm_enumWindow, DISPID_enumWindow),
-    ENTRY_L1S1L(dm_enumWindowByProcess, DISPID_enumWindowByProcess),
-    ENTRY_L1S1L(dm_enumWindowByProcessId, DISPID_enumWindowByProcessId),
-    ENTRY_L1S(dm_enumProcess, DISPID_enumProcess),
-    ENTRY_P1L1L(dm_getWindow, DISPID_getWindow),
-    ENTRY_L0(dm_getForegroundWindow, DISPID_getForegroundWindow),
-    ENTRY_L0(dm_getForegroundFocus, DISPID_getForegroundFocus),
-    ENTRY_L0(dm_getMousePointWindow, DISPID_getMousePointWindow),
-    ENTRY_L2L(dm_getPointWindow, DISPID_getPointWindow),
-    ENTRY_L1L(dm_getSpecialWindow, DISPID_getSpecialWindow),
-    ENTRY_P1S(dm_getWindowClass, DISPID_getWindowClass),
-    ENTRY_P1L(dm_getWindowProcessId, DISPID_getWindowProcessId),
-    ENTRY_P1S(dm_getWindowProcessPath, DISPID_getWindowProcessPath),
-    ENTRY_P1L(dm_getWindowThreadId, DISPID_getWindowThreadId),
-    ENTRY_P1S(dm_getWindowTitle, DISPID_getWindowTitle),
+    ENTRY_L2S(findWindow, DISPID_findWindow),
+    ENTRY_P1L1L1S(findWindowEx, DISPID_findWindowEx),
+    ENTRY_L2S(findWindowByProcess, DISPID_findWindowByProcess),
+    ENTRY_L3L(findWindowByProcessId, DISPID_findWindowByProcessId),
+    ENTRY_L1S1L(findWindowSuper, DISPID_findWindowSuper),
+    ENTRY_L1S1L(enumWindow, DISPID_enumWindow),
+    ENTRY_L1S1L(enumWindowByProcess, DISPID_enumWindowByProcess),
+    ENTRY_L1S1L(enumWindowByProcessId, DISPID_enumWindowByProcessId),
+    ENTRY_SPECIAL(H_enumWindowSuper, DISPID_enumWindowSuper, 5, 5),
+    ENTRY_L1S(enumProcess, DISPID_enumProcess),
+    ENTRY_P1L1L(getWindow, DISPID_getWindow),
+    ENTRY_L0(getForegroundWindow, DISPID_getForegroundWindow),
+    ENTRY_L0(getForegroundFocus, DISPID_getForegroundFocus),
+    ENTRY_L0(getMousePointWindow, DISPID_getMousePointWindow),
+    ENTRY_L2L(getPointWindow, DISPID_getPointWindow),
+    ENTRY_L1L(getSpecialWindow, DISPID_getSpecialWindow),
+    ENTRY_P1S(getWindowClass, DISPID_getWindowClass),
+    ENTRY_P1L(getWindowProcessId, DISPID_getWindowProcessId),
+    ENTRY_P1S(getWindowProcessPath, DISPID_getWindowProcessPath),
+    ENTRY_P1L(getWindowThreadId, DISPID_getWindowThreadId),
+    ENTRY_P1S(getWindowTitle, DISPID_getWindowTitle),
     ENTRY_SPECIAL(H_getWindowRect, DISPID_getWindowRect, 1, 1),
     ENTRY_SPECIAL(H_getClientRect, DISPID_getClientRect, 1, 1),
     ENTRY_SPECIAL(H_getClientSize, DISPID_getClientSize, 1, 1),
-    ENTRY_P1L1L(dm_getWindowState, DISPID_getWindowState),
-    ENTRY_L1S1L(dm_getProcessInfo, DISPID_getProcessInfo),
-    ENTRY_P1L2L(dm_moveWindow, DISPID_moveWindow),
-    ENTRY_P1L2L(dm_setWindowSize, DISPID_setWindowSize),
-    ENTRY_P1L1L(dm_setWindowState, DISPID_setWindowState),
-    ENTRY_P1L1S(dm_setWindowText, DISPID_setWindowText),
-    ENTRY_P1L1L(dm_setWindowTransparent, DISPID_setWindowTransparent),
-    ENTRY_P1L2L(dm_setClientSize, DISPID_setClientSize),
-    ENTRY_L1L(dm_setSendStringDelay, DISPID_setSendStringDelay),
-    ENTRY_P1L(dm_sendPaste, DISPID_sendPaste),
-    ENTRY_P1L1S(dm_sendString, DISPID_sendString),
-    ENTRY_P1L1S(dm_sendString2, DISPID_sendString2),
-    ENTRY_P1L1S(dm_sendStringIme, DISPID_sendStringIme),
-    ENTRY_P1L1S(dm_sendStringIme2, DISPID_sendStringIme2),
+    ENTRY_P1L1L(getWindowState, DISPID_getWindowState),
+    ENTRY_L1S1L(getProcessInfo, DISPID_getProcessInfo),
+    ENTRY_P1L2L(moveWindow, DISPID_moveWindow),
+    ENTRY_P1L2L(setWindowSize, DISPID_setWindowSize),
+    ENTRY_P1L1L(setWindowState, DISPID_setWindowState),
+    ENTRY_P1L1S(setWindowText, DISPID_setWindowText),
+    ENTRY_P1L1L(setWindowTransparent, DISPID_setWindowTransparent),
+    ENTRY_P1L2L(setClientSize, DISPID_setClientSize),
+    ENTRY_L1L(setSendStringDelay, DISPID_setSendStringDelay),
+    ENTRY_P1L(sendPaste, DISPID_sendPaste),
+    ENTRY_P1L1S(sendString, DISPID_sendString),
+    ENTRY_P1L1S(sendString2, DISPID_sendString2),
+    ENTRY_P1L1S(sendStringIme, DISPID_sendStringIme),
+    ENTRY_P1L1S(sendStringIme2, DISPID_sendStringIme2),
     ENTRY_SPECIAL(H_clientToScreen, DISPID_clientToScreen, 3, 3),
     ENTRY_SPECIAL(H_screenToClient, DISPID_screenToClient, 3, 3),
     // ====== 模块3: 键鼠操作 ======
-    ENTRY_L1L(dm_keyDown, DISPID_keyDown),
-    ENTRY_L1S(dm_keyDownChar, DISPID_keyDownChar),
-    ENTRY_L1L(dm_keyPress, DISPID_keyPress),
-    ENTRY_L1S(dm_keyPressChar, DISPID_keyPressChar),
-    ENTRY_L1S1L(dm_keyPressStr, DISPID_keyPressStr),
-    ENTRY_L1L(dm_keyUp, DISPID_keyUp),
-    ENTRY_L1S(dm_keyUpChar, DISPID_keyUpChar),
-    ENTRY_L2L(dm_waitKey, DISPID_waitKey),
-    ENTRY_L1L(dm_getKeyState, DISPID_getKeyState),
-    ENTRY_L0(dm_leftClick, DISPID_leftClick),
-    ENTRY_L0(dm_leftDoubleClick, DISPID_leftDoubleClick),
-    ENTRY_L0(dm_leftDown, DISPID_leftDown),
-    ENTRY_L0(dm_leftUp, DISPID_leftUp),
-    ENTRY_L0(dm_rightClick, DISPID_rightClick),
-    ENTRY_L0(dm_rightDown, DISPID_rightDown),
-    ENTRY_L0(dm_rightUp, DISPID_rightUp),
-    ENTRY_L0(dm_middleClick, DISPID_middleClick),
-    ENTRY_L0(dm_middleDown, DISPID_middleDown),
-    ENTRY_L0(dm_middleUp, DISPID_middleUp),
-    ENTRY_L2L(dm_moveTo, DISPID_moveTo),
-    ENTRY_L4L(dm_moveToEx, DISPID_moveToEx),
-    ENTRY_L2L(dm_moveR, DISPID_moveR),
-    ENTRY_L1L(dm_wheelDown, DISPID_wheelDown),
-    ENTRY_L1L(dm_wheelUp, DISPID_wheelUp),
+    ENTRY_L1L(keyDown, DISPID_keyDown),
+    ENTRY_L1S(keyDownChar, DISPID_keyDownChar),
+    ENTRY_L1L(keyPress, DISPID_keyPress),
+    ENTRY_L1S(keyPressChar, DISPID_keyPressChar),
+    ENTRY_L1S1L(keyPressStr, DISPID_keyPressStr),
+    ENTRY_L1L(keyUp, DISPID_keyUp),
+    ENTRY_L1S(keyUpChar, DISPID_keyUpChar),
+    ENTRY_L2L(waitKey, DISPID_waitKey),
+    ENTRY_L1L(getKeyState, DISPID_getKeyState),
+    ENTRY_L0(leftClick, DISPID_leftClick),
+    ENTRY_L0(leftDoubleClick, DISPID_leftDoubleClick),
+    ENTRY_L0(leftDown, DISPID_leftDown),
+    ENTRY_L0(leftUp, DISPID_leftUp),
+    ENTRY_L0(rightClick, DISPID_rightClick),
+    ENTRY_L0(rightDown, DISPID_rightDown),
+    ENTRY_L0(rightUp, DISPID_rightUp),
+    ENTRY_L0(middleClick, DISPID_middleClick),
+    ENTRY_L0(middleDown, DISPID_middleDown),
+    ENTRY_L0(middleUp, DISPID_middleUp),
+    ENTRY_L2L(moveTo, DISPID_moveTo),
+    ENTRY_L4L(moveToEx, DISPID_moveToEx),
+    ENTRY_L2L(moveR, DISPID_moveR),
+    ENTRY_L1L(wheelDown, DISPID_wheelDown),
+    ENTRY_L1L(wheelUp, DISPID_wheelUp),
     ENTRY_SPECIAL(H_getCursorPos, DISPID_getCursorPos, 0, 0),
-    ENTRY_L0(dm_getCursorShape, DISPID_getCursorShape),
-    ENTRY_L1L(dm_getCursorShapeEx, DISPID_getCursorShapeEx),
-    ENTRY_L0(dm_getCursorSpot, DISPID_getCursorSpot),
-    ENTRY_L2L(dm_setMouseDelay, DISPID_setMouseDelay),
-    ENTRY_L2L(dm_setKeypadDelay, DISPID_setKeypadDelay),
-    ENTRY_L1L(dm_setMouseSpeed, DISPID_setMouseSpeed),
-    ENTRY_L0(dm_getMouseSpeed, DISPID_getMouseSpeed),
-    ENTRY_L1L(dm_enableMouseAccuracy, DISPID_enableMouseAccuracy),
-    ENTRY_L1L(dm_setSimMode, DISPID_setSimMode),
+    ENTRY_L0(getCursorShape, DISPID_getCursorShape),
+    ENTRY_L1L(getCursorShapeEx, DISPID_getCursorShapeEx),
+    ENTRY_L0(getCursorSpot, DISPID_getCursorSpot),
+    ENTRY_L2L(setMouseDelay, DISPID_setMouseDelay),
+    ENTRY_L2L(setKeypadDelay, DISPID_setKeypadDelay),
+    ENTRY_L1L(setMouseSpeed, DISPID_setMouseSpeed),
+    ENTRY_L0(getMouseSpeed, DISPID_getMouseSpeed),
+    ENTRY_L1L(enableMouseAccuracy, DISPID_enableMouseAccuracy),
+    ENTRY_L1L(setSimMode, DISPID_setSimMode),
     // ====== 模块4: 图色操作 ======
-    ENTRY_L4L1S(dm_capture, DISPID_capture),
-    ENTRY_L4L1S1L(dm_captureGif, DISPID_captureGif),
-    ENTRY_L4L1S1L(dm_captureJpg, DISPID_captureJpg),
-    ENTRY_L4L1S(dm_capturePng, DISPID_capturePng),
-    ENTRY_L1S(dm_capturePre, DISPID_capturePre),
-    ENTRY_S2L(dm_getColor, DISPID_getColor),
-    ENTRY_S2L(dm_getColorBGR, DISPID_getColorBGR),
-    ENTRY_S2L(dm_getColorHSV, DISPID_getColorHSV),
-    ENTRY_L4L1S(dm_getColorNum, DISPID_getColorNum),
-    ENTRY_S2L(dm_getAveRGB, DISPID_getAveRGB),
-    ENTRY_S2L(dm_getAveHSV, DISPID_getAveHSV),
-    ENTRY_L2L1S(dm_cmpColor, DISPID_cmpColor),
+    ENTRY_L4L1S(capture, DISPID_capture),
+    ENTRY_L4L1S1L(captureGif, DISPID_captureGif),
+    ENTRY_L4L1S1L(captureJpg, DISPID_captureJpg),
+    ENTRY_L4L1S(capturePng, DISPID_capturePng),
+    ENTRY_L1S(capturePre, DISPID_capturePre),
+    ENTRY_S2L(getColor, DISPID_getColor),
+    ENTRY_S2L(getColorBGR, DISPID_getColorBGR),
+    ENTRY_S2L(getColorHSV, DISPID_getColorHSV),
+    ENTRY_L4L1S(getColorNum, DISPID_getColorNum),
+    ENTRY_S2L(getAveRGB, DISPID_getAveRGB),
+    ENTRY_S2L(getAveHSV, DISPID_getAveHSV),
+    ENTRY_L2L1S(cmpColor, DISPID_cmpColor),
     ENTRY_SPECIAL(H_findColor, DISPID_findColor, 7, 7),
-    ENTRY_L4L2S(dm_findColorEx, DISPID_findColorEx),
+    ENTRY_L4L2S(findColorEx, DISPID_findColorEx),
     ENTRY_SPECIAL(H_findColorBlock9, DISPID_findColorBlock, 9, 9),
-    ENTRY_L4L2S(dm_findColorBlockEx, DISPID_findColorBlockEx),
-    ENTRY_L4L2S(dm_findColorE, DISPID_findColorE),
-    ENTRY_L4L1S(dm_findMulColor, DISPID_findMulColor),
+    ENTRY_L4L2S(findColorBlockEx, DISPID_findColorBlockEx),
+    ENTRY_L4L2S(findColorE, DISPID_findColorE),
+    ENTRY_L4L1S(findMulColor, DISPID_findMulColor),
     ENTRY_SPECIAL(H_findMultiColor, DISPID_findMultiColor, 8, 8),
-    ENTRY_S2L2S(dm_findMultiColorEx, DISPID_findMultiColorEx),
-    ENTRY_S2L2S(dm_findMultiColorE, DISPID_findMultiColorE),
+    ENTRY_S2L2S(findMultiColorEx, DISPID_findMultiColorEx),
+    ENTRY_S2L2S(findMultiColorE, DISPID_findMultiColorE),
     ENTRY_SPECIAL(H_findPic, DISPID_findPic, 8, 8),
-    ENTRY_S2L2S(dm_findPicE, DISPID_findPicE),
-    ENTRY_S2L2S(dm_findPicEx, DISPID_findPicEx),
-    ENTRY_S2L2S(dm_findPicExS, DISPID_findPicExS),
-    ENTRY_L4L2S(dm_findPicS, DISPID_findPicS),
-    ENTRY_L4L2S(dm_findPicMem, DISPID_findPicMem),
-    ENTRY_S2L2S(dm_findPicMemE, DISPID_findPicMemE),
-    ENTRY_S2L2S(dm_findPicMemEx, DISPID_findPicMemEx),
-    ENTRY_L4L2S(dm_findPicSim, DISPID_findPicSim),
-    ENTRY_S2L2S(dm_findPicSimE, DISPID_findPicSimE),
-    ENTRY_S2L2S(dm_findPicSimEx, DISPID_findPicSimEx),
-    ENTRY_L4L2S(dm_findPicSimMem, DISPID_findPicSimMem),
-    ENTRY_S2L2S(dm_findPicSimMemE, DISPID_findPicSimMemE),
-    ENTRY_S2L2S(dm_findPicSimMemEx, DISPID_findPicSimMemEx),
-    ENTRY_L4L1S(dm_findShape, DISPID_findShape),
-    ENTRY_S2L1S(dm_findShapeE, DISPID_findShapeE),
-    ENTRY_S2L1S(dm_findShapeEx, DISPID_findShapeEx),
-    ENTRY_S1S(dm_getPicSize, DISPID_getPicSize),
-    ENTRY_L1S(dm_freePic, DISPID_freePic),
-    ENTRY_L1S(dm_loadPic, DISPID_loadPic),
-    ENTRY_L1S1L(dm_loadPicByte, DISPID_loadPicByte),
-    ENTRY_L1S1L(dm_appendPicAddr, DISPID_appendPicAddr),
-    ENTRY_S1S(dm_matchPicName, DISPID_matchPicName),
-    ENTRY_L2S(dm_imageToBmp, DISPID_imageToBmp),
-    ENTRY_L1S(dm_setPicPwd, DISPID_setPicPwd),
-    ENTRY_L1S1L(dm_setExcludeRegion, DISPID_setExcludeRegion),
-    ENTRY_L4L(dm_getScreenData, DISPID_getScreenData),
+    ENTRY_S2L2S(findPicE, DISPID_findPicE),
+    ENTRY_S2L2S(findPicEx, DISPID_findPicEx),
+    ENTRY_S2L2S(findPicExS, DISPID_findPicExS),
+    ENTRY_L4L2S(findPicS, DISPID_findPicS),
+    ENTRY_L4L2S(findPicMem, DISPID_findPicMem),
+    ENTRY_S2L2S(findPicMemE, DISPID_findPicMemE),
+    ENTRY_S2L2S(findPicMemEx, DISPID_findPicMemEx),
+    ENTRY_L4L2S(findPicSim, DISPID_findPicSim),
+    ENTRY_S2L2S(findPicSimE, DISPID_findPicSimE),
+    ENTRY_S2L2S(findPicSimEx, DISPID_findPicSimEx),
+    ENTRY_L4L2S(findPicSimMem, DISPID_findPicSimMem),
+    ENTRY_S2L2S(findPicSimMemE, DISPID_findPicSimMemE),
+    ENTRY_S2L2S(findPicSimMemEx, DISPID_findPicSimMemEx),
+    ENTRY_L4L1S(findShape, DISPID_findShape),
+    ENTRY_S2L1S(findShapeE, DISPID_findShapeE),
+    ENTRY_S2L1S(findShapeEx, DISPID_findShapeEx),
+    ENTRY_S1S(getPicSize, DISPID_getPicSize),
+    ENTRY_L1S(freePic, DISPID_freePic),
+    ENTRY_L1S(loadPic, DISPID_loadPic),
+    ENTRY_L1S1L(loadPicByte, DISPID_loadPicByte),
+    ENTRY_L1S1L(appendPicAddr, DISPID_appendPicAddr),
+    ENTRY_S1S(matchPicName, DISPID_matchPicName),
+    ENTRY_L2S(imageToBmp, DISPID_imageToBmp),
+    ENTRY_L1S(setPicPwd, DISPID_setPicPwd),
+    ENTRY_L1S1L(setExcludeRegion, DISPID_setExcludeRegion),
+    ENTRY_L4L(getScreenData, DISPID_getScreenData),
     ENTRY_SPECIAL(H_getScreenDataBmp, DISPID_getScreenDataBmp, 4, 4),
-    ENTRY_L1L(dm_enableDisplayDebug, DISPID_enableDisplayDebug),
-    ENTRY_L1L(dm_enableFindPicMultithread, DISPID_enableFindPicMultithread),
-    ENTRY_L1L(dm_enableGetColorByCapture, DISPID_enableGetColorByCapture),
-    ENTRY_L1L(dm_setFindPicMultithreadCount, DISPID_setFindPicMultithreadCount),
-    ENTRY_L1L(dm_setFindPicMultithreadLimit, DISPID_setFindPicMultithreadLimit),
-    ENTRY_L1S(dm_bgr2RGB, DISPID_bgr2RGB),
-    ENTRY_S1S(dm_rgb2BGR, DISPID_rgb2BGR),
-    ENTRY_L5L(dm_isDisplayDead, DISPID_isDisplayDead),
+    ENTRY_L1L(enableDisplayDebug, DISPID_enableDisplayDebug),
+    ENTRY_L1L(enableFindPicMultithread, DISPID_enableFindPicMultithread),
+    ENTRY_L1L(enableGetColorByCapture, DISPID_enableGetColorByCapture),
+    ENTRY_L1L(setFindPicMultithreadCount, DISPID_setFindPicMultithreadCount),
+    ENTRY_L1L(setFindPicMultithreadLimit, DISPID_setFindPicMultithreadLimit),
+    ENTRY_L1S(bgr2RGB, DISPID_bgr2RGB),
+    ENTRY_S1S(rgb2BGR, DISPID_rgb2BGR),
+    ENTRY_L5L(isDisplayDead, DISPID_isDisplayDead),
     // ====== 模块5: 后台设置 ======
-    ENTRY_L1L2S(dm_bindWindow, DISPID_bindWindow),
-    ENTRY_L1L2S(dm_bindWindowEx, DISPID_bindWindowEx),
-    ENTRY_L0(dm_unBindWindow, DISPID_unBindWindow),
-    ENTRY_L0(dm_getBindWindow, DISPID_getBindWindow),
-    ENTRY_P1L(dm_isBind, DISPID_isBind),
-    ENTRY_L0(dm_forceUnBindWindow, DISPID_forceUnBindWindow),
-    ENTRY_L1L(dm_setAero, DISPID_setAero),
-    ENTRY_L1L(dm_lockInput, DISPID_lockInput),
-    ENTRY_L4L(dm_lockMouseRect, DISPID_lockMouseRect),
-    ENTRY_L1L(dm_lockDisplay, DISPID_lockDisplay),
-    ENTRY_L1L(dm_enableBind, DISPID_enableBind),
-    ENTRY_L1L(dm_enableFakeActive, DISPID_enableFakeActive),
-    ENTRY_L1L(dm_enableIme, DISPID_enableIme),
-    ENTRY_L1L(dm_enableKeypadMsg, DISPID_enableKeypadMsg),
-    ENTRY_L1L(dm_enableKeypadPatch, DISPID_enableKeypadPatch),
-    ENTRY_L1L(dm_enableKeypadSync, DISPID_enableKeypadSync),
-    ENTRY_L1L(dm_enableMouseMsg, DISPID_enableMouseMsg),
-    ENTRY_L2L(dm_enableMouseSync, DISPID_enableMouseSync),
-    ENTRY_L1L(dm_enableRealKeypad, DISPID_enableRealKeypad),
-    ENTRY_L3L(dm_enableRealMouse, DISPID_enableRealMouse),
-    ENTRY_L1L(dm_enableSpeedDx, DISPID_enableSpeedDx),
-    ENTRY_L0(dm_getFps, DISPID_getFps),
-    ENTRY_L1L(dm_setDisplayDelay, DISPID_setDisplayDelay),
-    ENTRY_L1L(dm_setDisplayRefreshDelay, DISPID_setDisplayRefreshDelay),
-    ENTRY_L1L(dm_setInputDm, DISPID_setInputDm),
-    ENTRY_L1L(dm_hackSpeed, DISPID_hackSpeed),
-    ENTRY_L2L(dm_downCpu, DISPID_downCpu),
-    ENTRY_P1L(dm_switchBindWindow, DISPID_switchBindWindow),
+    ENTRY_L1L2S(bindWindow, DISPID_bindWindow),
+    ENTRY_L1L2S(bindWindowEx, DISPID_bindWindowEx),
+    ENTRY_L0(unBindWindow, DISPID_unBindWindow),
+    ENTRY_L0(getBindWindow, DISPID_getBindWindow),
+    ENTRY_P1L(isBind, DISPID_isBind),
+    ENTRY_L0(forceUnBindWindow, DISPID_forceUnBindWindow),
+    ENTRY_L1L(setAero, DISPID_setAero),
+    ENTRY_L1L(lockInput, DISPID_lockInput),
+    ENTRY_L4L(lockMouseRect, DISPID_lockMouseRect),
+    ENTRY_L1L(lockDisplay, DISPID_lockDisplay),
+    ENTRY_L1L(enableBind, DISPID_enableBind),
+    ENTRY_L1L(enableFakeActive, DISPID_enableFakeActive),
+    ENTRY_L1L(enableIme, DISPID_enableIme),
+    ENTRY_L1L(enableKeypadMsg, DISPID_enableKeypadMsg),
+    ENTRY_L1L(enableKeypadPatch, DISPID_enableKeypadPatch),
+    ENTRY_L1L(enableKeypadSync, DISPID_enableKeypadSync),
+    ENTRY_L1L(enableMouseMsg, DISPID_enableMouseMsg),
+    ENTRY_L2L(enableMouseSync, DISPID_enableMouseSync),
+    ENTRY_L1L(enableRealKeypad, DISPID_enableRealKeypad),
+    ENTRY_L3L(enableRealMouse, DISPID_enableRealMouse),
+    ENTRY_L1L(enableSpeedDx, DISPID_enableSpeedDx),
+    ENTRY_L0(getFps, DISPID_getFps),
+    ENTRY_L1L(setDisplayDelay, DISPID_setDisplayDelay),
+    ENTRY_L1L(setDisplayRefreshDelay, DISPID_setDisplayRefreshDelay),
+    ENTRY_L1L(setInputDm, DISPID_setInputDm),
+    ENTRY_L1L(hackSpeed, DISPID_hackSpeed),
+    ENTRY_L2L(downCpu, DISPID_downCpu),
+    ENTRY_P1L(switchBindWindow, DISPID_switchBindWindow),
     // ====== 模块6: 内存操作 ======
-    ENTRY_L1L(dm_openProcess, DISPID_openProcess),
-    ENTRY_P1L1S(dm_getModuleBaseAddr, DISPID_getModuleBaseAddr),
-    ENTRY_P1L1S(dm_getModuleSize, DISPID_getModuleSize),
-    ENTRY_L3S(dm_getRemoteApiAddress, DISPID_getRemoteApiAddress),
+    ENTRY_L1L(openProcess, DISPID_openProcess),
+    ENTRY_P1L1S(getModuleBaseAddr, DISPID_getModuleBaseAddr),
+    ENTRY_P1L1S(getModuleSize, DISPID_getModuleSize),
+    ENTRY_L3S(getRemoteApiAddress, DISPID_getRemoteApiAddress),
     ENTRY_SPECIAL(H_readInt, DISPID_readInt, 2, 2),
-    ENTRY_L3L(dm_readIntAddr, DISPID_readIntAddr),
+    ENTRY_L3L(readIntAddr, DISPID_readIntAddr),
     ENTRY_SPECIAL(H_readFloat, DISPID_readFloat, 2, 2),
+    ENTRY_SPECIAL(H_readFloatAddr, DISPID_readFloatAddr, 2, 2),
     ENTRY_SPECIAL(H_readDouble, DISPID_readDouble, 2, 2),
-    ENTRY_L4L(dm_readString, DISPID_readString),
-    ENTRY_L3L(dm_readData, DISPID_readData),
-    ENTRY_L3L(dm_readDataToBin, DISPID_readDataToBin),
-    ENTRY_L1S1L(dm_findInt, DISPID_findInt),
-    ENTRY_L4L(dm_writeInt, DISPID_writeInt),
-    ENTRY_P1L1L1F(dm_writeFloat, DISPID_writeFloat),
-    ENTRY_P1L2L1S(dm_writeString, DISPID_writeString),
-    ENTRY_P1L1L1S(dm_writeData, DISPID_writeData),
-    ENTRY_L3L(dm_virtualAllocEx, DISPID_virtualAllocEx),
-    ENTRY_P1L1L(dm_virtualFreeEx, DISPID_virtualFreeEx),
+    ENTRY_SPECIAL(H_readDoubleAddr, DISPID_readDoubleAddr, 2, 2),
+    ENTRY_L4L(readString, DISPID_readString),
+    ENTRY_SPECIAL(H_readStringAddr, DISPID_readStringAddr, 4, 4),
+    ENTRY_L3L(readData, DISPID_readData),
+    ENTRY_SPECIAL(H_readDataAddr, DISPID_readDataAddr, 3, 3),
+    ENTRY_L3L(readDataToBin, DISPID_readDataToBin),
+    ENTRY_P1L2L(readDataAddrToBin, DISPID_readDataAddrToBin),
+    ENTRY_L1S1L(findInt, DISPID_findInt),
+    ENTRY_SPECIAL(H_findIntEx, DISPID_findIntEx, 7, 7),
+    ENTRY_SPECIAL(H_findFloat, DISPID_findFloat, 4, 4),
+    ENTRY_SPECIAL(H_findFloatEx, DISPID_findFloatEx, 7, 7),
+    ENTRY_SPECIAL(H_findDouble, DISPID_findDouble, 4, 4),
+    ENTRY_SPECIAL(H_findDoubleEx, DISPID_findDoubleEx, 7, 7),
+    ENTRY_SPECIAL(H_findString, DISPID_findString, 4, 4),
+    ENTRY_SPECIAL(H_findStringEx, DISPID_findStringEx, 7, 7),
+    ENTRY_SPECIAL(H_findData, DISPID_findData, 3, 3),
+    ENTRY_SPECIAL(H_findDataEx, DISPID_findDataEx, 6, 6),
+    ENTRY_L4L(writeInt, DISPID_writeInt),
+    ENTRY_L4L(writeIntAddr, DISPID_writeIntAddr),
+    ENTRY_P1L1L1F(writeFloat, DISPID_writeFloat),
+    ENTRY_P1L1L1F(writeFloatAddr, DISPID_writeFloatAddr),
+    ENTRY_SPECIAL(H_writeDouble, DISPID_writeDouble, 3, 3),
+    ENTRY_SPECIAL(H_writeDoubleAddr, DISPID_writeDoubleAddr, 3, 3),
+    ENTRY_P1L2L1S(writeString, DISPID_writeString),
+    ENTRY_P1L2L1S(writeStringAddr, DISPID_writeStringAddr),
+    ENTRY_P1L1L1S(writeData, DISPID_writeData),
+    ENTRY_P1L1L1S(writeDataAddr, DISPID_writeDataAddr),
+    ENTRY_L4L(writeDataFromBin, DISPID_writeDataFromBin),
+    ENTRY_L4L(writeDataAddrFromBin, DISPID_writeDataAddrFromBin),
+    ENTRY_L3L(virtualAllocEx, DISPID_virtualAllocEx),
+    ENTRY_P1L1L(virtualFreeEx, DISPID_virtualFreeEx),
     ENTRY_SPECIAL(H_virtualProtectEx, DISPID_virtualProtectEx, 4, 4),
-    ENTRY_P1L(dm_freeProcessMemory, DISPID_freeProcessMemory),
-    ENTRY_P1S(dm_getCommandLine, DISPID_getCommandLine),
-    ENTRY_L1L(dm_terminateProcess, DISPID_terminateProcess),
-    ENTRY_L1L(dm_terminateProcessTree, DISPID_terminateProcessTree),
-    ENTRY_L1L(dm_setMemoryFindResultToFile, DISPID_setMemoryFindResultToFile),
-    ENTRY_L1L(dm_setMemoryHwndAsProcessId, DISPID_setMemoryHwndAsProcessId),
-    ENTRY_L1L(dm_setParam64ToPointer, DISPID_setParam64ToPointer),
-    ENTRY_L3L(dm_int64ToInt32, DISPID_int64ToInt32),
-    ENTRY_L1S1L(dm_intToData, DISPID_intToData),
-    ENTRY_L1L(dm_floatToData, DISPID_floatToData),
-    ENTRY_L1L(dm_doubleToData, DISPID_doubleToData),
-    ENTRY_L1S1L(dm_stringToData, DISPID_stringToData),
+    ENTRY_SPECIAL(H_virtualQueryEx, DISPID_virtualQueryEx, 3, 3),
+    ENTRY_P1L(freeProcessMemory, DISPID_freeProcessMemory),
+    ENTRY_P1S(getCommandLine, DISPID_getCommandLine),
+    ENTRY_L1L(terminateProcess, DISPID_terminateProcess),
+    ENTRY_L1L(terminateProcessTree, DISPID_terminateProcessTree),
+    ENTRY_L1L(setMemoryFindResultToFile, DISPID_setMemoryFindResultToFile),
+    ENTRY_L1L(setMemoryHwndAsProcessId, DISPID_setMemoryHwndAsProcessId),
+    ENTRY_L1L(setParam64ToPointer, DISPID_setParam64ToPointer),
+    ENTRY_L3L(int64ToInt32, DISPID_int64ToInt32),
+    ENTRY_L1S1L(intToData, DISPID_intToData),
+    ENTRY_L1L(floatToData, DISPID_floatToData),
+    ENTRY_L1L(doubleToData, DISPID_doubleToData),
+    ENTRY_L1S1L(stringToData, DISPID_stringToData),
     // ====== 模块7: 文件操作 ======
-    ENTRY_L2S(dm_writeFile, DISPID_writeFile),
-    ENTRY_S1S(dm_readFile, DISPID_readFile),
-    ENTRY_L1S(dm_deleteFile, DISPID_deleteFile),
-    ENTRY_L2S1L(dm_copyFile, DISPID_copyFile),
-    ENTRY_L2S(dm_moveFile, DISPID_moveFile),
-    ENTRY_L1S(dm_createFolder, DISPID_createFolder),
-    ENTRY_L1S(dm_deleteFolder, DISPID_deleteFolder),
-    ENTRY_L1S(dm_isFileExist, DISPID_isFileExist),
-    ENTRY_L1S(dm_isFolderExist, DISPID_isFolderExist),
-    ENTRY_L1S(dm_getFileLength, DISPID_getFileLength),
-    ENTRY_S1S(dm_getRealPath, DISPID_getRealPath),
-    ENTRY_S0(dm_selectFile, DISPID_selectFile),
-    ENTRY_S0(dm_selectDirectory, DISPID_selectDirectory),
-    ENTRY_L1S1L(dm_downloadFile, DISPID_downloadFile),
-    ENTRY_L2S(dm_encodeFile, DISPID_encodeFile),
-    ENTRY_L2S(dm_decodeFile, DISPID_decodeFile),
-    ENTRY_L3S(dm_writeIni, DISPID_writeIni),
-    ENTRY_L2S(dm_readIni, DISPID_readIni),
-    ENTRY_L2S(dm_deleteIni, DISPID_deleteIni),
-    ENTRY_L2S(dm_enumIniKey, DISPID_enumIniKey),
-    ENTRY_L1S(dm_enumIniSection, DISPID_enumIniSection),
-    ENTRY_L5S(dm_writeIniPwd, DISPID_writeIniPwd),
-    ENTRY_S4S(dm_readIniPwd, DISPID_readIniPwd),
-    ENTRY_L4S(dm_deleteIniPwd, DISPID_deleteIniPwd),
-    ENTRY_S3S(dm_enumIniKeyPwd, DISPID_enumIniKeyPwd),
-    ENTRY_S2S(dm_enumIniSectionPwd, DISPID_enumIniSectionPwd),
+    ENTRY_L2S(writeFile, DISPID_writeFile),
+    ENTRY_S1S(readFile, DISPID_readFile),
+    ENTRY_L1S(deleteFile, DISPID_deleteFile),
+    ENTRY_L2S1L(copyFile, DISPID_copyFile),
+    ENTRY_L2S(moveFile, DISPID_moveFile),
+    ENTRY_L1S(createFolder, DISPID_createFolder),
+    ENTRY_L1S(deleteFolder, DISPID_deleteFolder),
+    ENTRY_L1S(isFileExist, DISPID_isFileExist),
+    ENTRY_L1S(isFolderExist, DISPID_isFolderExist),
+    ENTRY_L1S(getFileLength, DISPID_getFileLength),
+    ENTRY_S1S(getRealPath, DISPID_getRealPath),
+    ENTRY_S0(selectFile, DISPID_selectFile),
+    ENTRY_S0(selectDirectory, DISPID_selectDirectory),
+    ENTRY_L1S1L(downloadFile, DISPID_downloadFile),
+    ENTRY_L2S(encodeFile, DISPID_encodeFile),
+    ENTRY_L2S(decodeFile, DISPID_decodeFile),
+    ENTRY_L3S(writeIni, DISPID_writeIni),
+    ENTRY_L2S(readIni, DISPID_readIni),
+    ENTRY_L2S(deleteIni, DISPID_deleteIni),
+    ENTRY_L2S(enumIniKey, DISPID_enumIniKey),
+    ENTRY_L1S(enumIniSection, DISPID_enumIniSection),
+    ENTRY_L5S(writeIniPwd, DISPID_writeIniPwd),
+    ENTRY_S4S(readIniPwd, DISPID_readIniPwd),
+    ENTRY_L4S(deleteIniPwd, DISPID_deleteIniPwd),
+    ENTRY_S3S(enumIniKeyPwd, DISPID_enumIniKeyPwd),
+    ENTRY_S2S(enumIniSectionPwd, DISPID_enumIniSectionPwd),
     // ====== 模块8: 文字识别 ======
-    ENTRY_L1S1L(dm_setDict, DISPID_setDict),
-    ENTRY_L1S(dm_setDictPwd, DISPID_setDictPwd),
-    ENTRY_L1L(dm_useDict, DISPID_useDict),
-    ENTRY_L2L(dm_getDict, DISPID_getDict),
-    ENTRY_L1L(dm_getDictCount, DISPID_getDictCount),
-    ENTRY_L1S1L(dm_getDictInfo, DISPID_getDictInfo),
-    ENTRY_L0(dm_getNowDict, DISPID_getNowDict),
-    ENTRY_L1S(dm_addDict, DISPID_addDict),
-    ENTRY_L1S1L(dm_saveDict, DISPID_saveDict),
-    ENTRY_L1L(dm_clearDict, DISPID_clearDict),
-    ENTRY_L1L(dm_enableShareDict, DISPID_enableShareDict),
-    ENTRY_S2L1S(dm_ocr, DISPID_ocr),
-    ENTRY_S2L1S(dm_ocrEx, DISPID_ocrEx),
-    ENTRY_S2L1S(dm_ocrExOne, DISPID_ocrExOne),
-    ENTRY_L4L1S(dm_ocrInFile, DISPID_ocrInFile),
+    ENTRY_L1S1L(setDict, DISPID_setDict),
+    ENTRY_SPECIAL(H_setDictMem, DISPID_setDictMem, 3, 3),
+    ENTRY_L1S(setDictPwd, DISPID_setDictPwd),
+    ENTRY_L1L(useDict, DISPID_useDict),
+    ENTRY_L2L(getDict, DISPID_getDict),
+    ENTRY_L1L(getDictCount, DISPID_getDictCount),
+    ENTRY_L1S1L(getDictInfo, DISPID_getDictInfo),
+    ENTRY_L0(getNowDict, DISPID_getNowDict),
+    ENTRY_L1S(addDict, DISPID_addDict),
+    ENTRY_L1S1L(saveDict, DISPID_saveDict),
+    ENTRY_L1L(clearDict, DISPID_clearDict),
+    ENTRY_L1L(enableShareDict, DISPID_enableShareDict),
+    ENTRY_S2L1S(ocr, DISPID_ocr),
+    ENTRY_S2L1S(ocrEx, DISPID_ocrEx),
+    ENTRY_S2L1S(ocrExOne, DISPID_ocrExOne),
+    ENTRY_L4L1S(ocrInFile, DISPID_ocrInFile),
     ENTRY_SPECIAL(H_findStr, DISPID_findStr, 7, 7),
-    ENTRY_S2L1S(dm_findStrE, DISPID_findStrE),
-    ENTRY_S2L1S(dm_findStrEx, DISPID_findStrEx),
-    ENTRY_L4L1S(dm_findStrS, DISPID_findStrS),
-    ENTRY_S2L1S(dm_findStrExS, DISPID_findStrExS),
+    ENTRY_S2L1S(findStrE, DISPID_findStrE),
+    ENTRY_S2L1S(findStrEx, DISPID_findStrEx),
+    ENTRY_L4L1S(findStrS, DISPID_findStrS),
+    ENTRY_S2L1S(findStrExS, DISPID_findStrExS),
     ENTRY_SPECIAL(H_findStrFast, DISPID_findStrFast, 7, 7),
-    ENTRY_S2L1S(dm_findStrFastE, DISPID_findStrFastE),
-    ENTRY_S2L1S(dm_findStrFastEx, DISPID_findStrFastEx),
-    ENTRY_L4L1S(dm_findStrFastS, DISPID_findStrFastS),
-    ENTRY_S2L1S(dm_findStrFastExS, DISPID_findStrFastExS),
-    ENTRY_S2L1S(dm_getWords, DISPID_getWords),
-    ENTRY_S2L1S(dm_getWordsNoDict, DISPID_getWordsNoDict),
-    ENTRY_L2L1S(dm_fetchWord, DISPID_fetchWord),
-    ENTRY_L1S(dm_getResultCount, DISPID_getResultCount),
+    ENTRY_S2L1S(findStrFastE, DISPID_findStrFastE),
+    ENTRY_S2L1S(findStrFastEx, DISPID_findStrFastEx),
+    ENTRY_L4L1S(findStrFastS, DISPID_findStrFastS),
+    ENTRY_S2L1S(findStrFastExS, DISPID_findStrFastExS),
+    ENTRY_SPECIAL(H_findStrWithFont, DISPID_findStrWithFont, 10, 10),
+    ENTRY_SPECIAL(H_findStrWithFontE, DISPID_findStrWithFontE, 10, 10),
+    ENTRY_SPECIAL(H_findStrWithFontEx, DISPID_findStrWithFontEx, 10, 10),
+    ENTRY_S2L1S(getWords, DISPID_getWords),
+    ENTRY_S2L1S(getWordsNoDict, DISPID_getWordsNoDict),
+    ENTRY_L2L1S(fetchWord, DISPID_fetchWord),
+    ENTRY_L1S(getResultCount, DISPID_getResultCount),
     ENTRY_SPECIAL(H_getResultPos, DISPID_getResultPos, 2, 2),
-    ENTRY_L1S(dm_getWordResultCount, DISPID_getWordResultCount),
+    ENTRY_L1S(getWordResultCount, DISPID_getWordResultCount),
     ENTRY_SPECIAL(H_getWordResultPos, DISPID_getWordResultPos, 2, 2),
-    ENTRY_L1S1L(dm_getWordResultStr, DISPID_getWordResultStr),
-    ENTRY_L1L(dm_setColGapNoDict, DISPID_setColGapNoDict),
-    ENTRY_L1L(dm_setRowGapNoDict, DISPID_setRowGapNoDict),
-    ENTRY_L1L(dm_setWordGapNoDict, DISPID_setWordGapNoDict),
-    ENTRY_L1L(dm_setWordLineHeightNoDict, DISPID_setWordLineHeightNoDict),
-    ENTRY_L1L(dm_setExactOcr, DISPID_setExactOcr),
-    ENTRY_L1L(dm_setMinColGap, DISPID_setMinColGap),
-    ENTRY_L1L(dm_setMinRowGap, DISPID_setMinRowGap),
-    ENTRY_L1L(dm_setWordGap, DISPID_setWordGap),
-    ENTRY_L1L(dm_setWordLineHeight, DISPID_setWordLineHeight),
+    ENTRY_L1S1L(getWordResultStr, DISPID_getWordResultStr),
+    ENTRY_L1L(setColGapNoDict, DISPID_setColGapNoDict),
+    ENTRY_L1L(setRowGapNoDict, DISPID_setRowGapNoDict),
+    ENTRY_L1L(setWordGapNoDict, DISPID_setWordGapNoDict),
+    ENTRY_L1L(setWordLineHeightNoDict, DISPID_setWordLineHeightNoDict),
+    ENTRY_L1L(setExactOcr, DISPID_setExactOcr),
+    ENTRY_L1L(setMinColGap, DISPID_setMinColGap),
+    ENTRY_L1L(setMinRowGap, DISPID_setMinRowGap),
+    ENTRY_L1L(setWordGap, DISPID_setWordGap),
+    ENTRY_L1L(setWordLineHeight, DISPID_setWordLineHeight),
     // ====== 模块9: 系统操作 ======
-    ENTRY_L2L(dm_beep, DISPID_beep),
-    ENTRY_L1L(dm_delay, DISPID_delay),
-    ENTRY_L2L(dm_delays, DISPID_delays),
-    ENTRY_L1S1L(dm_runApp, DISPID_runApp),
-    ENTRY_L1L(dm_stop, DISPID_stop),
-    ENTRY_L1S(dm_play, DISPID_play),
-    ENTRY_L1L(dm_exitOs, DISPID_exitOs),
-    ENTRY_L3L(dm_setScreen, DISPID_setScreen),
-    ENTRY_L0(dm_getScreenWidth, DISPID_getScreenWidth),
-    ENTRY_L0(dm_getScreenHeight, DISPID_getScreenHeight),
-    ENTRY_L0(dm_getScreenDepth, DISPID_getScreenDepth),
-    ENTRY_L0(dm_getDPI, DISPID_getDPI),
-    ENTRY_L0(dm_getTime, DISPID_getTime),
-    ENTRY_L0(dm_getOsType, DISPID_getOsType),
-    ENTRY_L0(dm_getOsBuildNumber, DISPID_getOsBuildNumber),
-    ENTRY_L0(dm_is64Bit, DISPID_is64Bit),
-    ENTRY_L0(dm_isSurrpotVt, DISPID_isSurrpotVt),
-    ENTRY_L2L(dm_getSystemInfo, DISPID_getSystemInfo),
-    ENTRY_L1L(dm_getDir, DISPID_getDir),
-    ENTRY_L0(dm_getLocale, DISPID_getLocale),
-    ENTRY_L0(dm_getCpuType, DISPID_getCpuType),
-    ENTRY_L0(dm_getCpuUsage, DISPID_getCpuUsage),
-    ENTRY_L0(dm_getMemoryUsage, DISPID_getMemoryUsage),
-    ENTRY_S0(dm_getDiskSerial, DISPID_getDiskSerial),
-    ENTRY_S0(dm_getDiskModel, DISPID_getDiskModel),
-    ENTRY_S0(dm_getDiskReversion, DISPID_getDiskReversion),
-    ENTRY_S0(dm_getMachineCode, DISPID_getMachineCode),
-    ENTRY_S0(dm_getMachineCodeNoMac, DISPID_getMachineCodeNoMac),
-    ENTRY_S0(dm_getNetTime, DISPID_getNetTime),
-    ENTRY_S1S(dm_getNetTimeByIp, DISPID_getNetTimeByIp),
-    ENTRY_L1L(dm_getNetTimeSafe, DISPID_getNetTimeSafe),
-    ENTRY_S0(dm_getClipboard, DISPID_getClipboard),
-    ENTRY_L1S(dm_setClipboard, DISPID_setClipboard),
-    ENTRY_L1L(dm_getDisplayInfo, DISPID_getDisplayInfo),
-    ENTRY_L1L(dm_disableCloseDisplayAndSleep, DISPID_disableCloseDisplayAndSleep),
-    ENTRY_L1L(dm_disablePowerSave, DISPID_disablePowerSave),
-    ENTRY_L1L(dm_disableScreenSave, DISPID_disableScreenSave),
-    ENTRY_L0(dm_disableFontSmooth, DISPID_disableFontSmooth),
-    ENTRY_L0(dm_enableFontSmooth, DISPID_enableFontSmooth),
-    ENTRY_L0(dm_checkFontSmooth, DISPID_checkFontSmooth),
-    ENTRY_L0(dm_checkUAC, DISPID_checkUAC),
-    ENTRY_L1L(dm_setUAC, DISPID_setUAC),
-    ENTRY_L1L(dm_setDisplayAcceler, DISPID_setDisplayAcceler),
-    ENTRY_P1L1L(dm_showTaskBarIcon, DISPID_showTaskBarIcon),
+    ENTRY_L2L(beep, DISPID_beep),
+    ENTRY_L1L(delay, DISPID_delay),
+    ENTRY_L2L(delays, DISPID_delays),
+    ENTRY_L1S1L(runApp, DISPID_runApp),
+    ENTRY_L1L(stop, DISPID_stop),
+    ENTRY_L1S(play, DISPID_play),
+    ENTRY_L1L(exitOs, DISPID_exitOs),
+    ENTRY_L3L(setScreen, DISPID_setScreen),
+    ENTRY_L0(getScreenWidth, DISPID_getScreenWidth),
+    ENTRY_L0(getScreenHeight, DISPID_getScreenHeight),
+    ENTRY_L0(getScreenDepth, DISPID_getScreenDepth),
+    ENTRY_L0(getDPI, DISPID_getDPI),
+    ENTRY_L0(getTime, DISPID_getTime),
+    ENTRY_L0(getOsType, DISPID_getOsType),
+    ENTRY_L0(getOsBuildNumber, DISPID_getOsBuildNumber),
+    ENTRY_L0(is64Bit, DISPID_is64Bit),
+    ENTRY_L0(isSurrpotVt, DISPID_isSurrpotVt),
+    ENTRY_L2L(getSystemInfo, DISPID_getSystemInfo),
+    ENTRY_L1L(getDir, DISPID_getDir),
+    ENTRY_L0(getLocale, DISPID_getLocale),
+    ENTRY_L0(getCpuType, DISPID_getCpuType),
+    ENTRY_L0(getCpuUsage, DISPID_getCpuUsage),
+    ENTRY_L0(getMemoryUsage, DISPID_getMemoryUsage),
+    ENTRY_S0(getDiskSerial, DISPID_getDiskSerial),
+    ENTRY_S0(getDiskModel, DISPID_getDiskModel),
+    ENTRY_S0(getDiskReversion, DISPID_getDiskReversion),
+    ENTRY_S0(getMachineCode, DISPID_getMachineCode),
+    ENTRY_S0(getMachineCodeNoMac, DISPID_getMachineCodeNoMac),
+    ENTRY_S0(getNetTime, DISPID_getNetTime),
+    ENTRY_S1S(getNetTimeByIp, DISPID_getNetTimeByIp),
+    ENTRY_L1L(getNetTimeSafe, DISPID_getNetTimeSafe),
+    ENTRY_S0(getClipboard, DISPID_getClipboard),
+    ENTRY_L1S(setClipboard, DISPID_setClipboard),
+    ENTRY_L1L(getDisplayInfo, DISPID_getDisplayInfo),
+    ENTRY_L1L(disableCloseDisplayAndSleep, DISPID_disableCloseDisplayAndSleep),
+    ENTRY_L1L(disablePowerSave, DISPID_disablePowerSave),
+    ENTRY_L1L(disableScreenSave, DISPID_disableScreenSave),
+    ENTRY_L0(disableFontSmooth, DISPID_disableFontSmooth),
+    ENTRY_L0(enableFontSmooth, DISPID_enableFontSmooth),
+    ENTRY_L0(checkFontSmooth, DISPID_checkFontSmooth),
+    ENTRY_L0(checkUAC, DISPID_checkUAC),
+    ENTRY_L1L(setUAC, DISPID_setUAC),
+    ENTRY_L1L(setDisplayAcceler, DISPID_setDisplayAcceler),
+    ENTRY_P1L1L(showTaskBarIcon, DISPID_showTaskBarIcon),
     // ====== 模块10: 杂项 ======
-    ENTRY_L0(dm_enterCri, DISPID_enterCri),
-    ENTRY_L0(dm_leaveCri, DISPID_leaveCri),
-    ENTRY_L0(dm_initCri, DISPID_initCri),
-    ENTRY_L0(dm_releaseRef, DISPID_releaseRef),
-    ENTRY_L1L(dm_setExitThread, DISPID_setExitThread),
-    ENTRY_L1S1L(dm_executeCmd, DISPID_executeCmd),
-    ENTRY_P1L1S(dm_activeInputMethod, DISPID_activeInputMethod),
-    ENTRY_P1L1S(dm_checkInputMethod, DISPID_checkInputMethod),
-    ENTRY_L1S(dm_findInputMethod, DISPID_findInputMethod),
+    ENTRY_L0(enterCri, DISPID_enterCri),
+    ENTRY_L0(leaveCri, DISPID_leaveCri),
+    ENTRY_L0(initCri, DISPID_initCri),
+    ENTRY_L0(releaseRef, DISPID_releaseRef),
+    ENTRY_L1L(setExitThread, DISPID_setExitThread),
+    ENTRY_L1S1L(executeCmd, DISPID_executeCmd),
+    ENTRY_P1L1S(activeInputMethod, DISPID_activeInputMethod),
+    ENTRY_P1L1S(checkInputMethod, DISPID_checkInputMethod),
+    ENTRY_L1S(findInputMethod, DISPID_findInputMethod),
     // ====== 模块11: 汇编 ======
-    ENTRY_L1S(dm_asmAdd, DISPID_asmAdd),
-    ENTRY_P1L1L(dm_asmCall, DISPID_asmCall),
-    ENTRY_L4L(dm_asmCallEx, DISPID_asmCallEx),
-    ENTRY_L0(dm_asmClear, DISPID_asmClear),
-    ENTRY_L1L(dm_asmSetTimeout, DISPID_asmSetTimeout),
-    ENTRY_L2L(dm_assemble, DISPID_assemble),
-    ENTRY_L3L(dm_disAssemble, DISPID_disAssemble),
-    ENTRY_L1L(dm_setAsmHwndAsProcessId, DISPID_setAsmHwndAsProcessId),
-    ENTRY_L1L(dm_setShowAsmErrorMsg, DISPID_setShowAsmErrorMsg),
+    ENTRY_L1S(asmAdd, DISPID_asmAdd),
+    ENTRY_P1L1L(asmCall, DISPID_asmCall),
+    ENTRY_L4L(asmCallEx, DISPID_asmCallEx),
+    ENTRY_L0(asmClear, DISPID_asmClear),
+    ENTRY_L1L(asmSetTimeout, DISPID_asmSetTimeout),
+    ENTRY_L2L(assemble, DISPID_assemble),
+    ENTRY_L3L(disAssemble, DISPID_disAssemble),
+    ENTRY_L1L(setAsmHwndAsProcessId, DISPID_setAsmHwndAsProcessId),
+    ENTRY_L1L(setShowAsmErrorMsg, DISPID_setShowAsmErrorMsg),
     // ====== 模块12: AI ======
-    ENTRY_L1S(dm_loadAi, DISPID_loadAi),
-    ENTRY_L1L(dm_aiEnableFindPicWindow, DISPID_aiEnableFindPicWindow),
-    ENTRY_L4L1S(dm_aiFindPic, DISPID_aiFindPic),
-    ENTRY_S2L1S(dm_aiFindPicEx, DISPID_aiFindPicEx),
-    ENTRY_S2L1S(dm_aiYoloDetectObjects, DISPID_aiYoloDetectObjects),
-    ENTRY_L1S1L(dm_aiYoloSetModel, DISPID_aiYoloSetModel),
-    ENTRY_L0(dm_aiYoloFreeModel, DISPID_aiYoloFreeModel),
-    ENTRY_L1L(dm_aiYoloUseModel, DISPID_aiYoloUseModel),
-    ENTRY_L1S(dm_aiYoloSetVersion, DISPID_aiYoloSetVersion),
-    ENTRY_S1S(dm_aiYoloObjectsToString, DISPID_aiYoloObjectsToString),
-    ENTRY_L1S1L(dm_aiYoloSortsObjects, DISPID_aiYoloSortsObjects),
+    ENTRY_L1S(loadAi, DISPID_loadAi),
+    ENTRY_SPECIAL(H_loadAiMemory, DISPID_loadAiMemory, 2, 2),
+    ENTRY_L1L(aiEnableFindPicWindow, DISPID_aiEnableFindPicWindow),
+    ENTRY_L4L1S(aiFindPic, DISPID_aiFindPic),
+    ENTRY_S2L1S(aiFindPicEx, DISPID_aiFindPicEx),
+    ENTRY_SPECIAL(H_aiFindPicMem, DISPID_aiFindPicMem, 7, 7),
+    ENTRY_SPECIAL(H_aiFindPicMemEx, DISPID_aiFindPicMemEx, 7, 7),
+    ENTRY_S2L1S(aiYoloDetectObjects, DISPID_aiYoloDetectObjects),
+    ENTRY_SPECIAL(H_aiYoloDetectObjectsToDataBmp, DISPID_aiYoloDetectObjectsToDataBmp, 9, 9),
+    ENTRY_SPECIAL(H_aiYoloDetectObjectsToFile, DISPID_aiYoloDetectObjectsToFile, 8, 8),
+    ENTRY_L1S1L(aiYoloSetModel, DISPID_aiYoloSetModel),
+    ENTRY_SPECIAL(H_aiYoloSetModelMemory, DISPID_aiYoloSetModelMemory, 3, 3),
+    ENTRY_L0(aiYoloFreeModel, DISPID_aiYoloFreeModel),
+    ENTRY_L1L(aiYoloUseModel, DISPID_aiYoloUseModel),
+    ENTRY_L1S(aiYoloSetVersion, DISPID_aiYoloSetVersion),
+    ENTRY_S1S(aiYoloObjectsToString, DISPID_aiYoloObjectsToString),
+    ENTRY_L1S1L(aiYoloSortsObjects, DISPID_aiYoloSortsObjects),
     // ====== 模块13: Foobar ======
-    ENTRY_L5L(dm_createFoobarRect, DISPID_createFoobarRect),
-    ENTRY_L5L(dm_createFoobarEllipse, DISPID_createFoobarEllipse),
-    ENTRY_L5L(dm_createFoobarRoundRect, DISPID_createFoobarRoundRect),
-    ENTRY_L4L1S(dm_createFoobarCustom, DISPID_createFoobarCustom),
-    ENTRY_P1L(dm_foobarClose, DISPID_foobarClose),
-    ENTRY_P1L(dm_foobarLock, DISPID_foobarLock),
-    ENTRY_P1L(dm_foobarUnlock, DISPID_foobarUnlock),
-    ENTRY_P1L(dm_foobarUpdate, DISPID_foobarUpdate),
-    ENTRY_P1L1S2L(dm_foobarSetFont, DISPID_foobarSetFont),
-    ENTRY_P1L1S1L(dm_foobarPrintText, DISPID_foobarPrintText),
-    ENTRY_P1L5L(dm_foobarFillRect, DISPID_foobarFillRect),
-    ENTRY_P1L2L1S(dm_foobarDrawPic, DISPID_foobarDrawPic),
-    ENTRY_P1L(dm_foobarClearText, DISPID_foobarClearText),
-    ENTRY_P1L4L(dm_foobarTextRect, DISPID_foobarTextRect),
-    ENTRY_P1L1L(dm_foobarTextLineGap, DISPID_foobarTextLineGap),
-    ENTRY_P1L1L(dm_foobarTextPrintDir, DISPID_foobarTextPrintDir),
-    ENTRY_P1L1S2L(dm_foobarStartGif, DISPID_foobarStartGif),
-    ENTRY_P1L(dm_foobarStopGif, DISPID_foobarStopGif),
+    ENTRY_L5L(createFoobarRect, DISPID_createFoobarRect),
+    ENTRY_L5L(createFoobarEllipse, DISPID_createFoobarEllipse),
+    ENTRY_L5L(createFoobarRoundRect, DISPID_createFoobarRoundRect),
+    ENTRY_L4L1S(createFoobarCustom, DISPID_createFoobarCustom),
+    ENTRY_P1L(foobarClose, DISPID_foobarClose),
+    ENTRY_P1L(foobarLock, DISPID_foobarLock),
+    ENTRY_P1L(foobarUnlock, DISPID_foobarUnlock),
+    ENTRY_P1L(foobarUpdate, DISPID_foobarUpdate),
+    ENTRY_P1L1S2L(foobarSetFont, DISPID_foobarSetFont),
+    ENTRY_P1L1S1L(foobarSetSave, DISPID_foobarSetSave),
+    ENTRY_P1L2L(foobarSetTrans, DISPID_foobarSetTrans),
+    ENTRY_SPECIAL(H_foobarDrawText, DISPID_foobarDrawText, 8, 8),
+    ENTRY_P1L1S1L(foobarPrintText, DISPID_foobarPrintText),
+    ENTRY_SPECIAL(H_foobarDrawRect, DISPID_foobarDrawRect, 7, 7),
+    ENTRY_SPECIAL(H_foobarDrawLine, DISPID_foobarDrawLine, 7, 7),
+    ENTRY_P1L5L(foobarFillRect, DISPID_foobarFillRect),
+    ENTRY_P1L2L1S(foobarDrawPic, DISPID_foobarDrawPic),
+    ENTRY_P1L(foobarClearText, DISPID_foobarClearText),
+    ENTRY_P1L4L(foobarTextRect, DISPID_foobarTextRect),
+    ENTRY_P1L1L(foobarTextLineGap, DISPID_foobarTextLineGap),
+    ENTRY_P1L1L(foobarTextPrintDir, DISPID_foobarTextPrintDir),
+    ENTRY_P1L1S2L(foobarStartGif, DISPID_foobarStartGif),
+    ENTRY_P1L(foobarStopGif, DISPID_foobarStopGif),
     // ====== 模块14: 答题 ======
-    ENTRY_L5L(dm_faqCapture, DISPID_faqCapture),
-    ENTRY_L1S1L(dm_faqCaptureFromFile, DISPID_faqCaptureFromFile),
-    ENTRY_L5L(dm_faqCaptureString, DISPID_faqCaptureString),
-    ENTRY_L1L(dm_faqGetSize, DISPID_faqGetSize),
-    ENTRY_L1S1L(dm_faqPost, DISPID_faqPost),
-    ENTRY_L2L(dm_faqSend, DISPID_faqSend),
-    ENTRY_L1L(dm_faqFetch, DISPID_faqFetch),
-    ENTRY_L0(dm_faqCancel, DISPID_faqCancel),
-    ENTRY_L0(dm_faqIsPosted, DISPID_faqIsPosted),
+    ENTRY_L5L(faqCapture, DISPID_faqCapture),
+    ENTRY_L1S1L(faqCaptureFromFile, DISPID_faqCaptureFromFile),
+    ENTRY_L5L(faqCaptureString, DISPID_faqCaptureString),
+    ENTRY_L1L(faqGetSize, DISPID_faqGetSize),
+    ENTRY_L1S1L(faqPost, DISPID_faqPost),
+    ENTRY_L2L(faqSend, DISPID_faqSend),
+    ENTRY_L1L(faqFetch, DISPID_faqFetch),
+    ENTRY_L0(faqCancel, DISPID_faqCancel),
+    ENTRY_L0(faqIsPosted, DISPID_faqIsPosted),
     // ====== 模块15: 算法 ======
-    ENTRY_L4L1S(dm_excludePos, DISPID_excludePos),
-    ENTRY_L1S1L(dm_findNearestPos, DISPID_findNearestPos),
-    ENTRY_L1S1L(dm_sortPosDistance, DISPID_sortPosDistance),
+    ENTRY_L4L1S(excludePos, DISPID_excludePos),
+    ENTRY_L1S1L(findNearestPos, DISPID_findNearestPos),
+    ENTRY_L1S1L(sortPosDistance, DISPID_sortPosDistance),
     // ====== 模块16: 防护盾 ======
-    ENTRY_L1S1L(dm_dmGuard, DISPID_dmGuard),
-    ENTRY_L2S(dm_dmGuardExtract, DISPID_dmGuardExtract),
-    ENTRY_L2S(dm_dmGuardLoadCustom, DISPID_dmGuardLoadCustom),
-    ENTRY_L2S(dm_dmGuardParams, DISPID_dmGuardParams),
-    ENTRY_L0(dm_unLoadDriver, DISPID_unLoadDriver),
+    ENTRY_L1S1L(dmGuard, DISPID_dmGuard),
+    ENTRY_L2S(dmGuardExtract, DISPID_dmGuardExtract),
+    ENTRY_L2S(dmGuardLoadCustom, DISPID_dmGuardLoadCustom),
+    ENTRY_L2S(dmGuardParams, DISPID_dmGuardParams),
+    ENTRY_L0(unLoadDriver, DISPID_unLoadDriver),
 };
 
 const UINT g_dispTableCount = sizeof(g_dispTable) / sizeof(g_dispTable[0]);
 
+} // 关闭匿名命名空间
+
+// ============================================================================
+// 公共 API（声明于 dm_com.h，必须在全局命名空间）
+// ============================================================================
 const DispFuncEntry* GetDispTable() { return g_dispTable; }
 UINT GetDispTableCount() { return g_dispTableCount; }
 
+// ============================================================================
+// 查找索引缓存 — 将 O(n) 线性查找优化为 O(1) hash map 查找
+// ============================================================================
+namespace {
+
+/// 名称 → 分发表条目的映射缓存（线程安全懒初始化）
+static std::unordered_map<std::string, const DispFuncEntry*>& GetNameMap() {
+    static std::unordered_map<std::string, const DispFuncEntry*> map;
+    static std::once_flag initFlag;
+    std::call_once(initFlag, []() {
+        for (UINT i = 0; i < g_dispTableCount; i++) {
+            // 键统一转小写，实现大小写不敏感查找
+            std::string key = g_dispTable[i].name;
+            for (auto& c : key) c = static_cast<char>(tolower(static_cast<unsigned char>(c)));
+            map[key] = &g_dispTable[i];
+        }
+    });
+    return map;
+}
+
+/// DISPID → 分发表条目的映射缓存（线程安全懒初始化）
+static std::unordered_map<DISPID, const DispFuncEntry*>& GetIdMap() {
+    static std::unordered_map<DISPID, const DispFuncEntry*> map;
+    static std::once_flag initFlag;
+    std::call_once(initFlag, []() {
+        for (UINT i = 0; i < g_dispTableCount; i++) {
+            map[g_dispTable[i].id] = &g_dispTable[i];
+        }
+    });
+    return map;
+}
+
+/// 按名称查找分发表条目（O(1) hash map）
 static const DispFuncEntry* FindByName(const char* name) {
-    for (UINT i = 0; i < g_dispTableCount; i++) {
-        if (strcmp(g_dispTable[i].name, name) == 0)
-            return &g_dispTable[i];
-    }
+    auto& nameMap = GetNameMap();
+    auto it = nameMap.find(name);
+    if (it != nameMap.end()) return it->second;
+
     return nullptr;
+}
+
+/// 按 DISPID 查找分发表条目（O(1) hash map）
+static const DispFuncEntry* FindById(DISPID id) {
+    auto& idMap = GetIdMap();
+    auto it = idMap.find(id);
+    return (it != idMap.end()) ? it->second : nullptr;
 }
 
 // ============================================================================
@@ -909,7 +1348,7 @@ static HRESULT DispatchByPattern(const DispFuncEntry* entry, VARIANT* ret,
                                   const VARIANT* args, UINT argCount) {
     if (entry->pattern == FuncPattern::SPECIAL) {
         // 特殊处理函数 — 直接调用
-        auto handler = (HRESULT(*)(VARIANT*, const VARIANT*, UINT))entry->funcPtr;
+        auto handler = reinterpret_cast<HRESULT(*)(VARIANT*, const VARIANT*, UINT)>(entry->funcPtr);
         return handler(ret, args, argCount);
     }
 
@@ -922,177 +1361,179 @@ static HRESULT DispatchByPattern(const DispFuncEntry* entry, VARIANT* ret,
 
     switch (entry->pattern) {
     case FuncPattern::L0: {
-        auto f = (long(*)())entry->funcPtr;
+        auto f = reinterpret_cast<long(*)()>(entry->funcPtr);
         SetResultLong(ret, f()); return S_OK;
     }
     case FuncPattern::S0: {
-        auto f = (const char*(*)())entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)()>(entry->funcPtr);
         SetResultString(ret, f()); return S_OK;
     }
     case FuncPattern::L1L: {
-        auto f = (long(*)(long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0))); return S_OK;
     }
     case FuncPattern::L1S: {
-        auto f = (long(*)(const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str())); return S_OK;
     }
     case FuncPattern::L2L: {
-        auto f = (long(*)(long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1))); return S_OK;
     }
     case FuncPattern::L3L: {
-        auto f = (long(*)(long, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1), a0(2))); return S_OK;
     }
     case FuncPattern::L4L: {
-        auto f = (long(*)(long, long, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1), a0(2), a0(3))); return S_OK;
     }
     case FuncPattern::L5L: {
-        auto f = (long(*)(long, long, long, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long, long, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1), a0(2), a0(3), a0(4))); return S_OK;
     }
     case FuncPattern::L2S: {
-        auto f = (long(*)(const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), aS(1).c_str())); return S_OK;
     }
     case FuncPattern::L3S: {
-        auto f = (long(*)(const char*, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, const char*, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), aS(1).c_str(), aS(2).c_str())); return S_OK;
     }
     case FuncPattern::L1L1S: {
-        auto f = (long(*)(long, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), aS(1).c_str())); return S_OK;
     }
     case FuncPattern::L1S1L: {
-        auto f = (long(*)(const char*, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, long)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), a0(1))); return S_OK;
     }
     case FuncPattern::L2L1S: {
-        auto f = (long(*)(long, long, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1), aS(2).c_str())); return S_OK;
     }
     case FuncPattern::L1S2L: {
-        auto f = (long(*)(const char*, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), a0(1), a0(2))); return S_OK;
     }
     case FuncPattern::L4L1S: {
-        auto f = (long(*)(long, long, long, long, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long, long, long, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1), a0(2), a0(3), aS(4).c_str())); return S_OK;
     }
     case FuncPattern::S2L: {
-        auto f = (const char*(*)(long, long))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(long, long)>(entry->funcPtr);
         SetResultString(ret, f(a0(0), a0(1))); return S_OK;
     }
     case FuncPattern::S2L1S: {
-        auto f = (const char*(*)(long, long, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(long, long, const char*)>(entry->funcPtr);
         std::string s = aS(2); SetResultString(ret, f(a0(0), a0(1), s.c_str())); return S_OK;
     }
     case FuncPattern::S1S: {
-        auto f = (const char*(*)(const char*))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(const char*)>(entry->funcPtr);
         SetResultString(ret, f(aS(0).c_str())); return S_OK;
     }
     case FuncPattern::L4L2S: {
-        auto f = (long(*)(long, long, long, long, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long, long, long, const char*, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1), a0(2), a0(3), aS(4).c_str(), aS(5).c_str())); return S_OK;
     }
     case FuncPattern::S2L2S: {
-        auto f = (const char*(*)(long, long, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(long, long, const char*, const char*)>(entry->funcPtr);
         SetResultString(ret, f(a0(0), a0(1), aS(2).c_str(), aS(3).c_str())); return S_OK;
     }
     case FuncPattern::L4L1S1L: {
-        auto f = (long(*)(long, long, long, long, const char*, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, long, long, long, const char*, long)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), a0(1), a0(2), a0(3), aS(4).c_str(), a0(5))); return S_OK;
     }
     case FuncPattern::L1L2S: {
-        auto f = (long(*)(long, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(long, const char*, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(a0(0), aS(1).c_str(), aS(2).c_str())); return S_OK;
     }
     case FuncPattern::P1L: {
-        auto f = (long(*)(intptr_t))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0))); return S_OK;
     }
     case FuncPattern::P1L1S: {
-        auto f = (long(*)(intptr_t, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), aS(1).c_str())); return S_OK;
     }
     case FuncPattern::P1L1L: {
-        auto f = (long(*)(intptr_t, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1))); return S_OK;
     }
     case FuncPattern::P1L2L: {
-        auto f = (long(*)(intptr_t, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1), a0(2))); return S_OK;
     }
     case FuncPattern::P1L1L1S: {
-        auto f = (long(*)(intptr_t, long, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1), aS(2).c_str())); return S_OK;
     }
     case FuncPattern::P1L2L1S: {
-        auto f = (long(*)(intptr_t, long, long, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long, long, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1), a0(2), aS(3).c_str())); return S_OK;
     }
     case FuncPattern::L2S1L: {
-        auto f = (long(*)(const char*, const char*, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, const char*, long)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), aS(1).c_str(), a0(2))); return S_OK;
     }
     case FuncPattern::P1S: {
-        auto f = (const char*(*)(intptr_t))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(intptr_t)>(entry->funcPtr);
         SetResultString(ret, f(aP(0))); return S_OK;
     }
     case FuncPattern::REGEX: {
-        auto f = (long(*)(const char*, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, const char*, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), aS(1).c_str(), aS(2).c_str())); return S_OK;
     }
     case FuncPattern::P1L1S1L: {
-        auto f = (long(*)(intptr_t, const char*, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, const char*, long)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), aS(1).c_str(), a0(2))); return S_OK;
     }
     case FuncPattern::P1L1L1F: {
-        auto f = (long(*)(intptr_t, long, float))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long, float)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1), aF(2))); return S_OK;
     }
     case FuncPattern::P1L4L: {
-        auto f = (long(*)(intptr_t, long, long, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long, long, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1), a0(2), a0(3), a0(4))); return S_OK;
     }
     case FuncPattern::P1L5L: {
-        auto f = (long(*)(intptr_t, long, long, long, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long, long, long, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1), a0(2), a0(3), a0(4), a0(5))); return S_OK;
     }
     case FuncPattern::P1L1S2L: {
-        auto f = (long(*)(intptr_t, const char*, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, const char*, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), aS(1).c_str(), a0(2), a0(3))); return S_OK;
     }
     case FuncPattern::P1L2L1S2L: {
-        auto f = (long(*)(intptr_t, long, long, const char*, long, long))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(intptr_t, long, long, const char*, long, long)>(entry->funcPtr);
         SetResultLong(ret, f(aP(0), a0(1), a0(2), aS(3).c_str(), a0(4), a0(5))); return S_OK;
     }
     case FuncPattern::L4S: {
-        auto f = (long(*)(const char*, const char*, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, const char*, const char*, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), aS(1).c_str(), aS(2).c_str(), aS(3).c_str())); return S_OK;
     }
     case FuncPattern::L5S: {
-        auto f = (long(*)(const char*, const char*, const char*, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<long(*)(const char*, const char*, const char*, const char*, const char*)>(entry->funcPtr);
         SetResultLong(ret, f(aS(0).c_str(), aS(1).c_str(), aS(2).c_str(), aS(3).c_str(), aS(4).c_str())); return S_OK;
     }
     case FuncPattern::S2S: {
-        auto f = (const char*(*)(const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(const char*, const char*)>(entry->funcPtr);
         SetResultString(ret, f(aS(0).c_str(), aS(1).c_str())); return S_OK;
     }
     case FuncPattern::S3S: {
-        auto f = (const char*(*)(const char*, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(const char*, const char*, const char*)>(entry->funcPtr);
         SetResultString(ret, f(aS(0).c_str(), aS(1).c_str(), aS(2).c_str())); return S_OK;
     }
     case FuncPattern::S4S: {
-        auto f = (const char*(*)(const char*, const char*, const char*, const char*))entry->funcPtr;
+        auto f = reinterpret_cast<const char*(*)(const char*, const char*, const char*, const char*)>(entry->funcPtr);
         SetResultString(ret, f(aS(0).c_str(), aS(1).c_str(), aS(2).c_str(), aS(3).c_str())); return S_OK;
     }
     default:
         return DISP_E_MEMBERNOTFOUND;
     }
 }
+
+} // 关闭匿名命名空间
 
 // ============================================================================
 // CDmObject 实现
@@ -1146,7 +1587,8 @@ STDMETHODIMP CDmObject::GetIDsOfNames(REFIID, LPOLESTR* rgszNames, UINT cNames,
     int len = WideCharToMultiByte(CP_UTF8, 0, rgszNames[0], -1, nameBuf, sizeof(nameBuf), NULL, NULL);
     if (len <= 0) { rgDispId[0] = DISPID_UNKNOWN; return DISP_E_UNKNOWNNAME; }
 
-    for (char* p = nameBuf; *p; ++p) *p = (char)tolower(*p);
+    for (char* p = nameBuf; *p; ++p)
+        *p = static_cast<char>(tolower(static_cast<unsigned char>(*p)));
 
     const DispFuncEntry* entry = FindByName(nameBuf);
     if (entry) {
@@ -1164,10 +1606,8 @@ STDMETHODIMP CDmObject::Invoke(DISPID dispIdMember, REFIID, LCID,
                                VARIANT* pVarResult, EXCEPINFO*, UINT*) {
     if (!(wFlags & DISPATCH_METHOD)) return DISP_E_MEMBERNOTFOUND;
 
-    const DispFuncEntry* entry = nullptr;
-    for (UINT i = 0; i < g_dispTableCount; i++) {
-        if (g_dispTable[i].id == dispIdMember) { entry = &g_dispTable[i]; break; }
-    }
+    // O(1) hash map 查找替代 O(n) 线性遍历
+    const DispFuncEntry* entry = FindById(dispIdMember);
     if (!entry) return DISP_E_MEMBERNOTFOUND;
 
     UINT argCount = pDispParams ? pDispParams->cArgs : 0;
@@ -1175,18 +1615,28 @@ STDMETHODIMP CDmObject::Invoke(DISPID dispIdMember, REFIID, LCID,
         return DISP_E_BADPARAMCOUNT;
 
     // 反转参数数组（rgvarg[0] 是最后一个参数）
-    VARIANT* reversedArgs = nullptr;
+    // 使用 std::vector 替代裸 new，确保异常安全（RAII）
+    // 使用 VariantCopy 替代浅拷贝，正确管理 BSTR 引用计数
+    std::vector<VARIANT> reversedArgsVec;
+    const VARIANT* reversedArgs = nullptr;
     if (argCount > 0 && pDispParams) {
-        reversedArgs = new VARIANT[argCount];
+        reversedArgsVec.resize(argCount);
         for (UINT i = 0; i < argCount; i++)
-            reversedArgs[i] = pDispParams->rgvarg[argCount - 1 - i];
+            VariantCopy(&reversedArgsVec[i], &pDispParams->rgvarg[argCount - 1 - i]);
+        reversedArgs = reversedArgsVec.data();
     }
 
+    // 清理 reversedArgsVec 中的 VARIANT 副本
+    struct VariantArrayGuard {
+        std::vector<VARIANT>* vec;
+        ~VariantArrayGuard() {
+            for (auto& v : *vec) VariantClear(&v);
+        }
+    } guard{&reversedArgsVec};
+
     {
-        StateGuard guard(&m_state);
-        HRESULT hr = DispatchByPattern(entry, pVarResult, reversedArgs, argCount);
-        delete[] reversedArgs;
-        return hr;
+        StateGuard stateGuard(&m_state);
+        return DispatchByPattern(entry, pVarResult, reversedArgs, argCount);
     }
 }
 
@@ -1241,7 +1691,7 @@ STDMETHODIMP CDmClassFactory::LockServer(BOOL fLock) {
 // 保存 DLL 模块句柄（由 DllMain 设置）
 static HMODULE g_comModule = NULL;
 
-void dm_setComModule(HMODULE hMod) {
+void setComModule(HMODULE hMod) {
     g_comModule = hMod;
 }
 
@@ -1259,67 +1709,69 @@ STDAPI DllCanUnloadNow() {
     return (g_dllRefCount == 0 && g_dllLockCount == 0) ? S_OK : S_FALSE;
 }
 
+// ============================================================================
+// RAII 包装 HKEY — 自动关闭注册表句柄，替代 goto 错误处理
+// ============================================================================
+struct ScopedHKey {
+    HKEY h = NULL;
+    ~ScopedHKey() { if (h) RegCloseKey(h); }
+    operator HKEY*() { return &h; }
+    operator bool() const { return h != NULL; }
+};
+
 STDAPI DllRegisterServer() {
     WCHAR dllPath[MAX_PATH];
     if (!GetModuleFileNameW(g_comModule, dllPath, MAX_PATH))
         return HRESULT_FROM_WIN32(GetLastError());
 
-    HKEY hKeyClsid = NULL, hKeyApp = NULL, hKeyInproc = NULL;
-    HKEY hKeyProgId = NULL, hKeyProgIdClsid = NULL;
+    ScopedHKey hKeyClsid, hKeyApp, hKeyInproc, hKeyProgId, hKeyProgIdClsid;
 
     WCHAR clsidStr[64];
     StringFromGUID2(CLSID_DmSoft, clsidStr, 64);
 
-    if (RegCreateKeyExW(HKEY_CLASSES_ROOT, L"CLSID", 0, NULL, 0, KEY_WRITE, NULL, &hKeyClsid, NULL) != ERROR_SUCCESS)
-        goto error;
-    if (RegCreateKeyExW(hKeyClsid, clsidStr, 0, NULL, 0, KEY_WRITE, NULL, &hKeyApp, NULL) != ERROR_SUCCESS)
-        goto error;
+    if (RegCreateKeyExW(HKEY_CLASSES_ROOT, L"CLSID", 0, NULL, 0, KEY_WRITE, NULL, hKeyClsid, NULL) != ERROR_SUCCESS)
+        return HRESULT_FROM_WIN32(GetLastError());
+    if (RegCreateKeyExW(hKeyClsid.h, clsidStr, 0, NULL, 0, KEY_WRITE, NULL, hKeyApp, NULL) != ERROR_SUCCESS)
+        return HRESULT_FROM_WIN32(GetLastError());
 
-    WCHAR progIdW[] = PROGID_DM;
-    RegSetValueExW(hKeyApp, NULL, 0, REG_SZ, (BYTE*)progIdW, sizeof(progIdW));
+    // ProgID 设置
+    const WCHAR* progIdW = PROGID_DM;
+    DWORD progIdBytes = static_cast<DWORD>((wcslen(progIdW) + 1) * sizeof(WCHAR));
+    RegSetValueExW(hKeyApp.h, NULL, 0, REG_SZ, reinterpret_cast<const BYTE*>(progIdW), progIdBytes);
 
-    if (RegCreateKeyExW(hKeyApp, L"InprocServer32", 0, NULL, 0, KEY_WRITE, NULL, &hKeyInproc, NULL) != ERROR_SUCCESS)
-        goto error;
-    RegSetValueExW(hKeyInproc, NULL, 0, REG_SZ, (BYTE*)dllPath, (DWORD)((wcslen(dllPath) + 1) * sizeof(WCHAR)));
-    WCHAR both[] = L"Both";
-    RegSetValueExW(hKeyInproc, L"ThreadingModel", 0, REG_SZ, (BYTE*)both, sizeof(both));
+    if (RegCreateKeyExW(hKeyApp.h, L"InprocServer32", 0, NULL, 0, KEY_WRITE, NULL, hKeyInproc, NULL) != ERROR_SUCCESS)
+        return HRESULT_FROM_WIN32(GetLastError());
+    RegSetValueExW(hKeyInproc.h, NULL, 0, REG_SZ, reinterpret_cast<const BYTE*>(dllPath),
+                   static_cast<DWORD>((wcslen(dllPath) + 1) * sizeof(WCHAR)));
+    const WCHAR* both = L"Both";
+    RegSetValueExW(hKeyInproc.h, L"ThreadingModel", 0, REG_SZ,
+                   reinterpret_cast<const BYTE*>(both), static_cast<DWORD>((wcslen(both) + 1) * sizeof(WCHAR)));
 
-    if (RegCreateKeyExW(HKEY_CLASSES_ROOT, progIdW, 0, NULL, 0, KEY_WRITE, NULL, &hKeyProgId, NULL) != ERROR_SUCCESS)
-        goto error;
-    RegSetValueExW(hKeyProgId, NULL, 0, REG_SZ, (BYTE*)progIdW, sizeof(progIdW));
+    if (RegCreateKeyExW(HKEY_CLASSES_ROOT, progIdW, 0, NULL, 0, KEY_WRITE, NULL, hKeyProgId, NULL) != ERROR_SUCCESS)
+        return HRESULT_FROM_WIN32(GetLastError());
+    RegSetValueExW(hKeyProgId.h, NULL, 0, REG_SZ, reinterpret_cast<const BYTE*>(progIdW), progIdBytes);
 
-    if (RegCreateKeyExW(hKeyProgId, L"CLSID", 0, NULL, 0, KEY_WRITE, NULL, &hKeyProgIdClsid, NULL) != ERROR_SUCCESS)
-        goto error;
-    RegSetValueExW(hKeyProgIdClsid, NULL, 0, REG_SZ, (BYTE*)clsidStr, (DWORD)((wcslen(clsidStr) + 1) * sizeof(WCHAR)));
+    if (RegCreateKeyExW(hKeyProgId.h, L"CLSID", 0, NULL, 0, KEY_WRITE, NULL, hKeyProgIdClsid, NULL) != ERROR_SUCCESS)
+        return HRESULT_FROM_WIN32(GetLastError());
+    RegSetValueExW(hKeyProgIdClsid.h, NULL, 0, REG_SZ, reinterpret_cast<const BYTE*>(clsidStr),
+                   static_cast<DWORD>((wcslen(clsidStr) + 1) * sizeof(WCHAR)));
 
-    RegCloseKey(hKeyInproc); RegCloseKey(hKeyApp); RegCloseKey(hKeyClsid);
-    RegCloseKey(hKeyProgIdClsid); RegCloseKey(hKeyProgId);
+    // ScopedHKey 析构函数自动关闭所有句柄
     return S_OK;
-
-error:
-    if (hKeyInproc) RegCloseKey(hKeyInproc);
-    if (hKeyApp) RegCloseKey(hKeyApp);
-    if (hKeyClsid) RegCloseKey(hKeyClsid);
-    if (hKeyProgIdClsid) RegCloseKey(hKeyProgIdClsid);
-    if (hKeyProgId) RegCloseKey(hKeyProgId);
-    return HRESULT_FROM_WIN32(GetLastError());
 }
 
 STDAPI DllUnregisterServer() {
     WCHAR clsidStr[64];
     StringFromGUID2(CLSID_DmSoft, clsidStr, 64);
 
-    WCHAR clsidKey[128];
-    wcscpy_s(clsidKey, L"CLSID\\");
-    wcscat_s(clsidKey, clsidStr);
+    // 使用 std::wstring 替代固定缓冲区拼接，避免溢出风险
+    std::wstring clsidKey = std::wstring(L"CLSID\\") + clsidStr;
+    std::wstring inprocKey = clsidKey + L"\\InprocServer32";
 
-    WCHAR inprocKey[256];
-    wcscpy_s(inprocKey, clsidKey);
-    wcscat_s(inprocKey, L"\\InprocServer32");
-    RegDeleteTreeW(HKEY_CLASSES_ROOT, inprocKey);
-    RegDeleteTreeW(HKEY_CLASSES_ROOT, clsidKey);
+    RegDeleteTreeW(HKEY_CLASSES_ROOT, inprocKey.c_str());
+    RegDeleteTreeW(HKEY_CLASSES_ROOT, clsidKey.c_str());
 
-    WCHAR progIdW[] = PROGID_DM;
+    const WCHAR* progIdW = PROGID_DM;
     RegDeleteTreeW(HKEY_CLASSES_ROOT, progIdW);
 
     return S_OK;

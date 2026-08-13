@@ -1,10 +1,8 @@
 ; ============================================================================
-; dm_hook.ahk — 大漠插件 (dm_hook.dll) AutoHotkey v1 绑定示例
+; dm_hook.ahk �?大漠插件 (dm_hook.dll) AutoHotkey v1 绑定示例
 ; ============================================================================
-; 用法: 安装 AutoHotkey v1 (https://www.autohotkey.com/), 双击运行此文件
-;
-; 本示例演示如何通过 DllCall 调用 dm_hook.dll 的导出函数
-; 所有函数使用 __stdcall 调用约定，可直接被 DllCall 调用
+; 用法: 安装 AutoHotkey v1 (https://www.autohotkey.com/), 双击运行此文�?;
+; 本示例演示如何通过 DllCall 调用 dm_hook.dll 的导出函�?; 所有函数使�?__stdcall 调用约定，可直接�?DllCall 调用
 ; ============================================================================
 
 #NoEnv
@@ -13,7 +11,7 @@
 SetWorkingDir %A_ScriptDir%
 
 ; ============================================================================
-; 初始化: 加载 DLL
+; 初始�? 加载 DLL
 ; ============================================================================
 
 ; 尝试加载 DLL
@@ -30,11 +28,10 @@ if (hModule = 0) {
 }
 
 ; ============================================================================
-; 辅助函数: 简化 DllCall
+; 辅助函数: 简�?DllCall
 ; ============================================================================
 
-; 调用返回 long 的函数
-dm_call(FuncName, args*) {
+; 调用返回 long 的函�?dm_call(FuncName, args*) {
     global hModule
     ; 构建 DllCall 参数
     fn := FuncName
@@ -42,8 +39,7 @@ dm_call(FuncName, args*) {
     return result
 }
 
-; 调用返回 string (const char*) 的函数
-dm_call_str(FuncName, args*) {
+; 调用返回 string (const char*) 的函�?dm_call_str(FuncName, args*) {
     global hModule
     ptr := DllCall(FuncName, args*, "CDecl Str")
     return ptr
@@ -266,10 +262,9 @@ InfoStr =
 屏幕: %dm_GetScreenWidth()% x %dm_GetScreenHeight()%
 全局路径: %dm_GetPath()%
 基础路径: %dm_GetBasePath()%
-机器码: %dm_GetMachineCode()%
+机器�? %dm_GetMachineCode()%
 
-详细 API 文档请参考 dm.h 头文件
-)
+详细 API 文档请参�?dm.h 头文�?)
 
 MsgBox, 0, 大漠插件 dm_hook, %InfoStr%
 
@@ -297,10 +292,9 @@ PID: %fg_pid%
 ; 获取鼠标位置颜色
 MouseGetPos, mx, my
 color := dm_GetColor(mx, my)
-MsgBox, 0, 鼠标位置颜色, 鼠标位置: (%mx%, %my%)`n颜色值: %color%
+MsgBox, 0, 鼠标位置颜色, 鼠标位置: (%mx%, %my%)`n颜色�? %color%
 
 ; 卸载 DLL
 DllCall("FreeLibrary", "Ptr", hModule)
-MsgBox, 已完成
-
+MsgBox, 已完�?
 ExitApp

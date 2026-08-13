@@ -17,7 +17,7 @@ extern DWORD g_tlsIndex;
 extern std::once_flag g_tlsInitFlag;
 
 // COM 模块句柄设置
-extern void dm_setComModule(HMODULE hMod);
+extern void setComModule(HMODULE hMod);
 
 static ULONG_PTR g_gdiplusToken = 0;
 
@@ -25,7 +25,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     switch (ul_reason_for_call) {
     case DLL_PROCESS_ATTACH: {
         // 保存模块句柄（用于 COM 注册）
-        dm_setComModule(hModule);
+        setComModule(hModule);
         // 初始化 GDI+
         GdiplusStartupInput gdiSI;
         GdiplusStartup(&g_gdiplusToken, &gdiSI, NULL);

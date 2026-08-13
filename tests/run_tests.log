@@ -1,0 +1,8 @@
+﻿=== tests build+run 08/13/2026 15:56:24 ===
+Module imported OK
+DevShell OK
+test_dm_all.cpp
+smoke compile exit: 0
+test_dm_unit.cpp
+unit compile exit: 0
+----- running test_dm_all.exe -----

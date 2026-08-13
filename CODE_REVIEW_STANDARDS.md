@@ -1,9 +1,10 @@
 # dm_hook 代码审查标准与流程规范
 
-> **版本**: 2.0  
-> **制定日期**: 2026-08-11  
-> **适用范围**: dm_hook 全部 C++ 代码（dm.cpp / dm.h / dllmain.cpp 及后续新增文件）  
-> **审查专家**: CodeReviewExpert (C++ Code Review Master)
+> **版本**: 3.0  
+> **制定日期**: 2026-08-13  
+> **适用范围**: dm_hook 全部 C++ 代码（dm.cpp / dm.h / dllmain.cpp / dm_com.cpp / dm_com.h 及后续新增文件）  
+> **审查专家**: CodeReviewExpert (C++ Code Review Master)  
+> **v3.0 变更**: 新增 COM 专项审查维度(G)与检查清单；纳入 dm_com.cpp 审查发现
 
 ---
 
@@ -177,7 +178,7 @@ constexpr int DM_MAX_PATH = 260;
 | E5 | 🔵 P2 | 公共 API 需有文档注释 | 参数含义、返回值、错误码 |
 | E6 | 💭 P3 | 文件头需有模块说明 | 模块职责、依赖关系 |
 
-#### 维度 F：现代 C++ 实践（权重 10%）
+#### 维度 F：现代 C++ 实践（权重 8%）
 
 | 编号 | 级别 | 规则 | 说明 |
 |------|------|------|------|
@@ -187,6 +188,50 @@ constexpr int DM_MAX_PATH = 260;
 | F4 | 🔵 P2 | 使用 scoped enum 替代裸枚举/魔法数字 | enum class |
 | F5 | 💭 P3 | 使用 std::optional 表达可能失败的返回值 | 替代哨兵值 |
 | F6 | 💭 P3 | 使用 std::format 替代 sprintf (C++20) | 类型安全的格式化 |
+
+#### 维度 G：COM 安全（权重 7%）
+
+> 适用于 dm_com.cpp / dm_com.h 等 COM 接口实现代码
+
+| 编号 | 级别 | 规则 | 说明 |
+|------|------|------|------|
+| G1 | 🔴 P0 | VARIANT 拷贝必须使用 VariantCopy | 禁止裸结构体赋值，避免 BSTR/SafeArray 引用计数错误 |
+| G2 | 🔴 P0 | 动态分配的 VARIANT 数组必须用 RAII 管理 | 禁止裸 new VARIANT[]，使用 std::vector |
+| G3 | 🟡 P1 | void* 到函数指针的转换必须用 reinterpret_cast | 禁止 C 风格转换，保证可搜索性和类型安全 |
+| G4 | 🟡 P1 | COM 方法分发查找应使用 hash map | O(n) 线性查找在 400+ 条目时性能不佳 |
+| G5 | 🟡 P1 | tolower/toupper 必须先转 unsigned char | 有符号 char 传入是 UB |
+| G6 | 🟡 P1 | HKEY 等 Windows 句柄必须用 RAII 管理 | 禁止 goto error 模式 |
+| G7 | 🔵 P2 | COM 内部函数应使用命名空间隔离 | 避免全局符号污染 |
+| G8 | 🔵 P2 | 分发表宏应提供编译期类型检查 | 防止函数签名与模式不匹配 |
+
+**正反示例：**
+
+```cpp
+// ❌ P0: VARIANT 浅拷贝
+reversedArgs[i] = pDispParams->rgvarg[argCount - 1 - i]; // 裸内存拷贝！
+
+// ✅ 正确: 使用 VariantCopy
+VariantCopy(&reversedArgs[i], &pDispParams->rgvarg[argCount - 1 - i]);
+
+// ❌ P0: 裸 new VARIANT[]
+VARIANT* reversedArgs = new VARIANT[argCount];
+// ... 如果异常，泄漏！
+
+// ✅ 正确: RAII 管理
+std::vector<VARIANT> reversedArgs(argCount);
+
+// ❌ P1: C 风格函数指针转换
+auto f = (long(*)(long, long))entry->funcPtr;
+
+// ✅ 正确: reinterpret_cast
+auto f = reinterpret_cast<long(*)(long, long)>(entry->funcPtr);
+
+// ❌ P1: tolower 对有符号 char
+*p = (char)tolower(*p); // 非 ASCII 字符 UB
+
+// ✅ 正确: 先转 unsigned char
+*p = static_cast<char>(tolower(static_cast<unsigned char>(*p)));
+```
 
 ### 1.3 命名约定规范
 
@@ -694,6 +739,25 @@ C++ Core Guidelines R.32, CERT STR31-C
 □ [P3] 避免过长的参数列表（超过 5 个考虑使用结构体）
 ```
 
+### 4.9 COM 安全专项
+
+> **dm_com.cpp / dm_com.h 必查项**
+
+```
+□ [P0] VARIANT 拷贝使用 VariantCopy，禁止裸赋值
+□ [P0] 动态 VARIANT 数组使用 std::vector，禁止裸 new[]
+□ [P0] 异常路径中 VARIANT 数组不泄漏（RAII 保证）
+□ [P1] void* 到函数指针转换使用 reinterpret_cast
+□ [P1] tolower/toupper 先转 unsigned char
+□ [P1] HKEY/HANDLE 等注册表句柄用 RAII 管理
+□ [P1] 分发表查找使用 hash map（非线性遍历）
+□ [P1] 参数提取函数有 Debug 模式边界检查
+□ [P2] COM 内部函数使用命名空间隔离
+□ [P2] 字符串拼接使用 std::wstring（非 wcscat_s）
+□ [P2] 分发表 ENTRY 宏有编译期类型安全检查
+□ [P2] 重复的 H_ 特殊处理函数已提取公共辅助
+```
+
 ---
 
 ## 第五章 度量与持续改进
@@ -734,12 +798,13 @@ C++ Core Guidelines R.32, CERT STR31-C
 
 | 维度 | 权重 | 满分 | 评分标准 |
 |------|------|------|----------|
-| 内存安全 | 25% | 25 | 无泄漏(10) + 无越界(10) + RAII覆盖率(5) |
-| 类型安全 | 15% | 15 | 无C风格转换(5) + 64位兼容(5) + 类型安全枚举(5) |
-| 安全性 | 20% | 20 | 无注入(8) + 无溢出(7) + 输入验证(5) |
-| 性能 | 15% | 15 | 无冗余操作(5) + 算法效率(5) + 资源使用(5) |
-| 可维护性 | 15% | 15 | 文件大小(4) + 函数大小(4) + 文档(4) + 命名(3) |
-| 现代 C++ | 10% | 10 | RAII使用(3) + 智能指针(3) + 现代特性(4) |
+| 内存安全 | 22% | 22 | 无泄漏(9) + 无越界(9) + RAII覆盖率(4) |
+| 类型安全 | 13% | 13 | 无C风格转换(4) + 64位兼容(5) + 类型安全枚举(4) |
+| 安全性 | 18% | 18 | 无注入(7) + 无溢出(6) + 输入验证(5) |
+| 性能 | 13% | 13 | 无冗余操作(4) + 算法效率(5) + 资源使用(4) |
+| 可维护性 | 14% | 14 | 文件大小(4) + 函数大小(4) + 文档(3) + 命名(3) |
+| 现代 C++ | 8% | 8 | RAII使用(3) + 智能指针(3) + 现代特性(2) |
+| COM 安全 | 12% | 12 | VARIANT安全(4) + 函数指针安全(3) + 查找效率(2) + 句柄RAII(3) |
 
 #### 5.2.2 评级标准
 
@@ -1043,7 +1108,7 @@ cppcheck --enable=all --suppress=missingIncludeSystem \
 
 ### 附录 D: 已知问题清单
 
-> 基于 2026-08-11 代码库分析
+> 基于 2026-08-13 代码库分析（含 dm_com.cpp）
 
 #### P0 — 阻塞项（必须修复）
 
@@ -1052,24 +1117,38 @@ cppcheck --enable=all --suppress=missingIncludeSystem \
 | 1 | dm.cpp:159,166 等 19 处 | `sprintf` 无长度限制 | 🔴 缓冲区溢出风险 |
 | 2 | dm.cpp:209,219 | `malloc`/`free` 管理 ImageCodecInfo | 🔴 异常不安全，泄漏风险 |
 | 3 | dm.cpp:84 | `new DmState()` 裸指针，TLS 泄漏风险 | 🔴 如果 TlsSetValue 失败则泄漏 |
+| 4 | dm_com.cpp:1193 | `new VARIANT[]` 裸分配，异常路径泄漏 | 🔴 RAII 违规，内存泄漏 |
+| 5 | dm_com.cpp:1195 | VARIANT 浅拷贝（裸赋值） | 🔴 违反 COM 所有权语义，潜在 double-free |
 
 #### P1 — 关键项（强烈建议修复）
 
 | # | 文件:行 | 问题 | 影响 |
 |---|---------|------|------|
-| 4 | dm.cpp:171-175 | `GetPixelColor` 逐像素 GetDC/ReleaseDC | 🟡 性能极差 |
-| 5 | dm.cpp 全文 | 3366 行单体文件，应按模块拆分 | 🟡 可维护性差 |
-| 6 | dm.cpp:104,110 | `strncpy` 使用可接受但建议封装 | 🟡 代码重复 |
-| 7 | dm.h:136 | `CRITICAL_SECTION criSection` 声明但审查需确认使用 | 🟡 线程安全验证 |
+| 6 | dm.cpp:171-175 | `GetPixelColor` 逐像素 GetDC/ReleaseDC | 🟡 性能极差 |
+| 7 | dm.cpp 全文 | 3366 行单体文件，应按模块拆分 | 🟡 可维护性差 |
+| 8 | dm.cpp:104,110 | `strncpy` 使用可接受但建议封装 | 🟡 代码重复 |
+| 9 | dm.h:136 | `CRITICAL_SECTION criSection` 声明但审查需确认使用 | 🟡 线程安全验证 |
+| 10 | dm_com.cpp:925-1102 | 42 处 C 风格函数指针转换 | 🟡 绕过类型检查，可维护性差 |
+| 11 | dm_com.cpp:897,1180 | FindByName/Invoke O(n) 线性查找 400 项 | 🟡 高频调用性能开销 |
+| 12 | dm_com.cpp:1162 | `tolower(*p)` 有符号 char UB | 🟡 非 ASCII 方法名 UB |
+| 13 | dm_com.cpp:30-71 | 参数提取函数无边界检查 | 🟡 越界访问风险 |
+| 14 | dm_com.cpp:1276-1319 | DllRegisterServer goto 错误处理 | 🟡 RAII 违规 |
+| 15 | dm_com.cpp:921-1108 | DispatchByPattern 170 行，42 个 case | 🟡 函数过长 |
+| 16 | dm_com.cpp:102-301 | 6 个 H_ 函数高度重复 | 🟡 代码重复 |
 
 #### P2 — 建议项
 
 | # | 文件 | 问题 |
 |---|------|------|
-| 8 | dm.cpp | 无命名空间，全局符号污染 |
-| 9 | dm.cpp | 大量桩函数无统一标记，难以区分实现状态 |
-| 10 | dm.h | 函数参数无文档注释 |
-| 11 | dm.cpp | findPic 逐像素比较，无 SIMD/多线程优化 |
+| 17 | dm.cpp | 无命名空间，全局符号污染 |
+| 18 | dm.cpp | 大量桩函数无统一标记，难以区分实现状态 |
+| 19 | dm.h | 函数参数无文档注释 |
+| 20 | dm.cpp | findPic 逐像素比较，无 SIMD/多线程优化 |
+| 21 | dm_com.cpp | 无命名空间，全局符号污染 |
+| 22 | dm_com.cpp | 15 处 sprintf_s 非标准可移植 |
+| 23 | dm_com.cpp | FuncPattern 枚举命名晦涩（L0/S0/L1L 等） |
+| 24 | dm_com.cpp | wcscpy_s/wcscat_s 字符串拼接脆弱 |
+| 25 | dm_com.cpp | ENTRY 宏无编译期类型安全检查 |
 
 ### 附录 E: 术语表
 
@@ -1090,5 +1169,5 @@ cppcheck --enable=all --suppress=missingIncludeSystem \
 ---
 
 > **文档维护**: 本文档随代码库演进而更新。每次审查标准修订需经过维护者和架构师审核。  
-> **最近更新**: 2026-08-11  
-> **版本历史**: v1.0 (2026-08-10) 初版 | v2.0 (2026-08-11) 全面扩展审查标准、流程、角色、清单、度量五大板块
+> **最近更新**: 2026-08-13  
+> **版本历史**: v1.0 (2026-08-10) 初版 | v2.0 (2026-08-11) 全面扩展审查标准、流程、角色、清单、度量五大板块 | v3.0 (2026-08-13) 新增 COM 专项维度(G)与检查清单，纳入 dm_com.cpp 审查发现，调整评分权重
