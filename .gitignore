@@ -1,13 +1,16 @@
 # Build outputs
 build/
 out/
-*.dll
 *.lib
 *.exp
 *.obj
 *.pdb
 *.ilk
 *.exe
+
+# DLL (只排除 build/ 目录下的，根目录的 dm_hook.dll 保留)
+build/*.dll
+out/*.dll
 
 # Visual Studio
 .vs/
