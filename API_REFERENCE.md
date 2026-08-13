@@ -7,10 +7,10 @@
 
 ---
 
-## 目录（点击模块名展开函数列表）
+## 目录（点击模块名展开/折叠，点击 🔗 跳转到模块）
 
 <details>
-<summary><a href="#模块-1基本设置">模块 1：基本设置</a>（13 个）</summary>
+<summary>模块 1：基本设置（13 个） <a href="#模块-1基本设置">🔗</a></summary>
 
 - <a href="#11-dm_reg">1.1 dm_reg</a> — 注册插件（基于机器码）
 - <a href="#12-dm_regex">1.2 dm_regEx</a> — 注册插件（基于 IP）
@@ -28,7 +28,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-2窗口操作">模块 2：窗口操作</a>（40 个）</summary>
+<summary>模块 2：窗口操作（40 个） <a href="#模块-2窗口操作">🔗</a></summary>
 
 - <a href="#21-dm_findwindow">2.1 dm_findWindow</a> — 查找窗口（类名/标题）
 - <a href="#22-dm_findwindowex">2.2 dm_findWindowEx</a> — 查找子窗口
@@ -73,7 +73,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-3键鼠操作">模块 3：键鼠操作</a>（34 个）</summary>
+<summary>模块 3：键鼠操作（34 个） <a href="#模块-3键鼠操作">🔗</a></summary>
 
 - <a href="#31-dm_keydown">3.1 dm_keyDown</a> — 按下键（虚拟键码）
 - <a href="#32-dm_keydownchar">3.2 dm_keyDownChar</a> — 按下字符键
@@ -112,7 +112,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-4图色操作">模块 4：图色操作</a>（57 个）</summary>
+<summary>模块 4：图色操作（57 个） <a href="#模块-4图色操作">🔗</a></summary>
 
 - <a href="#41-dm_capture">4.1 dm_capture</a> — 截图保存为 BMP
 - <a href="#42-dm_capturegif">4.2 dm_captureGif</a> — 截图保存为 GIF 动画
@@ -174,7 +174,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-5后台设置">模块 5：后台设置</a>（28 个）</summary>
+<summary>模块 5：后台设置（28 个） <a href="#模块-5后台设置">🔗</a></summary>
 
 - <a href="#51-dm_bindwindow">5.1 dm_bindWindow</a> — 绑定窗口
 - <a href="#52-dm_bindwindowex">5.2 dm_bindWindowEx</a> — 绑定窗口（扩展版）
@@ -207,7 +207,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-6内存操作">模块 6：内存操作</a>（54 个）</summary>
+<summary>模块 6：内存操作（54 个） <a href="#模块-6内存操作">🔗</a></summary>
 
 - <a href="#61-dm_openprocess">6.1 dm_openProcess</a> — 打开进程
 - <a href="#62-dm_getmodulebaseaddr">6.2 dm_getModuleBaseAddr</a> — 获取模块基址
@@ -266,7 +266,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-7文件操作">模块 7：文件操作</a>（26 个）</summary>
+<summary>模块 7：文件操作（26 个） <a href="#模块-7文件操作">🔗</a></summary>
 
 - <a href="#71-dm_writefile">7.1 dm_writeFile</a> — 写文件
 - <a href="#72-dm_readfile">7.2 dm_readFile</a> — 读文件
@@ -297,7 +297,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-8文字识别">模块 8：文字识别</a>（46 个）</summary>
+<summary>模块 8：文字识别（46 个） <a href="#模块-8文字识别">🔗</a></summary>
 
 - <a href="#81-dm_setdict">8.1 dm_setDict</a> — 加载字库文件
 - <a href="#82-dm_setdictmem">8.2 dm_setDictMem</a> — 从内存加载字库
@@ -348,7 +348,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-9系统操作">模块 9：系统操作</a>（44 个）</summary>
+<summary>模块 9：系统操作（44 个） <a href="#模块-9系统操作">🔗</a></summary>
 
 - <a href="#91-dm_beep">9.1 dm_beep</a> — 蜂鸣
 - <a href="#92-dm_delay">9.2 dm_delay</a> — 延时
@@ -397,7 +397,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-10杂项">模块 10：杂项</a>（9 个）</summary>
+<summary>模块 10：杂项（9 个） <a href="#模块-10杂项">🔗</a></summary>
 
 - <a href="#101-dm_entercri">10.1 dm_enterCri</a> — 进入临界区
 - <a href="#102-dm_leavecri">10.2 dm_leaveCri</a> — 离开临界区
@@ -411,7 +411,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-11汇编">模块 11：汇编</a>（9 个）</summary>
+<summary>模块 11：汇编（9 个） <a href="#模块-11汇编">🔗</a></summary>
 
 - <a href="#111-dm_asmadd">11.1 dm_asmAdd</a> — 添加汇编指令
 - <a href="#112-dm_asmcall">11.2 dm_asmCall</a> — 执行汇编代码
@@ -425,7 +425,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-12ai-功能">模块 12：AI 功能</a>（17 个）</summary>
+<summary>模块 12：AI 功能（17 个） <a href="#模块-12ai-功能">🔗</a></summary>
 
 - <a href="#121-dm_loadai">12.1 dm_loadAi</a> — 加载 AI 模型
 - <a href="#122-dm_loadaimemory">12.2 dm_loadAiMemory</a> — 从内存加载 AI 模型
@@ -447,7 +447,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-13foobar-界面控件">模块 13：Foobar 界面控件</a>（23 个）</summary>
+<summary>模块 13：Foobar 界面控件（23 个） <a href="#模块-13foobar-界面控件">🔗</a></summary>
 
 - <a href="#131-dm_createfoobarrect">13.1 dm_createFoobarRect</a> — 创建矩形 Foobar
 - <a href="#132-dm_createfoobarellipse">13.2 dm_createFoobarEllipse</a> — 创建椭圆 Foobar
@@ -475,7 +475,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-14答题">模块 14：答题</a>（9 个）</summary>
+<summary>模块 14：答题（9 个） <a href="#模块-14答题">🔗</a></summary>
 
 - <a href="#141-dm_faqcapture">14.1 dm_faqCapture</a> — 截取答题区域
 - <a href="#142-dm_faqcapturefromfile">14.2 dm_faqCaptureFromFile</a> — 从文件加载答题图片
@@ -489,7 +489,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-15算法">模块 15：算法</a>（3 个）</summary>
+<summary>模块 15：算法（3 个） <a href="#模块-15算法">🔗</a></summary>
 
 - <a href="#151-dm_excludepos">15.1 dm_excludePos</a> — 排除区域坐标
 - <a href="#152-dm_findnearestpos">15.2 dm_findNearestPos</a> — 查找最近坐标
@@ -497,7 +497,7 @@
 </details>
 
 <details>
-<summary><a href="#模块-16防护盾">模块 16：防护盾</a>（5 个）</summary>
+<summary>模块 16：防护盾（5 个） <a href="#模块-16防护盾">🔗</a></summary>
 
 - <a href="#161-dm_dmguard">16.1 dm_dmGuard</a> — 启用/禁用防护盾
 - <a href="#162-dm_dmguardextract">16.2 dm_dmGuardExtract</a> — 提取驱动文件
