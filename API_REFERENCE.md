@@ -2,8 +2,9 @@
 
 > **大漠插件 (dm.dll) 开源重新实现** — 接口完全兼容原版大漠插件
 > 采用 C 风格导出（`__stdcall`），支持跨语言调用（C++、Python、AutoHotkey 等）
+> 现已支持 **COM 组件**，可通过 `win32com.client.Dispatch('dm.dmsoft')` 调用
 >
-> **文档版本**: 1.1 | **最后更新**: 2026-08-13
+> **文档版本**: 1.2 | **最后更新**: 2026-08-13
 
 ---
 
@@ -9396,6 +9397,47 @@ print(f"颜色: {color}")
 dm.delay(1000)
 ```
 
+### COM 方式调用（注册后）
+
+```python
+import win32com.client
+
+# 创建 dm 对象（需先 regsvr32 dm_hook.dll）
+dm = win32com.client.Dispatch('dm.dmsoft')
+
+# 基本调用（COM 方法名首字母大写）
+print(f"版本: {dm.Ver()}")
+print(f"对象 ID: {dm.GetID()}")
+print(f"屏幕: {dm.GetScreenWidth()}x{dm.GetScreenHeight()}")
+print(f"机器码: {dm.GetMachineCode()}")
+
+# 窗口操作
+hwnd = dm.GetForegroundWindow()
+print(f"前台窗口: {dm.GetWindowTitle(hwnd)}")
+
+# 键鼠
+dm.MoveTo(500, 300)
+dm.LeftClick()
+
+# 截图
+dm.Capture(0, 0, 800, 600, "test.bmp")
+
+# 颜色
+color = dm.GetColor(100, 100)
+print(f"颜色: {color}")
+
+# 找色（返回 "x|y" 格式）
+result = dm.FindColor(0, 0, 1920, 1080, "FF0000-000000", 0.9, 0)
+print(f"找到红色在: {result}")
+
+# 找图
+result = dm.FindPic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0)
+print(f"找到按钮在: {result}")
+
+# 延时
+dm.Delay(1000)
+```
+
 ### C++ 调用
 
 ```cpp
@@ -9454,7 +9496,130 @@ DllCall("FreeLibrary", "Ptr", hModule)
 
 ---
 
-> **文档版本**: 1.1  
+## 附录 D：COM 组件调用
+
+本 DLL 支持 COM 组件模式，可通过 `win32com.client.Dispatch('dm.dmsoft')` 或 `CreateObject("dm.dmsoft")` 调用。
+
+### 注册 COM 组件
+
+```bash
+# 管理员模式运行
+regsvr32 dm_hook.dll
+
+# 注销
+regsvr32 /u dm_hook.dll
+```
+
+### Python（win32com）调用
+
+```python
+import win32com.client
+
+dm = win32com.client.Dispatch('dm.dmsoft')
+
+# 基本调用
+print(dm.Ver())           # 获取版本号
+print(dm.GetID())         # 获取对象 ID
+print(dm.GetScreenWidth())  # 屏幕宽度
+print(dm.GetMachineCode())  # 机器码
+
+# 窗口操作
+hwnd = dm.GetForegroundWindow()
+print(dm.GetWindowTitle(hwnd))
+print(dm.GetWindowClass(hwnd))
+print(dm.GetWindowProcessPath(hwnd))
+
+# 键鼠
+dm.MoveTo(500, 300)
+dm.LeftClick()
+dm.KeyPress(0x0D)         # 按回车
+
+# 截图
+dm.Capture(0, 0, 800, 600, "screen.bmp")
+dm.CapturePng(0, 0, 800, 600, "screen.png")
+
+# 颜色
+color = dm.GetColor(100, 100)
+print(f"颜色: #{color}")
+
+# 找色（返回 "x|y" 格式）
+pos = dm.FindColor(0, 0, 1920, 1080, "FF0000-101010", 0.9, 0)
+if pos:
+    x, y = pos.split("|")
+    print(f"找到红色在 ({x}, {y})")
+
+# 找图
+pos = dm.FindPic(0, 0, 1920, 1080, "button.bmp", "202020", 0.9, 0)
+if pos:
+    x, y = pos.split("|")
+    dm.MoveTo(int(x), int(y))
+    dm.LeftClick()
+
+# 文字识别
+dm.SetDict(0, "ocr_dict.txt")
+text = dm.Ocr(100, 100, 500, 200, "000000-000000", 0.9)
+print(f"识别结果: {text}")
+
+# 系统信息
+print(f"操作系统: {dm.GetOsType()}")
+print(f"CPU 使用率: {dm.GetCpuUsage()}%")
+print(f"内存使用率: {dm.GetMemoryUsage()}%")
+
+# 延时
+dm.Delay(500)
+```
+
+### VBScript / VBA 调用
+
+```vbs
+Set dm = CreateObject("dm.dmsoft")
+MsgBox "版本: " & dm.Ver()
+MsgBox "屏幕: " & dm.GetScreenWidth() & "x" & dm.GetScreenHeight()
+```
+
+### COM 命名规则
+
+COM 接口的方法名采用 **PascalCase**（首字母大写），与 C 导出函数名的对应关系：
+
+| C 函数 | COM 方法 |
+|--------|---------|
+| `dm_ver` | `Ver` |
+| `dm_getID` | `GetID` |
+| `dm_findWindow` | `FindWindow` |
+| `dm_moveTo` | `MoveTo` |
+| `dm_leftClick` | `LeftClick` |
+| `dm_capture` | `Capture` |
+| `dm_findColor` | `FindColor` |
+| `dm_findPic` | `FindPic` |
+| `dm_ocr` | `Ocr` |
+| `dm_delay` | `Delay` |
+
+### 有输出参数的函数
+
+以下函数在 COM 中返回 `"x|y"` 或 `"x1|y1|x2|y2"` 格式的字符串：
+
+| 函数 | COM 返回值格式 |
+|------|---------------|
+| `FindColor` | `"x\|y"` 或空字符串 |
+| `FindColorBlock` | `"x\|y"` 或空字符串 |
+| `FindMultiColor` | `"x\|y"` 或空字符串 |
+| `FindPic` | `"x\|y"` 或空字符串 |
+| `FindStr` | `"x\|y"` 或空字符串 |
+| `FindStrFast` | `"x\|y"` 或空字符串 |
+| `GetCursorPos` | `"x\|y"` |
+| `GetWindowRect` | `"x1\|y1\|x2\|y2"` |
+| `GetClientRect` | `"x1\|y1\|x2\|y2"` |
+| `GetClientSize` | `"width\|height"` |
+| `ClientToScreen` | `"x\|y"` |
+| `ScreenToClient` | `"x\|y"` |
+| `ReadInt` | 整数（直接返回） |
+| `ReadFloat` | 浮点数（直接返回） |
+| `ReadDouble` | 浮点数（直接返回） |
+
+---
+
+> **文档版本**: 1.2  
 > **最后更新**: 2026-08-13  
 > **项目地址**: [https://github.com/Pkk233/dm_hook](https://github.com/Pkk233/dm_hook)  
-> **总函数数**: 约 260+ 个（涵盖 16 个模块）
+> **总函数数**: 约 417 个（含同类变体，涵盖 16 个模块）  
+> **调用方式**: 支持 `LoadLibrary` 直调 + `COM` 组件注册
